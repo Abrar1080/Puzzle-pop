@@ -276,7 +276,7 @@
   .progress-box.flame-7{border-color:#FF3B30;}
   .progress-box.flame-30{border-color:#A78BFA;}
   .spin-pointer{width:0;height:0;margin:0 auto;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid #FF3B30;}
-  .spin-wheel{position:relative;width:220px;height:220px;margin:12px auto;border-radius:50%;border:4px solid var(--line);background:conic-gradient(#FFD166 0 40%, #FF6B35 40% 70%, #38BDF8 70% 90%, #A78BFA 90% 100%);transition:transform 5s cubic-bezier(.15,.9,.25,1);}
+  .spin-wheel{position:relative;width:220px;height:220px;margin:12px auto;border-radius:50%;border:4px solid var(--line);background:conic-gradient(#FFD166 0 30%, #FF6B35 30% 55%, #38BDF8 55% 75%, #A78BFA 75% 90%, #FF3B30 90% 100%);transition:transform 5s cubic-bezier(.15,.9,.25,1);}
   .spin-wheel::after{content:"";position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px;border-radius:50%;background:#FFF;border:3px solid var(--line);}
   .spin-legend{text-align:center;font-size:13px;}
   .t-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -537,7 +537,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #prizeTiers li.error-state,#lastWinnersList li.error-state,#badgesList li.error-state,#dailyBoardList li.error-state,#yesterdayTopList li.error-state,#claimsList li.error-state{background:#FEE2E2;border:1px solid #FECACA;color:#991B1B;text-align:center;font-weight:700;}
 :root[data-theme="dark"] #prizeTiers li.error-state,:root[data-theme="dark"] #lastWinnersList li.error-state,:root[data-theme="dark"] #badgesList li.error-state,:root[data-theme="dark"] #dailyBoardList li.error-state,:root[data-theme="dark"] #yesterdayTopList li.error-state,:root[data-theme="dark"] #claimsList li.error-state{background:#3B1D22;border-color:#7F1D1D;color:#FECACA;}
 #spinResult{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow-sm);font-weight:800;}
-#spinResult:empty,#spinBalanceLine:empty,#spinShopStatus:empty,#dailyRewardStatus:empty,#dailyOwnLine:empty{display:none;}
+#spinResult:empty,#dailyRewardStatus:empty,#dailyOwnLine:empty{display:none;}
 #spinBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #claimDailyRewardBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #spinRetryBtn:not([hidden]){display:block;width:100%;margin-top:8px;}
@@ -762,22 +762,20 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <h3>📜 Key rules</h3>
 <p class="muted">One global board • Mon 00:00–Sun 23:59 UTC • Score = total of all ranked games ÷ 7 • Top 50 frozen, claim with wallet, owner pays manually • 1 account per person, fakes disqualified • Full rules in the setup guide.</p>
 </section>
-    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub">One free spin per day.</p></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabBoard">🎯 Mini-board</button></div><div id="spinWheelView">
-    <p class="muted">One free spin per day. Prizes are spin points — spend them on power-ups for casual games only. Spin points never become daily coins, never count toward the tournament, and are never cash.</p>
+    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabBoard">🎯 Mini-board</button></div><div id="spinWheelView">
+    <p class="muted">One free spin per day for players at level 12+. Prizes go DIRECTLY to your leaderboard total — the board shows your total ÷ 7, so a win moves your board score by about a seventh of the prize.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
-    <p class="spin-legend">🟡 10 pts — 40% &nbsp; 🟠 25 pts — 30% &nbsp; 🔵 50 pts — 20% &nbsp; 🟣 100 pts — 10%</p>
+    <p class="spin-legend">🟡 100k — 30% &nbsp; 🟠 130k — 25% &nbsp; 🔵 160k — 20% &nbsp; 🟣 200k — 15% &nbsp; 🔴 250k — 10%</p>
     <button class="btn btn-primary" id="spinBtn" disabled>Spin the wheel</button>
     <button class="btn btn-ghost" id="spinRetryBtn" hidden>↻ Retry spin</button>
     <p id="spinResult" class="muted"></p>
-    <p id="spinBalanceLine" class="muted"></p>
-    <h3>🛒 Spin shop (casual games only)</h3>
-    <p class="muted">Spend spin points on power-ups for your next casual game. Never usable in ranked games.</p>
-    <div class="shop-row">
-      <button class="btn btn-ghost" id="buyHammerBtn">＋1 Hammer — 30 pts</button>
-      <button class="btn btn-ghost" id="buyBombBtn">＋1 Bomb — 30 pts</button>
-    </div>
-    <p id="spinShopStatus" class="muted"></p>
+    <h3>🎬 Ad spin — coming soon</h3>
+    <p class="muted">Watch an ad for an extra spin. Ads arrive in a later update — there is no ad to watch here yet, and no spin to claim from this section.</p>
+    <button class="btn btn-ghost" disabled>Watch ad — coming soon</button>
+    <h3>💳 Extra spins — Play Store app</h3>
+    <p class="muted">Extra spins cost Rs 120 each in the Play Store app via Google Play Billing. The web game cannot sell spins — never enter payment details here.</p>
+    <button class="btn btn-ghost" disabled>Buy a spin — Play Store app only</button>
 
     </div><div id="spinBoardView" hidden><h3 id="dailyBoardTitle">🎯 Today's mini-board</h3>
     <p class="muted">Today's best ranked scores. Yesterday's top 3 can claim a power-up bonus for today — in-game hammers/bombs only, never daily coins, never cash.</p>
@@ -797,7 +795,6 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div id="accountSection" hidden>
       <p id="accountInfo"></p>
       <p id="streakLine" class="muted"></p>
-      <p id="accountSpinLine" class="muted"></p>
       <h3>🏅 Your badges</h3>
       <ul id="badgesList"></ul>
       <div id="underdogClaim"></div>
@@ -1825,12 +1822,12 @@ window.PUZZLEPOP_CONFIG = {
   WEEK: { startDay: 1, timezone: "UTC" },
 
   /* Tournament unlock + daily-gated progression (mirrors schema.sql).
-   * The tournament stays locked until the player reaches level 15.
+   * The tournament stays locked until the player reaches level 12.
    * Every level-up costs 1 daily coin; daily coins come only from
    * daily play: max 2 per UTC day AND at most 1 per rolling 60 min.
-   * 14 coins for levels 2..15 at 2/day = 7 days minimum to unlock. */
+   * 11 coins for levels 2..12 at 2/day = 6 days minimum to unlock. */
   GATING: {
-    TOURNAMENT_UNLOCK_LEVEL: 15,
+    TOURNAMENT_UNLOCK_LEVEL: 12,
     MAX_LEVEL: 18,
     LEVEL_UP_COST: 1,
     DAILY_COINS: {
@@ -1859,18 +1856,23 @@ window.PUZZLEPOP_CONFIG = {
     UNDERDOG_PACK: { hammers: 1, bombs: 1 }
   },
 
-  // DAILY SPIN: one free spin per UTC day, drawn SERVER-SIDE from this
-  // fixed table. Wheel segments in the game match these weights.
-  // Expected value: 10*0.40 + 25*0.30 + 50*0.20 + 100*0.10 = 31.5 pts.
+  // SPIN: one FREE spin per UTC day for players at level 12+, drawn
+  // SERVER-SIDE by claim_free_spin() from this fixed table. Prizes go
+  // DIRECTLY to the day's ranked_scores.total_score, so the weekly
+  // board (sum(total)/7) moves with every win. Expected value:
+  // 100000*0.30 + 130000*0.25 + 160000*0.20 + 200000*0.15
+  // + 250000*0.10 = 149,500 leaderboard points per free spin.
+  // AD spins: coming soon (real provider + watch verification first).
+  // PAID spins: Play Store app only via Google Play Billing, Rs 120
+  // each -- the web client has no paid-spin claim path by design.
   SPIN: {
     PRIZES: [
-      { points: 10,  weight: 40 },
-      { points: 25,  weight: 30 },
-      { points: 50,  weight: 20 },
-      { points: 100, weight: 10 }
-    ],
-    HAMMER_COST: 30, // spin points, casual games only
-    BOMB_COST: 30
+      { points: 100000, weight: 30 },
+      { points: 130000, weight: 25 },
+      { points: 160000, weight: 20 },
+      { points: 200000, weight: 15 },
+      { points: 250000, weight: 10 }
+    ]
   },
 
   /* Anti-cheat caps, mirrored from schema.sql. These are enforced on the
@@ -2352,7 +2354,7 @@ window.PUZZLEPOP_CONFIG = {
   var lastProfileFormId = null;
 
   /* ============ tournament progression (level gate) ============ */
-  /* Server truth for the level-15 tournament lock + daily coins.
+  /* Server truth for the level-12 tournament lock + daily coins.
    * progressLoaded stays false until the server answers; the game
    * gate stays inactive until then, so a slow network never wrongly
    * locks or unlocks levels (the server enforces everything anyway). */
@@ -2386,7 +2388,7 @@ window.PUZZLEPOP_CONFIG = {
   function gateActive() { return !!(session && myProfile && progressLoaded); }
   function gateLevel() { return serverLevel; }
   function tournamentUnlocked() {
-    return gateActive() && serverLevel >= ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15);
+    return gateActive() && serverLevel >= ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 12);
   }
   function syncGameGate() {
     if (window.PuzzlePopSyncGate) window.PuzzlePopSyncGate();
@@ -2438,7 +2440,7 @@ window.PUZZLEPOP_CONFIG = {
     });
   }
   function renderProgress() {
-    var unlockLevel = (CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15;
+    var unlockLevel = (CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 12;
     if (!session) {
       setText("progressLevel", "Log in to track your tournament progress. Guest level progress does not count.");
       setText("progressCoins", "");
@@ -2467,7 +2469,7 @@ window.PUZZLEPOP_CONFIG = {
         " — each level-up costs 1 daily coin.");
       setText("progressToGo", "Levels to go: " + (unlockLevel - serverLevel) +
         ". Play daily, collect coins, and level up — nobody reaches Level " +
-        unlockLevel + " in less than 7 days.");
+        unlockLevel + " in less than 6 days.");
     }
     // Honest wait state (never a fake countdown to nothing).
     if (session && myProfile && progressLoaded) {
@@ -2480,7 +2482,7 @@ window.PUZZLEPOP_CONFIG = {
       }
     }
     // Ranked toggle lock. Gate order: logged in → profile exists →
-    // tournament unlocked (level 15).
+    // tournament unlocked (level 12).
     var t = $("rankedToggle");
     if (t) {
       if (session && myProfile && progressLoaded && !tournamentUnlocked()) {
@@ -2511,8 +2513,8 @@ window.PUZZLEPOP_CONFIG = {
     // exactly 1 coin and raises level by exactly 1, atomically), new
     // rows start at level 1 / balance 0, and grant_daily_coin() is
     // the only source. So coins ever collected = balance + level - 1.
-    var collected = Math.min(14, Math.max(0, (balance || 0) + (level || 1) - 1));
-    return { collected: collected, pct: collected / 14 * 100 };
+    var collected = Math.min(11, Math.max(0, (balance || 0) + (level || 1) - 1));
+    return { collected: collected, pct: collected / 11 * 100 };
   }
   function streakProgress(n) {
     n = Math.max(0, n || 0);
@@ -2527,7 +2529,7 @@ window.PUZZLEPOP_CONFIG = {
     f.classList.toggle("full", !!full);
   }
   function renderBars() {
-    var unlockLevel = (CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15;
+    var unlockLevel = (CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 12;
     var loggedIn = !!(session && myProfile);
     // Daily coins: 0/1/2 -> 0%/50%/100%.
     var dc = loggedIn && progressLoaded ? Math.min(2, Math.max(0, coinsToday || 0)) : 0;
@@ -2537,16 +2539,16 @@ window.PUZZLEPOP_CONFIG = {
     else if (!progressLoaded) setText("dailyCoinLabel", "Today's coins: 0/2");
     else if (dc >= 2) setText("dailyCoinLabel", "Today's coins done — come back tomorrow for 2 more");
     else setText("dailyCoinLabel", "Today's coins: " + dc + "/2");
-    // Journey: coins ever collected, capped at 14. Shine only when the
+    // Journey: coins ever collected, capped at 11. Shine only when the
     // gate is truly reached — never a fake full bar.
     var jp = journeyProgress(serverBalance, serverLevel);
     var unlocked = loggedIn && progressLoaded && serverLevel >= unlockLevel;
     setBarFill("journeyFill", loggedIn && progressLoaded ? jp.pct : 0, unlocked);
     if (!session) setText("journeyLabel", "Log in to collect daily coins");
     else if (!myProfile) setText("journeyLabel", "Choose your tournament username above to start your journey");
-    else if (!progressLoaded) setText("journeyLabel", "Tournament journey: 0/14 coins");
+    else if (!progressLoaded) setText("journeyLabel", "Tournament journey: 0/11 coins");
     else if (unlocked) setText("journeyLabel", "Tournament unlocked!");
-    else setText("journeyLabel", "Tournament journey: " + jp.collected + "/14 coins");
+    else setText("journeyLabel", "Tournament journey: " + jp.collected + "/11 coins");
     // Streak: fill toward the NEXT badge milestone (3/7/30).
     var sp = streakProgress(streakDays);
     setBarFill("streakFill", loggedIn ? sp.pct : 0, loggedIn && sp.full);
@@ -2845,7 +2847,7 @@ window.PUZZLEPOP_CONFIG = {
         btn.addEventListener("click", function () {
           if (!tournamentUnlocked()) {
             setText("rankedStatus", "Locked \u2014 the tournament unlocks at Level " +
-              ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15) + ".");
+              ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 12) + ".");
             return;
           }
           setRanked(true);
@@ -3024,46 +3026,71 @@ window.PUZZLEPOP_CONFIG = {
       }).catch(function () { /* keep previous text */ });
   }
 
-  /* --- Daily Spin (server-drawn, one per UTC day) --- */
-  function spinSegmentAngle(points) {
+  /* --- Daily Spin: leaderboard prizes, server-drawn (v12) ---
+   * One FREE spin per UTC day for logged-in players at level 12+.
+   * Prizes go DIRECTLY to the day's ranked_scores.total_score, so the
+   * weekly board (sum(total)/7) moves with every win. The draw is made
+   * SERVER-SIDE by claim_free_spin() from the fixed table in
+   * schema-spin-migration.sql -- the client never decides a prize.
+   * AD spins: coming soon (no claim path until a real provider +
+   * watch verification exists). PAID spins: Play Store app only via
+   * Google Play Billing (no web claim path, never fake-charged). */
+  function spinSegmentAngle(prize) {
     // Wheel segments (conic-gradient, clockwise from top):
-    // 10 pts: 0-144 deg (center 72), 25: 144-252 (198),
-    // 50: 252-324 (288), 100: 324-360 (342).
-    if (points === 25) return 198;
-    if (points === 50) return 288;
-    if (points === 100) return 342;
-    return 72;
+    // 100k: 0-108 deg (center 54), 130k: 108-198 (153),
+    // 160k: 198-270 (234), 200k: 270-324 (297), 250k: 324-360 (342).
+    if (prize === 130000) return 153;
+    if (prize === 160000) return 234;
+    if (prize === 200000) return 297;
+    if (prize === 250000) return 342;
+    return 54;
+  }
+  function spinMigrationMissing(err) {
+    var m = (err && err.message) || "";
+    return /spin_ledger|claim_free_spin|does not exist|PGRST205|PGRST202|Could not find/i.test(m);
   }
   function refreshSpinSection() {
     var btn = $("spinBtn");
     if (!btn) return;
     if (!session || !session.user) {
       btn.disabled = true;
-      setText("spinResult", "Log in to spin \u2014 one free spin per day for players.");
-      setText("spinBalanceLine", "");
-      setText("accountSpinLine", "");
-      setText("spinShopStatus", "");
+      setText("spinResult", "Log in to spin \u2014 spins unlock at level 12.");
       return;
     }
-    var today = fmtDateUTC(new Date());
-    callRest("spin_claims?select=points_won&user_id=eq." + session.user.id + "&spin_date=eq." + today)
-      .then(function (rows) {
-        if (rows && rows.length) {
-          btn.disabled = true;
-          setText("spinResult", "You already spun today and won " + rows[0].points_won +
-            " spin points. Next free spin tomorrow.");
-        } else {
-          btn.disabled = false;
-          setText("spinResult", "Your free spin for today is ready \u2014 good luck!");
-        }
-      }).catch(function () { btn.disabled = false; setText("spinResult", "Spin status could not load \u2014 tap to spin and the server will confirm."); });
-    callRest("spin_balances?select=points&user_id=eq." + session.user.id)
-      .then(function (rows) {
-        var bal = (rows && rows.length) ? rows[0].points : 0;
-        setText("spinBalanceLine", "Your spin points: " + bal +
-          " (spend them on power-ups for casual games only)");
-        setText("accountSpinLine", "Spin points: " + bal);
-      }).catch(function () { /* balance shows on next open */ });
+    // The level gate needs server truth; fetch it first when it is not
+    // loaded yet, then evaluate. fetchProgress is safe to re-call.
+    if (!progressLoaded) {
+      fetchProgress().then(evaluateSpinGate);
+    } else {
+      evaluateSpinGate();
+    }
+    function evaluateSpinGate() {
+      if (serverLevel < 12) {
+        btn.disabled = true;
+        setText("spinResult", "Spins unlock at level 12 \u2014 you are Level " + serverLevel + ".");
+        return;
+      }
+      var today = fmtDateUTC(new Date());
+      callRest("spin_ledger?select=prize&user_id=eq." + session.user.id + "&spin_date=eq." + today + "&kind=eq.free")
+        .then(function (rows) {
+          if (rows && rows.length) {
+            btn.disabled = true;
+            setText("spinResult", "You already spun today and won " + rows[0].prize.toLocaleString() +
+              " \u2014 added to your leaderboard total. Next free spin tomorrow.");
+          } else {
+            btn.disabled = false;
+            setText("spinResult", "Your free spin for today is ready \u2014 good luck!");
+          }
+        }).catch(function (err) {
+          if (spinMigrationMissing(err)) {
+            btn.disabled = true;
+            setText("spinResult", "Spins need a quick Supabase update \u2014 the owner runs it once, then free spins go live here.");
+          } else {
+            btn.disabled = false;
+            setText("spinResult", "Spin status could not load \u2014 tap to spin and the server will confirm.");
+          }
+        });
+    }
   }
   function wireSpin() {
     var btn = $("spinBtn");
@@ -3082,34 +3109,36 @@ window.PUZZLEPOP_CONFIG = {
         void wheel0.offsetWidth;
         wheel0.style.transition = "";
       }
-      callRest("rpc/claim_daily_spin", "POST", {}).then(function (res) {
-        var pts = res ? res.points_won : null;
+      callRest("rpc/claim_free_spin", "POST", {}).then(function (res) {
+        var prize = res ? res.prize : null;
+        var prizeTxt = prize ? prize.toLocaleString() : "?";
         var wheel = $("spinWheel");
-        if (wheel && pts) {
-          var target = 1440 + (360 - spinSegmentAngle(pts));
+        if (wheel && prize) {
+          var target = 1440 + (360 - spinSegmentAngle(prize));
           wheel.style.transform = "rotate(" + target + "deg)";
         }
         // The animation runs ~5s; the result is the SERVER's draw, the
         // wheel is only a celebration of it.
         setTimeout(function () {
           if (res && res.already) {
-            setText("spinResult", "You already spun today and won " + pts + " spin points. Next free spin tomorrow.");
+            setText("spinResult", "You already spun today and won " + prizeTxt +
+              " \u2014 added to your leaderboard total. Next free spin tomorrow.");
           } else {
-            setText("spinResult", "\uD83C\uDF89 You won " + pts + " spin points!");
+            setText("spinResult", "\uD83C\uDF89 You won " + prizeTxt +
+              " \u2014 added to your leaderboard total!");
           }
-          setText("spinBalanceLine", "Your spin points: " + (res ? res.balance : "?") +
-            " (spend them on power-ups for casual games only)");
-          setText("accountSpinLine", "Spin points: " + (res ? res.balance : "?"));
           if (retry) retry.hidden = true;
         }, 5200);
       }).catch(function (err) {
         btn.disabled = false;
         var msg = "Spin failed: " + err.message;
-        // The server requires a tournament profile row before the first spin:
-        // a player who signed up but skipped the username picker lands here.
-        // Point at the fix instead of leaving a cryptic failure.
-        if (/profile/i.test(err.message || "")) {
+        if (spinMigrationMissing(err)) {
+          msg = "Spins need a quick Supabase update \u2014 the owner runs it once, then free spins go live here.";
+          btn.disabled = true;
+        } else if (/profile/i.test(err.message || "")) {
           msg += " \u2014 finish your tournament profile on the Profile tab, then retry.";
+        } else if (/level 12|unlock/i.test(err.message || "")) {
+          msg += " \u2014 spins unlock at level 12.";
         }
         setText("spinResult", msg);
         if (retry) retry.hidden = false;
@@ -3117,25 +3146,6 @@ window.PUZZLEPOP_CONFIG = {
     }
     if (btn) btn.addEventListener("click", doSpin);
     if (retry) retry.addEventListener("click", doSpin);
-    var hammerBtn = $("buyHammerBtn");
-    if (hammerBtn) hammerBtn.addEventListener("click", function () { buySpinPowerup("hammer"); });
-    var bombBtn = $("buyBombBtn");
-    if (bombBtn) bombBtn.addEventListener("click", function () { buySpinPowerup("bomb"); });
-  }
-  function buySpinPowerup(item) {
-    if (!session || !session.user) { setText("spinShopStatus", "Log in first."); return; }
-    var cost = (CFG.SPIN && (item === "hammer" ? CFG.SPIN.HAMMER_COST : CFG.SPIN.BOMB_COST)) || 30;
-    setText("spinShopStatus", "Buying\u2026");
-    callRest("rpc/spend_spin_points", "POST", { p_item: item, p_cost: cost })
-      .then(function (res) {
-        // Casual-only bonus: onNewGame applies it only to non-ranked games.
-        storePendingBonus(res.hammers || 0, res.bombs || 0, true);
-        setText("spinShopStatus", "Bought +1 " + item + " for your next CASUAL game. Balance: " + res.balance + " pts.");
-        setText("spinBalanceLine", "Your spin points: " + res.balance +
-          " (spend them on power-ups for casual games only)");
-        setText("accountSpinLine", "Spin points: " + res.balance);
-      })
-      .catch(function (err) { setText("spinShopStatus", "Could not buy: " + err.message); });
   }
 
   /* ================= ranked state ================= */
@@ -4429,7 +4439,7 @@ window.PUZZLEPOP_CONFIG = {
           t.checked = false;
           setRanked(false);
           setText("rankedStatus", "Locked — the tournament unlocks at Level " +
-            ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15) +
+            ((CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 12) +
             ". You are Level " + serverLevel + ".");
           return;
         }
