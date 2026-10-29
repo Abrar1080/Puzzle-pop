@@ -329,7 +329,7 @@
   .welcome-overlay{position:fixed;inset:0;z-index:400;background:linear-gradient(165deg,#FFE3A3 0%,#FFC9A3 34%,#FFB3C6 66%,#A9D8FF 100%);display:none;place-items:center;padding:16px;overflow:hidden;}
   :root[data-theme="dark"] .welcome-overlay{background:linear-gradient(170deg,#1B2A4D 0%,#131E38 55%,#0E1730 100%);}
   .welcome-overlay.show{display:grid;}
-  .welcome-modal{background:var(--panel);border-radius:26px;padding:20px 20px 14px;max-width:360px;width:100%;max-height:100dvh;overflow:hidden;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.35);animation:modalIn .4s cubic-bezier(.34,1.56,.64,1);}
+  .welcome-modal{position:relative;background:var(--panel);border-radius:26px;padding:20px 20px 14px;max-width:360px;width:100%;max-height:100dvh;overflow:hidden;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.35);animation:modalIn .4s cubic-bezier(.34,1.56,.64,1);}
   .welcome-modal h2{font-family:"Baloo 2",cursive;font-size:28px;margin:4px 0 2px;}
   .welcome-modal p{color:var(--muted);font-weight:700;font-size:14px;line-height:1.5;margin:0 0 12px;}
   .welcome-modal .btn{width:100%;padding:14px 12px;font-size:15px;margin-bottom:10px;}
@@ -486,9 +486,10 @@ body.nav-on-board .wrap{padding-bottom:92px;}
    z-index -1 inside .wrap's stacking context, so it sits behind the
    board without affecting fitBoard (which skips fixed children). The old
    body-level .bg-decor cubes are hidden now that the Game page uses this
-   layer, so no page ever shows two cube sets at once. */
+   layer, so no page ever shows two cube sets at once. The welcome modal carries the same layer as its first child, with its content lifted above it. */
 #page-board,#page-prizes,#page-spin,#page-profile{position:relative;}
 #page-board > :not(.lb-bg),#page-prizes > :not(.lb-bg),#page-spin > :not(.lb-bg),#page-profile > :not(.lb-bg){position:relative;z-index:1;}
+.welcome-modal > :not(.lb-bg){position:relative;z-index:1;}
 .lb-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
 .lb-bg.game-bg{position:fixed;z-index:-1;}
 .bg-decor{display:none;}
@@ -569,7 +570,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <p class="splash-sub">Drag • Place • Pop</p>
   <div class="splash-bar"><i></i></div>
 </div></div>
-<div class="welcome-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Sign in to PuzzlePop"><div class="welcome-modal">
+<div class="welcome-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Sign in to PuzzlePop"><div class="welcome-modal"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 <div class="login-mascot" id="loginMascot" aria-hidden="true"><svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PuzzlePop blue monster"><defs><linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA"/><stop offset="55%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#2563EB"/></linearGradient><radialGradient id="furGloss" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.25"/><stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient><radialGradient id="pupilGloss" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="18%" stop-color="#FFFFFF"/><stop offset="32%" stop-color="#5B5470"/><stop offset="100%" stop-color="#17142A"/></radialGradient></defs><g class="m-idle"><g class="m-bounce"><ellipse cx="30" cy="16" rx="11" ry="10" fill="#3B82F6"/><ellipse cx="30" cy="17" rx="5.5" ry="5" fill="#93C5FD"/><ellipse cx="90" cy="16" rx="11" ry="10" fill="#3B82F6"/><ellipse cx="90" cy="17" rx="5.5" ry="5" fill="#93C5FD"/><circle cx="30" cy="10" r="6" fill="#3B82F6"/><circle cx="45" cy="6" r="6" fill="#60A5FA"/><circle cx="60" cy="5" r="6" fill="#3B82F6"/><circle cx="75" cy="6" r="6" fill="#60A5FA"/><circle cx="90" cy="10" r="6" fill="#3B82F6"/><rect x="18" y="8" width="84" height="82" rx="26" fill="url(#furGrad)"/><ellipse cx="60" cy="74" rx="24" ry="13" fill="#93C5FD" opacity="0.75"/><ellipse cx="46" cy="26" rx="26" ry="14" fill="url(#furGloss)"/><circle cx="32" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><circle cx="88" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><ellipse cx="46" cy="44" rx="13" ry="14" fill="#FFFFFF"/><ellipse cx="74" cy="44" rx="13" ry="14" fill="#FFFFFF"/><circle class="m-pupil" cx="46" cy="44" r="6" fill="url(#pupilGloss)"/><circle class="m-pupil" cx="74" cy="44" r="6" fill="url(#pupilGloss)"/><ellipse class="m-lid" cx="46" cy="44" rx="13" ry="14" fill="#3B82F6"/><ellipse class="m-lid" cx="74" cy="44" rx="13" ry="14" fill="#3B82F6"/><path d="M50,63 L55,63 L52.5,69 Z" fill="#FFFFFF"/><path d="M65,63 L70,63 L67.5,69 Z" fill="#FFFFFF"/><path class="m-smile" d="M48,66 Q60,75 72,66" stroke="#1E3A8A" stroke-width="3" fill="none" stroke-linecap="round"/><path class="m-grin" d="M44,64 Q60,88 76,64 Z" fill="#1E3A8A"/><g class="m-candy"><rect x="45" y="56" width="8" height="5" rx="2" fill="#F472B6" transform="rotate(-20 49 58)"/><rect x="67" y="56" width="8" height="5" rx="2" fill="#F472B6" transform="rotate(20 71 58)"/><circle cx="60" cy="58" r="7" fill="#EC4899"/><circle cx="58" cy="56" r="2" fill="#FFFFFF" opacity="0.85"/></g><ellipse class="m-paw m-paw-left" cx="26" cy="84" rx="13" ry="9" fill="url(#furGrad)"/><ellipse class="m-paw m-paw-right" cx="94" cy="84" rx="13" ry="9" fill="url(#furGrad)"/></g></g></svg></div>
   <h2>PuzzlePop</h2>
   <p>Sign in to play ranked games and win weekly prizes.</p>
