@@ -255,6 +255,7 @@
   .tournament-modal p,.tournament-modal li{font-size:13.5px;line-height:1.45;}
   .tournament-modal .muted{color:var(--muted);font-size:12px;}
   .t-input{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:10px 12px;font-size:15px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);}
+  .t-label{display:block;font-weight:900;margin:10px 0 2px;font-size:14px;}
   .t-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
   .t-btn-row .btn{flex:1;}
   .t-table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0;}
@@ -333,19 +334,19 @@
   .welcome-modal p{color:var(--muted);font-weight:700;font-size:14px;line-height:1.5;margin:0 0 12px;}
   .welcome-modal .btn{width:100%;padding:14px 12px;font-size:15px;margin-bottom:10px;}
   .welcome-modal .t-btn-row .btn{width:auto;}
-  .puzzle-anim{display:grid;grid-template-columns:repeat(3,26px);gap:6px;justify-content:center;margin:0 auto 10px;}
-  .puzzle-anim i{width:26px;height:26px;border-radius:8px;display:block;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -5px 0 rgba(0,0,0,.25);opacity:0;animation:puzzleSnap 3.6s ease-in-out infinite;}
-  .puzzle-anim i:nth-child(1){animation-delay:0s;}
-  .puzzle-anim i:nth-child(2){animation-delay:.14s;}
-  .puzzle-anim i:nth-child(3){animation-delay:.28s;}
-  .puzzle-anim i:nth-child(4){animation-delay:.42s;}
-  .puzzle-anim i:nth-child(5){animation-delay:.56s;}
-  .puzzle-anim i:nth-child(6){animation-delay:.70s;}
-  .puzzle-anim i:nth-child(7){animation-delay:.84s;}
-  .puzzle-anim i:nth-child(8){animation-delay:.98s;}
-  .puzzle-anim i:nth-child(9){animation-delay:1.12s;}
-  @keyframes puzzleSnap{0%{opacity:0;transform:translateY(-26px) rotate(-18deg) scale(.6);}16%{opacity:1;transform:translateY(0) rotate(0deg) scale(1.12);}26%{transform:translateY(0) scale(1);}72%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:scale(.92);}}
-  @media (prefers-reduced-motion: reduce){.puzzle-anim i{animation:none;opacity:1;transform:none;}}
+  .login-mascot{width:110px;height:96px;margin:0 auto 6px;}
+  .login-mascot svg{width:100%;height:100%;display:block;overflow:visible;}
+  .login-mascot .m-pupil{transition:transform .18s ease;}
+  .login-mascot.look-email .m-pupil{transform:translate(var(--look-x,0px),5px);}
+  .login-mascot .m-paw{transition:transform .5s ease;transform-box:fill-box;transform-origin:center;}
+  .login-mascot.paws-cover .m-paw-left{transform:translate(20px,-40px) scale(1.45);}
+  .login-mascot.paws-cover .m-paw-right{transform:translate(-20px,-40px) scale(1.45);}
+  .login-mascot .m-grin{display:none;}
+  .login-mascot.grin .m-grin{display:block;}
+  .login-mascot.grin .m-smile{display:none;}
+  .login-mascot.grin .m-bounce{animation:mascotBounce .6s ease;}
+  @keyframes mascotBounce{0%,100%{transform:translateY(0);}30%{transform:translateY(-10px);}60%{transform:translateY(2px);}}
+  @media (prefers-reduced-motion: reduce){.login-mascot .m-paw,.login-mascot .m-pupil{transition:none;}.login-mascot.grin .m-bounce{animation:none;}}
   .social-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 12px;font-size:15px;font-weight:800;border-radius:14px;cursor:pointer;margin-bottom:10px;border:2px solid var(--line);transition:transform .18s ease, filter .18s ease;}
   .social-btn:active{transform:scale(.96);}
   .social-google{background:#fff;color:#1F2937;}
@@ -353,7 +354,7 @@
   :root[data-theme="dark"] .social-google{background:#F2F4F8;color:#1F2937;}
   .g-mark{font-weight:900;color:#4285F4;font-size:18px;line-height:1;}
   .guest-link{display:block;margin:8px auto 0;background:none;border:none;color:var(--muted);font-weight:700;font-size:13px;text-decoration:underline;cursor:pointer;padding:8px;}
-  @media (max-height:640px){.puzzle-anim{grid-template-columns:repeat(3,22px);gap:5px;margin-bottom:8px;}.puzzle-anim i{width:22px;height:22px;}.welcome-modal{padding:14px 18px 10px;}.welcome-modal h2{font-size:24px;}}
+  @media (max-height:640px){.login-mascot{width:92px;height:80px;margin-bottom:4px;}.welcome-modal{padding:14px 18px 10px;}.welcome-modal h2{font-size:24px;}}
   /* Unmissable auth errors + guest banner */
   #authNotice.auth-error, #profileNotice.auth-error{background:#FEE2E2;border:2px solid #EF4444;color:#991B1B;font-weight:900;padding:12px;border-radius:14px;line-height:1.5;}
   :root[data-theme="dark"] #authNotice.auth-error, :root[data-theme="dark"] #profileNotice.auth-error{background:#3B1D22;border-color:#F87171;color:#FECACA;}
@@ -379,7 +380,7 @@
 .bnav-btn.active{background:var(--grad);color:#fff;box-shadow:0 8px 20px rgba(255,80,50,.45);transform:scale(1.06);}
 .bnav-btn.active::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:navShine 2.8s ease-in-out infinite;}
 @keyframes navShine{0%,60%{left:-80%;}100%{left:160%;}}
-.back-row{display:flex;justify-content:flex-end;padding:0 2px 6px;}
+.back-row{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;}
 .back-row[hidden]{display:none;}
 .play-back-btn{border:none;border-radius:999px;padding:13px 22px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:16px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
 .play-back-btn:active{transform:scale(.93);}
@@ -540,7 +541,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <div class="splash-bar"><i></i></div>
 </div></div>
 <div class="welcome-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Sign in to PuzzlePop"><div class="welcome-modal">
-  <div class="puzzle-anim" aria-hidden="true"><i style="background:#FF6B35"></i><i style="background:#FFB020"></i><i style="background:#38BDF8"></i><i style="background:#EC4899"></i><i style="background:#FF6B35"></i><i style="background:#38BDF8"></i><i style="background:#FFB020"></i><i style="background:#EC4899"></i><i style="background:#FF6B35"></i></div>
+  <div class="login-mascot" id="loginMascot" aria-hidden="true"><svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PuzzlePop candy buddy"><defs><linearGradient id="candyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFC53D"/><stop offset="100%" stop-color="#FF6B35"/></linearGradient></defs><g class="m-bounce"><rect x="18" y="8" width="84" height="82" rx="26" fill="url(#candyGrad)"/><ellipse cx="42" cy="26" rx="18" ry="10" fill="#FFFFFF" opacity="0.5"/><circle cx="32" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><circle cx="88" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><ellipse cx="46" cy="44" rx="12" ry="13" fill="#FFFFFF"/><ellipse cx="74" cy="44" rx="12" ry="13" fill="#FFFFFF"/><circle class="m-pupil" cx="46" cy="44" r="5.5" fill="#23203A"/><circle class="m-pupil" cx="74" cy="44" r="5.5" fill="#23203A"/><path class="m-smile" d="M48,66 Q60,75 72,66" stroke="#7C2D12" stroke-width="3" fill="none" stroke-linecap="round"/><path class="m-grin" d="M44,64 Q60,88 76,64 Z" fill="#7C2D12"/><ellipse class="m-paw m-paw-left" cx="26" cy="84" rx="13" ry="9" fill="#FF6B35"/><ellipse class="m-paw m-paw-right" cx="94" cy="84" rx="13" ry="9" fill="#FF6B35"/></g></svg></div>
   <h2>PuzzlePop</h2>
   <p>Sign in to play ranked games and win weekly prizes.</p>
   <p id="authNotice" class="muted"></p>
@@ -590,7 +591,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
   </div>
 
-  <div class="back-row" id="backRow" hidden><button type="button" class="play-back-btn" id="playBackBtn">← Back</button></div>
+  <div class="back-row" id="backRow" hidden><button type="button" class="play-back-btn" id="rankedBtn">Ranked: OFF</button><button type="button" class="play-back-btn" id="playBackBtn">← Back</button></div>
   <div class="board-flex" id="boardFlex">
     <div class="board-shell" id="boardShell">
       <div class="board" id="board" aria-label="8 by 8 puzzle board"></div>
@@ -778,9 +779,258 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
       <p id="todayBest" class="muted"></p>
     </div>
     <div id="profileSection" hidden>
-      <p><b>Choose your tournament username</b> (3–20 letters, numbers or underscores — this is the name on the leaderboard):</p>
+      <p id="profileIntro"><b>Choose your tournament username</b> (3–20 letters, numbers or underscores — this is the name on the leaderboard):</p>
       <input class="t-input" id="profileUsername" type="text" placeholder="Username" maxlength="20" />
       <input class="t-input" id="profileRegion" type="text" placeholder="Region (optional, e.g. Pakistan)" maxlength="40" />
+      <label class="t-label" for="profileCountry">Country (required to join the tournament)</label>
+      <select class="t-input" id="profileCountry">
+        <option value="">Select your country</option>
+        <option value="Afghanistan">Afghanistan</option>
+        <option value="Albania">Albania</option>
+        <option value="Algeria">Algeria</option>
+        <option value="American Samoa">American Samoa</option>
+        <option value="Andorra">Andorra</option>
+        <option value="Angola">Angola</option>
+        <option value="Anguilla">Anguilla</option>
+        <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Armenia">Armenia</option>
+        <option value="Aruba">Aruba</option>
+        <option value="Australia">Australia</option>
+        <option value="Austria">Austria</option>
+        <option value="Azerbaijan">Azerbaijan</option>
+        <option value="Bahamas">Bahamas</option>
+        <option value="Bahrain">Bahrain</option>
+        <option value="Bangladesh">Bangladesh</option>
+        <option value="Barbados">Barbados</option>
+        <option value="Belarus">Belarus</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Belize">Belize</option>
+        <option value="Benin">Benin</option>
+        <option value="Bermuda">Bermuda</option>
+        <option value="Bhutan">Bhutan</option>
+        <option value="Bolivia">Bolivia</option>
+        <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+        <option value="Botswana">Botswana</option>
+        <option value="Bouvet Island">Bouvet Island</option>
+        <option value="Brazil">Brazil</option>
+        <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+        <option value="British Virgin Islands">British Virgin Islands</option>
+        <option value="Brunei">Brunei</option>
+        <option value="Bulgaria">Bulgaria</option>
+        <option value="Burkina Faso">Burkina Faso</option>
+        <option value="Burundi">Burundi</option>
+        <option value="Cambodia">Cambodia</option>
+        <option value="Cameroon">Cameroon</option>
+        <option value="Canada">Canada</option>
+        <option value="Cape Verde">Cape Verde</option>
+        <option value="Cayman Islands">Cayman Islands</option>
+        <option value="Central African Republic">Central African Republic</option>
+        <option value="Chad">Chad</option>
+        <option value="Chile">Chile</option>
+        <option value="China">China</option>
+        <option value="Christmas Island">Christmas Island</option>
+        <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+        <option value="Colombia">Colombia</option>
+        <option value="Comoros">Comoros</option>
+        <option value="Congo">Congo</option>
+        <option value="Congo (Democratic Republic of the)">Congo (Democratic Republic of the)</option>
+        <option value="Cook Islands">Cook Islands</option>
+        <option value="Costa Rica">Costa Rica</option>
+        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+        <option value="Croatia">Croatia</option>
+        <option value="Cuba">Cuba</option>
+        <option value="Curaçao">Curaçao</option>
+        <option value="Cyprus">Cyprus</option>
+        <option value="Czech Republic">Czech Republic</option>
+        <option value="Denmark">Denmark</option>
+        <option value="Djibouti">Djibouti</option>
+        <option value="Dominica">Dominica</option>
+        <option value="Dominican Republic">Dominican Republic</option>
+        <option value="Ecuador">Ecuador</option>
+        <option value="Egypt">Egypt</option>
+        <option value="El Salvador">El Salvador</option>
+        <option value="Equatorial Guinea">Equatorial Guinea</option>
+        <option value="Eritrea">Eritrea</option>
+        <option value="Estonia">Estonia</option>
+        <option value="Eswatini">Eswatini</option>
+        <option value="Ethiopia">Ethiopia</option>
+        <option value="Falkland Islands">Falkland Islands</option>
+        <option value="Fiji">Fiji</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="French Guiana">French Guiana</option>
+        <option value="French Polynesia">French Polynesia</option>
+        <option value="French Southern and Antarctic Lands">French Southern and Antarctic Lands</option>
+        <option value="Gabon">Gabon</option>
+        <option value="Gambia">Gambia</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Germany">Germany</option>
+        <option value="Ghana">Ghana</option>
+        <option value="Gibraltar">Gibraltar</option>
+        <option value="Greece">Greece</option>
+        <option value="Greenland">Greenland</option>
+        <option value="Grenada">Grenada</option>
+        <option value="Guadeloupe">Guadeloupe</option>
+        <option value="Guam">Guam</option>
+        <option value="Guatemala">Guatemala</option>
+        <option value="Guernsey">Guernsey</option>
+        <option value="Guinea">Guinea</option>
+        <option value="Guinea-Bissau">Guinea-Bissau</option>
+        <option value="Guyana">Guyana</option>
+        <option value="Haiti">Haiti</option>
+        <option value="Heard Island and McDonald Islands">Heard Island and McDonald Islands</option>
+        <option value="Honduras">Honduras</option>
+        <option value="Hong Kong">Hong Kong</option>
+        <option value="Hungary">Hungary</option>
+        <option value="Iceland">Iceland</option>
+        <option value="India">India</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="Iran">Iran</option>
+        <option value="Iraq">Iraq</option>
+        <option value="Ireland">Ireland</option>
+        <option value="Isle of Man">Isle of Man</option>
+        <option value="Israel">Israel</option>
+        <option value="Italy">Italy</option>
+        <option value="Jamaica">Jamaica</option>
+        <option value="Japan">Japan</option>
+        <option value="Jersey">Jersey</option>
+        <option value="Jordan">Jordan</option>
+        <option value="Kazakhstan">Kazakhstan</option>
+        <option value="Kenya">Kenya</option>
+        <option value="Kiribati">Kiribati</option>
+        <option value="Kosovo">Kosovo</option>
+        <option value="Kuwait">Kuwait</option>
+        <option value="Kyrgyzstan">Kyrgyzstan</option>
+        <option value="Laos">Laos</option>
+        <option value="Latvia">Latvia</option>
+        <option value="Lebanon">Lebanon</option>
+        <option value="Lesotho">Lesotho</option>
+        <option value="Liberia">Liberia</option>
+        <option value="Libya">Libya</option>
+        <option value="Liechtenstein">Liechtenstein</option>
+        <option value="Lithuania">Lithuania</option>
+        <option value="Luxembourg">Luxembourg</option>
+        <option value="Madagascar">Madagascar</option>
+        <option value="Malawi">Malawi</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="Maldives">Maldives</option>
+        <option value="Mali">Mali</option>
+        <option value="Malta">Malta</option>
+        <option value="Marshall Islands">Marshall Islands</option>
+        <option value="Martinique">Martinique</option>
+        <option value="Mauritania">Mauritania</option>
+        <option value="Mauritius">Mauritius</option>
+        <option value="Mayotte">Mayotte</option>
+        <option value="Mexico">Mexico</option>
+        <option value="Micronesia">Micronesia</option>
+        <option value="Moldova">Moldova</option>
+        <option value="Monaco">Monaco</option>
+        <option value="Mongolia">Mongolia</option>
+        <option value="Montenegro">Montenegro</option>
+        <option value="Montserrat">Montserrat</option>
+        <option value="Morocco">Morocco</option>
+        <option value="Mozambique">Mozambique</option>
+        <option value="Myanmar">Myanmar</option>
+        <option value="Namibia">Namibia</option>
+        <option value="Nauru">Nauru</option>
+        <option value="Nepal">Nepal</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="New Caledonia">New Caledonia</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="Nicaragua">Nicaragua</option>
+        <option value="Niger">Niger</option>
+        <option value="Nigeria">Nigeria</option>
+        <option value="Niue">Niue</option>
+        <option value="Norfolk Island">Norfolk Island</option>
+        <option value="North Korea">North Korea</option>
+        <option value="North Macedonia">North Macedonia</option>
+        <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+        <option value="Norway">Norway</option>
+        <option value="Oman">Oman</option>
+        <option value="Pakistan">Pakistan</option>
+        <option value="Palau">Palau</option>
+        <option value="Palestine">Palestine</option>
+        <option value="Panama">Panama</option>
+        <option value="Papua New Guinea">Papua New Guinea</option>
+        <option value="Paraguay">Paraguay</option>
+        <option value="Peru">Peru</option>
+        <option value="Philippines">Philippines</option>
+        <option value="Pitcairn Islands">Pitcairn Islands</option>
+        <option value="Poland">Poland</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Puerto Rico">Puerto Rico</option>
+        <option value="Qatar">Qatar</option>
+        <option value="Réunion">Réunion</option>
+        <option value="Romania">Romania</option>
+        <option value="Russia">Russia</option>
+        <option value="Rwanda">Rwanda</option>
+        <option value="Saint Barthélemy">Saint Barthélemy</option>
+        <option value="Saint Helena">Saint Helena</option>
+        <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+        <option value="Saint Lucia">Saint Lucia</option>
+        <option value="Saint Martin">Saint Martin</option>
+        <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+        <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+        <option value="Samoa">Samoa</option>
+        <option value="San Marino">San Marino</option>
+        <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Senegal">Senegal</option>
+        <option value="Serbia">Serbia</option>
+        <option value="Seychelles">Seychelles</option>
+        <option value="Sierra Leone">Sierra Leone</option>
+        <option value="Singapore">Singapore</option>
+        <option value="Sint Maarten">Sint Maarten</option>
+        <option value="Slovakia">Slovakia</option>
+        <option value="Slovenia">Slovenia</option>
+        <option value="Solomon Islands">Solomon Islands</option>
+        <option value="Somalia">Somalia</option>
+        <option value="South Africa">South Africa</option>
+        <option value="South Georgia and the South Sandwich Islands">South Georgia and the South Sandwich Islands</option>
+        <option value="South Korea">South Korea</option>
+        <option value="South Sudan">South Sudan</option>
+        <option value="Spain">Spain</option>
+        <option value="Sri Lanka">Sri Lanka</option>
+        <option value="Sudan">Sudan</option>
+        <option value="Suriname">Suriname</option>
+        <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Syria">Syria</option>
+        <option value="Taiwan">Taiwan</option>
+        <option value="Tajikistan">Tajikistan</option>
+        <option value="Tanzania">Tanzania</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Timor-Leste">Timor-Leste</option>
+        <option value="Togo">Togo</option>
+        <option value="Tokelau">Tokelau</option>
+        <option value="Tonga">Tonga</option>
+        <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+        <option value="Tunisia">Tunisia</option>
+        <option value="Turkey">Turkey</option>
+        <option value="Turkmenistan">Turkmenistan</option>
+        <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+        <option value="Tuvalu">Tuvalu</option>
+        <option value="Uganda">Uganda</option>
+        <option value="Ukraine">Ukraine</option>
+        <option value="United Arab Emirates">United Arab Emirates</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="United States">United States</option>
+        <option value="U.S. Virgin Islands">U.S. Virgin Islands</option>
+        <option value="Uruguay">Uruguay</option>
+        <option value="Uzbekistan">Uzbekistan</option>
+        <option value="Vanuatu">Vanuatu</option>
+        <option value="Vatican City">Vatican City</option>
+        <option value="Venezuela">Venezuela</option>
+        <option value="Vietnam">Vietnam</option>
+        <option value="Wallis and Futuna">Wallis and Futuna</option>
+        <option value="Western Sahara">Western Sahara</option>
+        <option value="Yemen">Yemen</option>
+        <option value="Zambia">Zambia</option>
+        <option value="Zimbabwe">Zimbabwe</option>
+        <option value="Åland Islands">Åland Islands</option>
+      </select>
       <button class="btn btn-primary" id="saveProfileBtn">Save tournament profile</button>
       <p id="profileNotice" class="muted"></p>
     </div>
@@ -1240,6 +1490,7 @@ function showBanner(text, cls){
   bannerEl.textContent=text; bannerEl.className="show "+(cls||"");
   clearTimeout(bannerTimer); bannerTimer=setTimeout(function(){ bannerEl.className=""; },1600);
 }
+window.PuzzlePopShowBanner = showBanner;
 
 function snapshot(){
   return {
@@ -1689,6 +1940,32 @@ window.PuzzlePopGrantReward=function(pts){score+=pts; if(score>best){best=score;
 /* Tournament edition helpers (tournament.js calls these). */
 window.PuzzlePopSyncGate=function(){ if(window.PuzzlePopTournament && window.PuzzlePopTournament.gateActive()){ unlockedCount=Math.min(LEVELS.length, window.PuzzlePopTournament.gateLevel()); if(levelIdx>=unlockedCount) levelIdx=unlockedCount-1; renderLevelPanel(); saveProgress(); } };
 window.PuzzlePopGrantPowerups=function(h,b){ hammers+=h; bombs+=b; updatePowerBtns(); };
+/* Login mascot: an original candy-block buddy that watches email typing,
+   covers its eyes while the password is typed, and grins when done.
+   Behaviour pattern only — the character is our own, not the Short's. */
+(function(){
+  var m = document.getElementById("loginMascot");
+  var em = document.getElementById("authEmail");
+  var pw = document.getElementById("authPassword");
+  if (!m || !em || !pw) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var grinTimer = null;
+  function setLook(){
+    var n = (em.value || "").length;
+    m.style.setProperty("--look-x", (Math.min(n, 20) * 0.6 - 6).toFixed(1) + "px");
+  }
+  em.addEventListener("focus", function(){ m.classList.add("look-email"); setLook(); });
+  em.addEventListener("input", function(){ m.classList.add("look-email"); setLook(); });
+  em.addEventListener("blur", function(){ m.classList.remove("look-email"); });
+  pw.addEventListener("focus", function(){ m.classList.remove("look-email"); m.classList.remove("grin"); m.classList.add("paws-cover"); });
+  pw.addEventListener("input", function(){ m.classList.add("paws-cover"); });
+  pw.addEventListener("blur", function(){
+    m.classList.remove("paws-cover");
+    m.classList.add("grin");
+    if (grinTimer) clearTimeout(grinTimer);
+    grinTimer = setTimeout(function(){ m.classList.remove("grin"); }, 700);
+  });
+})();
 })();
 </script>
 <script>
@@ -1975,16 +2252,65 @@ window.PUZZLEPOP_CONFIG = {
       return res.json();
     });
   }
+  /* Session refresh, shared across concurrent callers: while one refresh
+     is in flight, every other expired call awaits the SAME promise instead
+     of firing its own refresh. Cleared on settle so a later expiry triggers
+     a fresh refresh. Sessions store refresh_token (see storeSessionFromAuth);
+     Supabase access tokens last ~1 hour, so a token can expire mid-session
+     long after the startup-only validateSessionInBackground ran. */
+  var refreshPromise = null;
+  function refreshSession() {
+    if (refreshPromise) return refreshPromise;
+    var rt = (session && session.refresh_token) || null;
+    if (!rt) return Promise.reject(new Error("no refresh token"));
+    refreshPromise = callAuth("token?grant_type=refresh_token",
+      { refresh_token: rt }).then(function (data) {
+      storeSessionFromAuth(data);
+      return data;
+    }).then(function (data) {
+      refreshPromise = null;
+      return data;
+    }, function (err) {
+      refreshPromise = null;
+      throw err;
+    });
+    return refreshPromise;
+  }
   function callRest(path, method, body) {
-    var opts = { method: method || "GET", headers: authHeaders() };
-    if (body !== undefined) {
-      opts.body = JSON.stringify(body);
-      opts.headers["Prefer"] = "return=representation";
+    function doRequest() {
+      var opts = { method: method || "GET", headers: authHeaders() };
+      if (body !== undefined) {
+        opts.body = JSON.stringify(body);
+        opts.headers["Prefer"] = "return=representation";
+      }
+      return fetch(CFG.SUPABASE_URL + "/rest/v1/" + path, opts);
     }
-    return fetch(CFG.SUPABASE_URL + "/rest/v1/" + path, opts).then(function (res) {
-      if (!res.ok) return apiErrorMessage(res, "Server request failed").then(function (m) { throw new Error(m); });
-      if (res.status === 204) return null;
-      return res.json();
+    function failWith(res, fallback) {
+      return apiErrorMessage(res, fallback).then(function (m) { throw new Error(m); });
+    }
+    return doRequest().then(function (res) {
+      if (res.ok) {
+        if (res.status === 204) return null;
+        return res.json();
+      }
+      /* Auth expiry mid-session: try ONE shared refresh, then retry the
+         original request exactly once with the new token. If the refresh
+         itself fails, the caller sees the ORIGINAL error; if the retry
+         fails, it sees the retry's error. No refresh token -> original
+         error, unchanged behaviour. */
+      if (res.status === 401 && session && session.refresh_token) {
+        return apiErrorMessage(res, "Server request failed").then(function (origMsg) {
+          return refreshSession().then(function () {
+            if (!session || !session.access_token) throw new Error(origMsg);
+            return doRequest().then(function (res2) {
+              if (!res2.ok) return failWith(res2, "Server request failed");
+              if (res2.status === 204) return null;
+              return res2.json();
+            });
+          }, function () { throw new Error(origMsg); });
+        });
+      }
+      return failWith(res, "Server request failed");
     });
   }
 
@@ -2001,6 +2327,13 @@ window.PUZZLEPOP_CONFIG = {
     // cache "Could not find the 'avatar' column of 'profiles'" (writes).
     return /avatar/i.test(m) && (/does not exist/i.test(m) || /could not find/i.test(m) || /schema cache/i.test(m));
   }
+  /* Auth-expiry wording (PostgREST 401 body is {"message":"JWT expired"}).
+     Used only to word a failure honestly: an expired session is fixed by
+     logging out and back in, other failures are not. */
+  function isAuthExpiryError(err) {
+    var m = (err && err.message) || "";
+    return /jwt expired/i.test(m) || /session expired/i.test(m) || /expired token/i.test(m);
+  }
   // Plain-language note for any avatar feature gated on the migration
   // (missing avatar columns, or the missing storage bucket for uploads).
   var AVATAR_MIGRATION_NOTE = "Profile picture needs the avatar migration run in Supabase first — run it and your picture will save.";
@@ -2014,12 +2347,33 @@ window.PUZZLEPOP_CONFIG = {
     var p2 = path.replace(",avatar,avatar_url", "");
     return p2 !== path ? p2 : null;
   }
+  /* Country-column gating: the country column exists only after
+   * schema-country-migration.sql runs. Same PostgREST wordings as the
+   * avatar/total_score columns, same graceful pattern. */
+  var COUNTRY_MIGRATION_NOTE = "Country needs the country migration run in Supabase first — run it and your country will save.";
+  function isCountryColumnError(err) {
+    var m = (err && err.message) || "";
+    return /country/i.test(m) && (/does not exist/i.test(m) || /could not find/i.test(m) || /schema cache/i.test(m));
+  }
+  function stripCountryField(path) {
+    var p2 = path.replace(",country", "");
+    return p2 !== path ? p2 : null;
+  }
+  /* Retry chain: strip whichever column the error names (avatar and/or
+   * country, in either order) and try again, so the profile loads under
+   * every migration state. Each retry removes at least one field, so
+   * the chain always terminates. */
   function callRestAvatarFallback(path, method, body) {
     return callRest(path, method, body).catch(function (err) {
-      if (!isAvatarColumnError(err)) throw err;
-      var fb = stripAvatarFields(path);
-      if (!fb) throw err;
-      return callRest(fb, method, body);
+      if (isAvatarColumnError(err)) {
+        var fb = stripAvatarFields(path);
+        if (fb) return callRestAvatarFallback(fb, method, body);
+      }
+      if (isCountryColumnError(err)) {
+        var fc = stripCountryField(path);
+        if (fc) return callRestAvatarFallback(fc, method, body);
+      }
+      throw err;
     });
   }
   /* Weekly-formula migration gating: total_score (sum of ALL ranked
@@ -2145,11 +2499,12 @@ window.PUZZLEPOP_CONFIG = {
   /* ================= profile ================= */
   function fetchMyProfile() {
     if (!session || !session.user) return Promise.resolve(null);
-    return callRestAvatarFallback("profiles?id=eq." + session.user.id + "&select=id,username,region,avatar,avatar_url")
+    return callRestAvatarFallback("profiles?id=eq." + session.user.id + "&select=id,username,region,country,avatar,avatar_url")
       .then(function (rows) { return rows && rows.length ? rows[0] : null; })
       .catch(function () { return null; });
   }
   var myProfile = null;
+  var lastProfileFormId = null;
 
   /* ============ tournament progression (level gate) ============ */
   /* Server truth for the level-15 tournament lock + daily coins.
@@ -2279,10 +2634,17 @@ window.PUZZLEPOP_CONFIG = {
         setText("progressWait", "Next daily coin available now — finish a game or complete the daily goal.");
       }
     }
-    // Ranked toggle lock.
+    // Ranked toggle lock. Gate order: logged in → profile exists →
+    // country selected → tournament unlocked (level 15). Until the
+    // country migration runs, no stored country exists, so ranked stays
+    // locked for everyone — that is the rule working, not a bug.
     var t = $("rankedToggle");
     if (t) {
-      if (session && myProfile && progressLoaded && !tournamentUnlocked()) {
+      if (session && myProfile && progressLoaded && !myProfile.country) {
+        if (rankedOn) setRanked(false);
+        t.disabled = true;
+        setText("rankedStatus", "Select your country in Profile to join the tournament.");
+      } else if (session && myProfile && progressLoaded && !tournamentUnlocked()) {
         if (rankedOn) setRanked(false);
         t.disabled = true;
         setText("rankedStatus", "Locked — the tournament unlocks at Level " + unlockLevel +
@@ -2949,11 +3311,16 @@ window.PUZZLEPOP_CONFIG = {
     var b = document.querySelector(".mode-btn.active");
     return !!b && b.dataset.mode === "classic";
   }
+  function syncRankedBtn() {
+    var b = $("rankedBtn");
+    if (b) b.textContent = rankedOn ? "Ranked: ON" : "Ranked: OFF";
+  }
   function setRanked(on) {
     rankedOn = !!on;
     try { localStorage.setItem(RANKED_KEY, rankedOn ? "1" : "0"); } catch (e) { /* ignore */ }
     var t = $("rankedToggle");
     if (t) t.checked = rankedOn;
+    syncRankedBtn();
     updateBadge();
   }
   function updateBadge() {
@@ -3056,8 +3423,14 @@ window.PUZZLEPOP_CONFIG = {
       refreshTournamentData();
       showPostGameFeedback(todayBest);
     }).catch(function (err) {
+      /* Honest failure wording: a failed submit never "counts locally"
+         and no later game retries THIS score — the next game submits
+         its own score. An expired session is fixed by logging out and
+         back in; other failures just did not submit. */
       overlayNote("Submission failed: " + err.message +
-        ". Your game still counts locally — your next ranked game will retry.");
+        (isAuthExpiryError(err)
+          ? ". This result was not submitted — log out and log back in, then play again."
+          : ". This result was not submitted."));
     });
   }
   function ensureSubmitStatusEl() {
@@ -3192,6 +3565,8 @@ window.PUZZLEPOP_CONFIG = {
     // a playing state with neither the bar nor Back visible.
     var backVisible = inGameView && gameActive && !barPinned && !welcomeShowing;
     if (back) back.hidden = !backVisible;
+    var rb = $("rankedBtn");
+    if (rb) rb.hidden = !backVisible;
     var backRow = $("backRow");
     if (backRow) backRow.hidden = !backVisible;
     var padOn = showBar && inGameView;
@@ -3704,6 +4079,20 @@ window.PUZZLEPOP_CONFIG = {
       (typeof myProfile !== "undefined" && myProfile && myProfile.id) || null;
     if (window.PuzzlePopSetLevelOwner) window.PuzzlePopSetLevelOwner(id);
   }
+  function fillProfileForm() {
+    var un = $("profileUsername");
+    var rg = $("profileRegion");
+    var ct = $("profileCountry");
+    if (myProfile) {
+      if (un) { un.value = myProfile.username || ""; un.readOnly = true; }
+      if (rg) rg.value = myProfile.region || "";
+      if (ct) ct.value = myProfile.country || "";
+    } else {
+      if (un) { un.value = ""; un.readOnly = false; }
+      if (rg) rg.value = "";
+      if (ct) ct.value = "";
+    }
+  }
   function renderAuth() {
     syncLevelOwner();
     var loggedIn = !!session;
@@ -3718,15 +4107,29 @@ window.PUZZLEPOP_CONFIG = {
       show(accountSection);
       setText("accountInfo", session.user && session.user.email ?
         ("Logged in as " + session.user.email) : "Logged in.");
+      // Fill the form only when the section is newly revealed or the
+      // profile itself just arrived/changed, so a later renderAuth
+      // (panel reopen, refresh) never wipes text the player is
+      // mid-typing — but a freshly loaded profile still fills in.
+      var sectionWasHidden = profileSection.hidden;
+      var profileFormId = myProfile ? myProfile.id : null;
+      var profileChanged = profileFormId !== lastProfileFormId;
       if (myProfile) {
         setText("accountInfo", "Playing as " + myProfile.username +
           (myProfile.region ? " (" + myProfile.region + ")" : "") +
           " — " + (session.user ? session.user.email : ""));
-        hide(profileSection);
+        // Existing players keep the form visible so they can add or
+        // change their country (compulsory for ranked). The username
+        // itself is not renamed here.
+        setText("profileIntro", "Your tournament profile — update your country to join the tournament:");
+        show(profileSection);
       } else {
         // Logged in but no tournament profile yet: ask for a username.
+        var pi = $("profileIntro");
+        if (pi) pi.innerHTML = "<b>Choose your tournament username</b> (3–20 letters, numbers or underscores — this is the name on the leaderboard):";
         show(profileSection);
       }
+      if (sectionWasHidden || profileChanged) { fillProfileForm(); lastProfileFormId = profileFormId; }
     } else {
       show(authSection);
       if (panelHint) panelHint.hidden = false;
@@ -3881,6 +4284,7 @@ window.PUZZLEPOP_CONFIG = {
       clearAuthError();
       var name = ($("profileUsername").value || "").trim();
       var region = ($("profileRegion").value || "").trim();
+      var country = ($("profileCountry").value || "").trim();
       if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) {
         setText("profileNotice", "Username must be 3–20 letters, numbers or underscores.");
         return;
@@ -3890,16 +4294,57 @@ window.PUZZLEPOP_CONFIG = {
         return;
       }
       setText("profileNotice", "Saving your tournament profile…");
+      var hadProfile = !!myProfile;
       var prevAvatar = myProfile ? myProfile.avatar : null;
       var prevAvatarUrl = myProfile ? myProfile.avatar_url : null;
-      // Step 1: username + region ONLY — no avatar key, so the save works
-      // even before the avatar migration adds the avatar columns.
-      callRest("profiles", "POST", { id: session.user.id, username: name, region: region || null })
-        .then(function () {
-          myProfile = { id: session.user.id, username: name, region: region, avatar: prevAvatar, avatar_url: prevAvatarUrl };
+      var prevCountry = myProfile ? myProfile.country : null;
+      var countryNote = null;
+      // Step 1: identity first — country only when selected, so the
+      // save works even before the country migration adds the column.
+      // A casual profile without a country is allowed; ranked stays
+      // locked until a country is picked (toggle gate + server check).
+      var saveStep;
+      if (hadProfile) {
+        // Existing profile: update region/country only (the username
+        // is not renamed here).
+        var patchBody = { region: region || null };
+        if (country) patchBody.country = country;
+        saveStep = callRest("profiles?id=eq." + session.user.id, "PATCH", patchBody)
+          .catch(function (err) {
+            if (country && isCountryColumnError(err)) {
+              countryNote = COUNTRY_MIGRATION_NOTE;
+              return callRest("profiles?id=eq." + session.user.id, "PATCH", { region: region || null });
+            }
+            throw err;
+          })
+          .then(function () {
+            myProfile = { id: session.user.id, username: myProfile.username, region: region,
+              country: countryNote ? (prevCountry || null) : (country || prevCountry || null),
+              avatar: prevAvatar, avatar_url: prevAvatarUrl };
+          });
+      } else {
+        var postBody = { id: session.user.id, username: name, region: region || null };
+        if (country) postBody.country = country;
+        saveStep = callRest("profiles", "POST", postBody)
+          .catch(function (err) {
+            if (country && isCountryColumnError(err)) {
+              countryNote = COUNTRY_MIGRATION_NOTE;
+              return callRest("profiles", "POST", { id: session.user.id, username: name, region: region || null });
+            }
+            throw err;
+          })
+          .then(function () {
+            myProfile = { id: session.user.id, username: name, region: region,
+              country: countryNote ? null : (country || null),
+              avatar: prevAvatar, avatar_url: prevAvatarUrl };
+          });
+      }
+      var okNote = hadProfile ? "Profile updated."
+        : ("Welcome, " + name + "! You can now play ranked games.");
+      saveStep.then(function () {
           // Step 2: only if the user actually chose a picture.
           if (!selectedAvatar) {
-            setText("profileNotice", "Welcome, " + name + "! You can now play ranked games.");
+            setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
             renderAuth();
             refreshTournamentData();
             return;
@@ -3908,7 +4353,7 @@ window.PUZZLEPOP_CONFIG = {
             .then(function () {
               myProfile.avatar = selectedAvatar;
               myProfile.avatar_url = null;
-              setText("profileNotice", "Welcome, " + name + "! You can now play ranked games.");
+              setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
               setText("avatarStatus", "Avatar saved!");
               renderAuth();
               refreshTournamentData();
@@ -3919,10 +4364,10 @@ window.PUZZLEPOP_CONFIG = {
               // picture that was not saved.
               selectedAvatar = prevAvatar;
               if (isAvatarColumnError(avErr)) {
-                setText("profileNotice", "Welcome, " + name + "! You can now play ranked games. " + AVATAR_MIGRATION_NOTE);
+                setText("profileNotice", okNote + (countryNote ? " " + countryNote : "") + " " + AVATAR_MIGRATION_NOTE);
                 setText("avatarStatus", AVATAR_MIGRATION_NOTE);
               } else {
-                setText("profileNotice", "Welcome, " + name + "! You can now play ranked games.");
+                setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
                 setText("avatarStatus", "Could not save picture: " + avErr.message);
               }
               renderAuth();
@@ -3930,8 +4375,8 @@ window.PUZZLEPOP_CONFIG = {
             });
         })
         .catch(function (err) {
-          showAuthError("Could not save that username: ", err,
-            (err.message.indexOf("duplicate") !== -1 || err.message.indexOf("unique") !== -1 ?
+          showAuthError(hadProfile ? "Could not save profile: " : "Could not save that username: ", err,
+            (!hadProfile && (err.message.indexOf("duplicate") !== -1 || err.message.indexOf("unique") !== -1) ?
               " That username is already taken — try another." : ""), "profileNotice");
         });
     });
@@ -3956,6 +4401,12 @@ window.PUZZLEPOP_CONFIG = {
           setText("rankedStatus", "Choose your tournament username first (account section above).");
           return;
         }
+        if (!myProfile.country) {
+          t.checked = false;
+          setRanked(false);
+          setText("rankedStatus", "Select your country in Profile to join the tournament.");
+          return;
+        }
         if (!tournamentUnlocked()) {
           t.checked = false;
           setRanked(false);
@@ -3974,6 +4425,33 @@ window.PUZZLEPOP_CONFIG = {
       } else {
         setRanked(false);
         setText("rankedStatus", "Ranked OFF — your games are casual only.");
+      }
+    });
+  }
+
+  /* Game-page Ranked button: the SAME control as the ranked toggle, not
+   * a second state. It drives the toggle's change handler, so gates,
+   * messages, mode-switch and state stay identical by construction:
+   * the flag is set before the mode-switch game starts, so tapping ON
+   * from Daily/Levels drops the player straight into a ranked Classic
+   * game (switching mode first would have made that game casual).
+   * A blocked tap changes nothing; the toggle handler's reason is
+   * also shown on the game page as a banner. */
+  function wireRankedBtn() {
+    var b = $("rankedBtn");
+    if (!b) return;
+    syncRankedBtn();
+    b.addEventListener("click", function () {
+      var t = $("rankedToggle");
+      if (!t) return;
+      var wasOn = rankedOn;
+      t.checked = !rankedOn;
+      t.dispatchEvent(new Event("change", { bubbles: true }));
+      syncRankedBtn();
+      if (!rankedOn && !wasOn) {
+        var reason = ($("rankedStatus") && $("rankedStatus").textContent) || "";
+        var sb = window.PuzzlePopShowBanner;
+        if (reason && sb) { try { sb(reason, "great"); } catch (e) { /* noop */ } }
       }
     });
   }
@@ -4070,6 +4548,7 @@ window.PUZZLEPOP_CONFIG = {
     if (refreshBtn) refreshBtn.addEventListener("click", refreshTournamentData);
     wireAuth();
     wireRankedToggle();
+    wireRankedBtn();
     wireProgressButtons();
     wireSpin();
     wireBottomNav();
