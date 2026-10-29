@@ -379,7 +379,9 @@
 .bnav-btn.active{background:var(--grad);color:#fff;box-shadow:0 8px 20px rgba(255,80,50,.45);transform:scale(1.06);}
 .bnav-btn.active::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:navShine 2.8s ease-in-out infinite;}
 @keyframes navShine{0%,60%{left:-80%;}100%{left:160%;}}
-.play-back-btn{position:fixed;right:14px;bottom:14px;z-index:240;border:none;border-radius:999px;padding:11px 18px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:14px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
+.back-row{display:flex;justify-content:flex-end;padding:0 2px 6px;}
+.back-row[hidden]{display:none;}
+.play-back-btn{border:none;border-radius:999px;padding:13px 22px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:16px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
 .play-back-btn:active{transform:scale(.93);}
 body.nav-on-board .wrap{padding-bottom:92px;}
 .wrap.view-in{animation:viewFade .3s ease both;}
@@ -434,6 +436,32 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #leaderboardEmpty:not(:empty){background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);text-align:center;font-weight:800;color:var(--muted);}
 #leaderboardEmpty.is-loading::before,.tpage li.loading-state::before{content:"";display:block;width:22px;height:22px;margin:0 auto 8px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spinRing .8s linear infinite;}
 @keyframes spinRing{to{transform:rotate(360deg);}}
+/* ===== Weekly Tournament page: animated background + row/header animation (?v=3 vibrant style) ===== */
+#page-board{position:relative;}
+#page-board > :not(.lb-bg){position:relative;z-index:1;}
+.lb-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.lb-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 15% 20%,rgba(255,209,102,.28),transparent 45%),radial-gradient(circle at 85% 75%,rgba(167,139,250,.25),transparent 45%),radial-gradient(circle at 80% 15%,rgba(56,189,248,.22),transparent 40%);animation:lbGlow 9s ease-in-out infinite alternate;}
+.lb-bg i{position:absolute;display:block;border-radius:24%;opacity:.32;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.35);animation:lbDrift 14s ease-in-out infinite alternate;}
+.lb-bg i:nth-child(1){width:64px;height:64px;left:4%;top:8%;background:#FF6B6B;animation-delay:-2s;}
+.lb-bg i:nth-child(2){width:40px;height:40px;right:7%;top:20%;background:#FFD166;animation-delay:-6s;animation-duration:17s;}
+.lb-bg i:nth-child(3){width:52px;height:52px;left:10%;bottom:14%;background:#4ADE80;animation-delay:-9s;animation-duration:19s;}
+.lb-bg i:nth-child(4){width:34px;height:34px;right:12%;bottom:24%;background:#38BDF8;animation-delay:-4s;animation-duration:15s;}
+.lb-bg i:nth-child(5){width:26px;height:26px;left:46%;top:4%;background:#C084FC;animation-delay:-11s;animation-duration:16s;}
+@keyframes lbDrift{from{transform:translateY(0) rotate(-6deg);}to{transform:translateY(-24px) rotate(10deg);}}
+@keyframes lbGlow{from{opacity:.7;}to{opacity:1;}}
+#page-board .page-head h2{animation:lbHeadIn .5s ease both;}
+@keyframes lbHeadIn{from{opacity:0;transform:translateY(10px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+#page-board tbody tr{animation:lbRowIn .45s ease both;}
+#page-board tbody tr:nth-child(2){animation-delay:.05s;}
+#page-board tbody tr:nth-child(3){animation-delay:.1s;}
+#page-board tbody tr:nth-child(4){animation-delay:.15s;}
+#page-board tbody tr:nth-child(5){animation-delay:.2s;}
+#page-board tbody tr:nth-child(6){animation-delay:.25s;}
+#page-board tbody tr:nth-child(7){animation-delay:.3s;}
+#page-board tbody tr:nth-child(8){animation-delay:.35s;}
+#page-board tbody tr:nth-child(9){animation-delay:.4s;}
+#page-board tbody tr:nth-child(10){animation-delay:.45s;}
+@keyframes lbRowIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 .tpage li.loading-state{text-align:center;color:var(--muted);font-weight:800;list-style:none;}
 #prizeTiers li.empty-state,#lastWinnersList li.empty-state,#badgesList li.empty-state,#dailyBoardList li.empty-state,#yesterdayTopList li.empty-state,#claimsList li.empty-state{background:var(--panel2);border:1.5px solid var(--line);box-shadow:var(--shadow-sm);color:var(--ink);text-align:center;font-weight:800;}
 #dailyBoardList li.empty-state::before{content:"🎯";display:block;font-size:30px;margin-bottom:4px;}
@@ -471,7 +499,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #page-profile{scrollbar-width:thin;scrollbar-color:var(--line) transparent;overscroll-behavior:contain;}
 #page-profile .page-head{position:sticky;top:0;z-index:5;background:var(--panel);margin:0 -16px 12px;padding:10px 16px;border-bottom:1px solid var(--line);}
 .bottom-nav{bottom:calc(10px + env(safe-area-inset-bottom));}
-.play-back-btn{bottom:calc(14px + env(safe-area-inset-bottom));}
+
 body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));}
 .tournament-modal{padding-bottom:calc(96px + env(safe-area-inset-bottom));}
 .t-subnav button{background:var(--panel2);}
@@ -538,6 +566,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
   </div>
 
+  <div class="back-row" id="backRow" hidden><button type="button" class="play-back-btn" id="playBackBtn">← Back</button></div>
   <div class="board-flex" id="boardFlex">
     <div class="board-shell" id="boardShell">
       <div class="board" id="board" aria-label="8 by 8 puzzle board"></div>
@@ -580,7 +609,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span></button>
   <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
 </nav>
-<button type="button" class="play-back-btn" id="playBackBtn" hidden>← Back</button>
+
 <div class="overlay ad-overlay" id="adOverlay" role="dialog" aria-modal="true" aria-label="Ad break">
   <div class="ad-modal">
     <div class="ad-top"><span class="ad-badge">Ad</span><span class="ad-count" id="adCountText">Video ad · 0:15</span></div>
@@ -622,7 +651,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div class="t-head"><h2>🏆 Weekly Tournament</h2></div>
     <p class="muted" id="tournamentNotice">One global board — prizes paid manually in crypto after winners claim.</p>
 
-    <div class="tpages"><section class="tpage" id="page-board"><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is the sum of your daily bests.</p></div><h3>⏱️ This week</h3>
+    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is the sum of your daily bests.</p></div><h3>⏱️ This week</h3>
     <p class="week-card"><b id="weekRange"></b><br /><span id="countdown"></span></p>
 
     <h3>Live leaderboard — top 50</h3>
@@ -632,7 +661,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <table class="t-table">
       <thead><tr><th>#</th><th>Player</th><th>Weekly pts</th><th>Prize</th></tr></thead>
       <tbody id="leaderboardBody"></tbody>
-    </table><div class="t-pager"><button class="btn btn-ghost" id="lbPrevBtn">◀ Prev</button><span id="lbPageInfo"></span><button class="btn btn-ghost" id="lbNextBtn">Next ▶</button><button class="btn btn-ghost" id="leaderboardRefreshBtn">↻</button></div><p id="leaderboardEmpty" class="muted"></p><div id="passFeed"></div></section><section class="tpage" id="page-prizes"><div class="page-head"><h2>💰 Prizes</h2><p class="page-sub">Top 50 players win real money, paid manually in crypto after claiming.</p></div><h3>Prize tiers</h3>
+    </table><div class="t-pager"><button class="btn btn-ghost" id="lbPrevBtn">◀ Prev</button><span id="lbPageInfo"></span><button class="btn btn-ghost" id="lbNextBtn">Next ▶</button><button class="btn btn-ghost" id="leaderboardRefreshBtn">↻</button></div><p id="leaderboardEmpty" class="muted"></p><button type="button" class="btn btn-ghost" id="leaderboardRetryBtn" hidden>\u21bb Retry loading the leaderboard</button><div id="passFeed"></div></section><section class="tpage" id="page-prizes"><div class="page-head"><h2>💰 Prizes</h2><p class="page-sub">Top 50 players win real money, paid manually in crypto after claiming.</p></div><h3>Prize tiers</h3>
     <ul id="prizeTiers"></ul>
     <p class="muted">Per player; the owner may change amounts before a week starts. Winners claim with a wallet address; the owner pays manually.</p>
 
@@ -1834,6 +1863,31 @@ window.PUZZLEPOP_CONFIG = {
     });
   }
 
+  /* Avatar-column fallback: avatar/avatar_url exist only after the owner runs
+     schema-avatar-migration.sql. Until then PostgREST rejects selects naming
+     them (e.g. "column profiles_1.avatar does not exist") — instead of failing
+     the whole board, retry once with the avatar fields stripped. Rows then
+     render with the existing null-avatar fallback, and once the migration IS
+     run the first-attempt query serves photos as before. */
+  function isAvatarColumnError(err) {
+    var m = (err && err.message) || "";
+    return /does not exist/i.test(m) && /avatar/i.test(m);
+  }
+  function stripAvatarFields(path) {
+    if (path.indexOf("profiles(username,avatar,avatar_url)") !== -1)
+      return path.split("profiles(username,avatar,avatar_url)").join("profiles(username)");
+    var p2 = path.replace(",avatar,avatar_url", "");
+    return p2 !== path ? p2 : null;
+  }
+  function callRestAvatarFallback(path, method, body) {
+    return callRest(path, method, body).catch(function (err) {
+      if (!isAvatarColumnError(err)) throw err;
+      var fb = stripAvatarFields(path);
+      if (!fb) throw err;
+      return callRest(fb, method, body);
+    });
+  }
+
   /* ================= auth flows ================= */
   function storeSessionFromAuth(data) {
     if (data && data.access_token) {
@@ -1940,7 +1994,7 @@ window.PUZZLEPOP_CONFIG = {
   /* ================= profile ================= */
   function fetchMyProfile() {
     if (!session || !session.user) return Promise.resolve(null);
-    return callRest("profiles?id=eq." + session.user.id + "&select=id,username,region,avatar,avatar_url")
+    return callRestAvatarFallback("profiles?id=eq." + session.user.id + "&select=id,username,region,avatar,avatar_url")
       .then(function (rows) { return rows && rows.length ? rows[0] : null; })
       .catch(function () { return null; });
   }
@@ -2174,7 +2228,7 @@ window.PUZZLEPOP_CONFIG = {
     var list = $("dailyBoardList");
     if (list) {
       list.innerHTML = "<li class=\"loading-state\">Loading…</li>";
-      callRest("ranked_scores?select=user_id,best_score,profiles(username,avatar,avatar_url)" +
+      callRestAvatarFallback("ranked_scores?select=user_id,best_score,profiles(username,avatar,avatar_url)" +
         "&game_date=eq." + today + "&order=best_score.desc&limit=100")
         .then(function (rows) {
           var board = (rows || []).map(function (r, i) {
@@ -2206,14 +2260,16 @@ window.PUZZLEPOP_CONFIG = {
           }
         })
         .catch(function (err) {
-          list.innerHTML = "<li class=\"error-state\">Could not load today's board: " + escapeHtml(err.message) + "</li>";
+          list.innerHTML = "<li class=\"error-state\">Could not load today's board. Check your connection and try again. <button type=\"button\" class=\"btn btn-ghost btn-small\" id=\"dailyBoardRetryBtn\">\u21bb Retry</button></li>";
+          var drb = $("dailyBoardRetryBtn");
+          if (drb) drb.addEventListener("click", refreshDailyBoard);
         });
     }
     var ylist = $("yesterdayTopList");
     var claimBtn = $("claimDailyRewardBtn");
     if (ylist) {
       ylist.innerHTML = "<li class=\"loading-state\">Loading…</li>";
-      callRest("ranked_scores?select=user_id,best_score,profiles(username,avatar,avatar_url)" +
+      callRestAvatarFallback("ranked_scores?select=user_id,best_score,profiles(username,avatar,avatar_url)" +
         "&game_date=eq." + yestStr + "&order=best_score.desc&limit=100")
         .then(function (rows) {
           var board = (rows || []).map(function (r, i) {
@@ -2268,7 +2324,9 @@ window.PUZZLEPOP_CONFIG = {
           }
         })
         .catch(function (err) {
-          ylist.innerHTML = "<li class=\"error-state\">Could not load yesterday's board: " + escapeHtml(err.message) + "</li>";
+          ylist.innerHTML = "<li class=\"error-state\">Could not load yesterday's board. Check your connection and try again. <button type=\"button\" class=\"btn btn-ghost btn-small\" id=\"yestBoardRetryBtn\">\u21bb Retry</button></li>";
+          var yrb = $("yestBoardRetryBtn");
+          if (yrb) yrb.addEventListener("click", refreshDailyBoard);
         });
     }
   }
@@ -2674,6 +2732,7 @@ window.PUZZLEPOP_CONFIG = {
     moveCount = 0;
     barPlaying = false;
     barPinned = false;
+    gameActive = true;
     syncBarVisibility();
     gameStartMs = Date.now();
     submittedThisGame = false;
@@ -2709,6 +2768,7 @@ window.PUZZLEPOP_CONFIG = {
   function onGameEnd(score, lines, bestCombo, kind, mode, levelIdx) {
     barPlaying = false;
     barPinned = false;
+    gameActive = false;
     syncBarVisibility();
     // Daily coins + level progress (logged-in players with a profile).
     // These run for EVERY finished game; the server dedupes grants
@@ -2785,6 +2845,7 @@ window.PUZZLEPOP_CONFIG = {
   /* Bottom-bar play state: hidden while a game is in motion, back on Back. */
   var barPlaying = false;
   var barPinned = false;
+  var gameActive = false;
   var barPadOn = false;
   var currentPageName = "profile";
   function setBarActive(view) {
@@ -2848,7 +2909,13 @@ window.PUZZLEPOP_CONFIG = {
     var inGameView = !(ov && ov.classList.contains("show"));
     var showBar = !welcomeShowing && (!barPlaying || barPinned);
     bar.classList.toggle("bar-hidden", !showBar);
-    if (back) back.hidden = !(barPlaying && !barPinned && !welcomeShowing);
+    // Back is visible for the WHOLE game once it starts (not only after the
+    // first move), whenever the bar is not already showing it: there is never
+    // a playing state with neither the bar nor Back visible.
+    var backVisible = inGameView && gameActive && !barPinned && !welcomeShowing;
+    if (back) back.hidden = !backVisible;
+    var backRow = $("backRow");
+    if (backRow) backRow.hidden = !backVisible;
     var padOn = showBar && inGameView;
     if (padOn !== barPadOn) {
       barPadOn = padOn;
@@ -2928,7 +2995,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   function fetchWeekRows() {
     var w = currentWeek();
-    return callRest("ranked_scores?select=user_id,best_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
+    return callRestAvatarFallback("ranked_scores?select=user_id,best_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
       "&game_date=gte." + w.startStr + "&game_date=lte." + w.endStr +
       "&limit=1000");
   }
@@ -2965,6 +3032,8 @@ window.PUZZLEPOP_CONFIG = {
     var prev = $("lbPrevBtn"), next = $("lbNextBtn");
     if (prev) prev.addEventListener("click", function () { if (lbPage > 0) { lbPage -= 1; renderLeaderboardPage(); } });
     if (next) next.addEventListener("click", function () { if (lbPage < maxLbPage()) { lbPage += 1; renderLeaderboardPage(); } });
+    var lbRetry = $("leaderboardRetryBtn");
+    if (lbRetry) lbRetry.addEventListener("click", refreshLeaderboard);
   }
   function refreshLeaderboard() {
     var body = $("leaderboardBody");
@@ -2973,6 +3042,7 @@ window.PUZZLEPOP_CONFIG = {
     setText("leaderboardEmpty", "Loading…"); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.add("is-loading");
     setText("myRank", "");
     setText("neighborRows", "");
+    if ($("leaderboardRetryBtn")) $("leaderboardRetryBtn").hidden = true;
     fetchWeekBoard().then(function (board) {
       if (!board.length) {
         lbBoard = [];
@@ -3009,7 +3079,8 @@ window.PUZZLEPOP_CONFIG = {
       }
       refreshPassFeed(board);
     }).catch(function (err) {
-      setText("leaderboardEmpty", "Could not load the leaderboard: " + err.message); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
+      setText("leaderboardEmpty", "Could not load the leaderboard. Check your connection and try again."); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
+      if ($("leaderboardRetryBtn")) $("leaderboardRetryBtn").hidden = false;
     });
   }
   function showPostGameFeedback(todayBest) {
