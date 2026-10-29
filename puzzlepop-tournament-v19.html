@@ -307,10 +307,14 @@
    background refreshes never spin. The logout pulse is Profile-only
    (#logoutBtn exists only on the Profile page) and is disabled
    under prefers-reduced-motion. */
-  .t-pager .btn,#leaderboardRetryBtn{position:relative;overflow:hidden;background:linear-gradient(135deg,#0F2440 0%,#1E2A4A 55%,#2A2F45 100%);color:#FFFFFF;border:1.5px solid rgba(232,199,102,.55);box-shadow:0 8px 18px rgba(15,36,64,.35);}
-  .t-pager .btn::after,#leaderboardRetryBtn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:transform .55s ease;pointer-events:none;}
-  .t-pager .btn:active,#leaderboardRetryBtn:active{transform:scale(.95);}
-  .t-pager .btn:active::after,#leaderboardRetryBtn:active::after{transform:translateX(420%) skewX(-20deg);}
+  .t-pager .btn{position:relative;overflow:hidden;background:linear-gradient(135deg,#0F2440 0%,#1E2A4A 55%,#2A2F45 100%);color:#FFFFFF;border:1.5px solid rgba(232,199,102,.55);box-shadow:0 8px 18px rgba(15,36,64,.35);}
+  #leaderboardRetryBtn{position:relative;overflow:hidden;background:linear-gradient(135deg,#0F2440 0%,#1E2A4A 55%,#2A2F45 100%);color:#FFFFFF;border:1.5px solid rgba(232,199,102,.55);box-shadow:0 8px 18px rgba(15,36,64,.35);}
+  .t-pager .btn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:transform .55s ease;pointer-events:none;}
+  #leaderboardRetryBtn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:transform .55s ease;pointer-events:none;}
+  .t-pager .btn:active{transform:scale(.95);}
+  #leaderboardRetryBtn:active{transform:scale(.95);}
+  .t-pager .btn:active::after{transform:translateX(420%) skewX(-20deg);}
+  #leaderboardRetryBtn:active::after{transform:translateX(420%) skewX(-20deg);}
   .t-pager .btn:disabled{opacity:1;background:#3A4356;border-color:var(--line);color:var(--muted);box-shadow:none;cursor:default;}
   .t-pager .btn:disabled::after{display:none;}
   #leaderboardRefreshBtn .lb-spin-glyph{display:inline-block;}
