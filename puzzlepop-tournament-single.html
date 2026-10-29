@@ -423,6 +423,18 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #prizeTiers li,#lastWinnersList li,#badgesList li,#dailyBoardList li,#yesterdayTopList li{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:11px 14px;margin-bottom:8px;box-shadow:var(--shadow-sm);font-weight:800;font-size:14px;line-height:1.45;}
 .claim-row{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
 .progress-box{border:2px solid var(--line);border-radius:18px;padding:14px;margin:8px 0;box-shadow:var(--shadow-sm);}
+  /* Animated progress bars (daily coins, journey, streak): same vibrant
+     gradient as the primary buttons. Width transitions animate every
+     value change; shine + pulse run only at 100%. The global
+     reduced-motion rule collapses both. */
+  .coin-bar{margin:8px 0;}
+  .coin-bar-track{height:14px;border-radius:999px;background:rgba(128,110,140,.22);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.18);}
+  .coin-bar-fill{height:100%;width:0%;border-radius:inherit;background:var(--grad);transition:width .8s ease;position:relative;}
+  .coin-bar-fill.full{animation:coinPulse 1.6s ease-in-out infinite;}
+  .coin-bar-fill.full::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.55) 50%,transparent 80%);animation:coinShine 2.2s linear infinite;}
+  @keyframes coinPulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.18);}}
+  @keyframes coinShine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
+  .coin-bar-label{margin:4px 0 0;}
 .pass-feed{border:2px solid #FFB020;border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
 .pass-feed.pass-hold{border-color:var(--line);}
 #accountSection #accountInfo{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);font-weight:800;}
@@ -663,11 +675,12 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div class="t-head"><h2>🏆 Weekly Tournament</h2></div>
     <p class="muted" id="tournamentNotice">One global board — prizes paid manually in crypto after winners claim.</p>
 
-    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is the sum of your daily bests.</p></div><h3>⏱️ This week</h3>
+    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total ranked score ÷ 7.</p></div><h3>⏱️ This week</h3>
     <p class="week-card"><b id="weekRange"></b><br /><span id="countdown"></span></p>
 
     <h3>Live leaderboard — top 50</h3>
-    <p class="muted">Weekly = sum of daily bests. Ranked Classic games only.</p>
+    <p class="muted">Weekly = total of all ranked games ÷ 7. Ranked Classic games only.</p>
+    <p id="weeklyFormulaNote" class="muted"></p>
     <p id="myRank"></p>
     <p id="neighborRows" class="muted"></p>
     <table class="t-table">
@@ -690,7 +703,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     
 <h3>📜 Key rules</h3>
-<p class="muted">One global board • Mon 00:00–Sun 23:59 UTC • Score = sum of daily bests • Top 50 frozen, claim with wallet, owner pays manually • 1 account per person, fakes disqualified • Full rules in the setup guide.</p>
+<p class="muted">One global board • Mon 00:00–Sun 23:59 UTC • Score = total of all ranked games ÷ 7 • Top 50 frozen, claim with wallet, owner pays manually • 1 account per person, fakes disqualified • Full rules in the setup guide.</p>
 </section>
     <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub">One free spin per day.</p></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabBoard">🎯 Mini-board</button></div><div id="spinWheelView">
     <p class="muted">One free spin per day. Prizes are spin points — spend them on power-ups for casual games only. Spin points never become daily coins, never count toward the tournament, and are never cash.</p>
@@ -738,11 +751,23 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
       <div class="progress-box" id="progressBox">
         <p><b id="progressLevel"></b></p>
         <p id="progressCoins" class="muted"></p>
+        <div class="coin-bar" id="dailyCoinBar">
+          <div class="coin-bar-track"><div class="coin-bar-fill" id="dailyCoinFill"></div></div>
+          <p id="dailyCoinLabel" class="muted coin-bar-label"></p>
+        </div>
+        <div class="coin-bar" id="journeyBar">
+          <div class="coin-bar-track"><div class="coin-bar-fill" id="journeyFill"></div></div>
+          <p id="journeyLabel" class="muted coin-bar-label"></p>
+        </div>
         <p id="progressWait" class="muted"></p>
         <p id="progressBanked" class="muted"></p>
         <p id="progressToGo" class="muted"></p>
         <p id="streakFlame"></p>
         <p id="streakBadges" class="muted"></p>
+        <div class="coin-bar" id="streakBar">
+          <div class="coin-bar-track"><div class="coin-bar-fill" id="streakFill"></div></div>
+          <p id="streakBarLabel" class="muted coin-bar-label"></p>
+        </div>
         <button class="btn btn-primary" id="unlockLevelBtn">Unlock next level (1 daily coin)</button>
         <p id="unlockStatus" class="muted"></p>
       </div>
@@ -1827,14 +1852,24 @@ window.PUZZLEPOP_CONFIG = {
     }
     return null;
   }
-  /* Rows from ranked_scores -> ranked weekly totals, best first.
-   * RANKING = SCORE, NOT XP. Weekly total = sum of each day's best
-   * RANKED-mode score. Replaying a day can only improve that day's
-   * best, never add on top of it.
-   * TIE-BREAKERS: higher weekly total first, then higher single-day
+  /* Rows from ranked_scores -> ranked weekly values, best first.
+   * RANKING = SCORE, NOT XP. Weekly value = (sum of ALL ranked games'
+   * scores in the week) / 7: each day's total_score summed over the
+   * week, then divided by 7. A player with many medium games outranks
+   * a player with few brilliant games: that IS the rule. Rank by the
+   * EXACT value; display rounds to the nearest whole number.
+   * FALLBACK (weekly-total migration not run yet): rows carry no
+   * total_score, so the old sum-of-daily-bests is used and the
+   * leaderboard shows a plain note about it. Same order as the SQL
+   * freeze in schema.sql.
+   * TIE-BREAKERS: higher weekly value first, then higher single-day
    * best, then whoever's final total was set first (earliest last
-   * update). Same order as the SQL freeze in schema.sql. */
+   * update). */
+  function weeklyUsesTotal(rows) {
+    return (rows || []).some(function (r) { return typeof r.total_score === "number"; });
+  }
   function aggregateWeekly(rows) {
+    var useTotal = weeklyUsesTotal(rows);
     var map = {};
     rows.forEach(function (r) {
       var u = r.user_id;
@@ -1845,12 +1880,13 @@ window.PUZZLEPOP_CONFIG = {
                    total: 0, maxDay: 0, lastUpdate: 0 };
       }
       var s = r.best_score || 0;
-      map[u].total += s;
+      map[u].total += useTotal ? (r.total_score || 0) : s;
       if (s > map[u].maxDay) map[u].maxDay = s;
       var t = r.updated_at ? Date.parse(r.updated_at) : 0;
       if (t > map[u].lastUpdate) map[u].lastUpdate = t;
     });
     var arr = Object.keys(map).map(function (k) { return map[k]; });
+    if (useTotal) arr.forEach(function (r) { r.total = r.total / 7; });
     arr.sort(function (a, b) {
       if (b.total !== a.total) return b.total - a.total;
       if (b.maxDay !== a.maxDay) return b.maxDay - a.maxDay;
@@ -1878,9 +1914,9 @@ window.PUZZLEPOP_CONFIG = {
     var n = neighborsFor(board, userId);
     var line = "Your best today: " + todayBest.toLocaleString() + " pts.";
     if (!n) return line + " Play a ranked game to join this week's board.";
-    line += " Weekly total: " + n.me.total.toLocaleString() + " pts (#" + n.me.rank + ").";
+    line += " Weekly total: " + Math.round(n.me.total).toLocaleString() + " pts (#" + n.me.rank + ").";
     if (n.above) {
-      line += " " + n.gapAbove.toLocaleString() + " points behind #" + n.above.rank +
+      line += " " + Math.round(n.gapAbove).toLocaleString() + " points behind #" + n.above.rank +
         " (" + n.above.username + ") — beat it!";
     } else {
       line += " You lead the week!";
@@ -1986,6 +2022,22 @@ window.PUZZLEPOP_CONFIG = {
       return callRest(fb, method, body);
     });
   }
+  /* Weekly-formula migration gating: total_score (sum of ALL ranked
+   * games in a day) exists only after schema-weekly-total-migration.sql
+   * runs. Same two PostgREST wordings as the avatar columns. */
+  function isTotalScoreColumnError(err) {
+    var m = (err && err.message) || "";
+    return /total_score/i.test(m) && (/does not exist/i.test(m) || /could not find/i.test(m) || /schema cache/i.test(m));
+  }
+  function stripTotalScore(path) {
+    var p2 = path.replace(",total_score", "");
+    return p2 !== path ? p2 : null;
+  }
+  /* True while the live weekly board is computed with the old
+   * sum-of-daily-bests formula because total_score is missing. The
+   * board still loads; the leaderboard shows a plain note about it. */
+  var weeklyFormulaFallback = false;
+  var WEEKLY_FORMULA_MIGRATION_NOTE = "Weekly totals still use the old daily-best sum \u2014 run the weekly-total migration in Supabase once to switch to total \u00f7 7.";
 
   /* ================= auth flows ================= */
   function storeSessionFromAuth(data) {
@@ -2111,6 +2163,7 @@ window.PUZZLEPOP_CONFIG = {
   var coinsToday = 0;
   var coinsTodaySources = {};
   var nextCoinInMin = 0;
+  var streakDays = 0; // server streak (get_streak), kept for the streak bar
   var DAILY_BONUS_KEY = "pp_daily_bonus";
   var DAILY_REWARD_KEY = "pp_daily_reward_claimed";
   var UNDERDOG_CLAIM_PREFIX = "pp_underdog_claimed_";
@@ -2245,6 +2298,75 @@ window.PUZZLEPOP_CONFIG = {
       ub.disabled = !(session && myProfile && progressLoaded &&
         serverLevel < 18 && serverCompleted >= serverLevel && serverBalance >= 1);
     }
+    renderBars();
+  }
+  /* ---- Animated progress bars: daily coins, journey, streak ----
+   * All three read the SAME server state as the texts around them —
+   * no new endpoints, no local counters. Widths animate through the
+   * CSS transition whenever the value changes; sweepBars() replays
+   * the sweep when the Profile tab opens. */
+  function journeyProgress(balance, level) {
+    // VERIFIED: unlock_next_level() is the ONLY coin sink (it spends
+    // exactly 1 coin and raises level by exactly 1, atomically), new
+    // rows start at level 1 / balance 0, and grant_daily_coin() is
+    // the only source. So coins ever collected = balance + level - 1.
+    var collected = Math.min(14, Math.max(0, (balance || 0) + (level || 1) - 1));
+    return { collected: collected, pct: collected / 14 * 100 };
+  }
+  function streakProgress(n) {
+    n = Math.max(0, n || 0);
+    if (n >= 30) return { target: 30, pct: 100, full: true };
+    var target = n < 3 ? 3 : (n < 7 ? 7 : 30);
+    return { target: target, pct: n / target * 100, full: false };
+  }
+  function setBarFill(fillId, pct, full) {
+    var f = $(fillId);
+    if (!f) return;
+    f.style.width = pct + "%";
+    f.classList.toggle("full", !!full);
+  }
+  function renderBars() {
+    var unlockLevel = (CFG.GATING && CFG.GATING.TOURNAMENT_UNLOCK_LEVEL) || 15;
+    var loggedIn = !!(session && myProfile);
+    // Daily coins: 0/1/2 -> 0%/50%/100%.
+    var dc = loggedIn && progressLoaded ? Math.min(2, Math.max(0, coinsToday || 0)) : 0;
+    setBarFill("dailyCoinFill", dc * 50, dc >= 2);
+    if (!session) setText("dailyCoinLabel", "Log in to collect daily coins");
+    else if (!myProfile) setText("dailyCoinLabel", "Choose your tournament username above to collect daily coins");
+    else if (!progressLoaded) setText("dailyCoinLabel", "Today's coins: 0/2");
+    else if (dc >= 2) setText("dailyCoinLabel", "Today's coins done — come back tomorrow for 2 more");
+    else setText("dailyCoinLabel", "Today's coins: " + dc + "/2");
+    // Journey: coins ever collected, capped at 14. Shine only when the
+    // gate is truly reached — never a fake full bar.
+    var jp = journeyProgress(serverBalance, serverLevel);
+    var unlocked = loggedIn && progressLoaded && serverLevel >= unlockLevel;
+    setBarFill("journeyFill", loggedIn && progressLoaded ? jp.pct : 0, unlocked);
+    if (!session) setText("journeyLabel", "Log in to collect daily coins");
+    else if (!myProfile) setText("journeyLabel", "Choose your tournament username above to start your journey");
+    else if (!progressLoaded) setText("journeyLabel", "Tournament journey: 0/14 coins");
+    else if (unlocked) setText("journeyLabel", "Tournament unlocked!");
+    else setText("journeyLabel", "Tournament journey: " + jp.collected + "/14 coins");
+    // Streak: fill toward the NEXT badge milestone (3/7/30).
+    var sp = streakProgress(streakDays);
+    setBarFill("streakFill", loggedIn ? sp.pct : 0, loggedIn && sp.full);
+    if (!session) setText("streakBarLabel", "Log in to collect daily coins");
+    else if (!myProfile) setText("streakBarLabel", "Choose your tournament username above to start your streak");
+    else if (streakDays <= 0) setText("streakBarLabel", "Play today to start your streak");
+    else if (sp.full) setText("streakBarLabel", "Top streak badge reached");
+    else setText("streakBarLabel", "Day streak: " + streakDays + (streakDays === 1 ? " day" : " days") +
+      " — next badge at " + sp.target + " days");
+  }
+  function sweepBars() {
+    var ids = ["dailyCoinFill", "journeyFill", "streakFill"];
+    var any = false;
+    ids.forEach(function (id) {
+      var f = $(id);
+      if (f) { f.style.width = "0%"; f.classList.remove("full"); any = true; }
+    });
+    if (!any) return;
+    var raf = (typeof window !== "undefined" && window.requestAnimationFrame) ||
+      function (cb) { return setTimeout(cb, 30); };
+    raf(function () { raf(function () { renderBars(); }); });
   }
   function grantDailyCoin(source) {
     if (!session || !myProfile) return Promise.resolve(null);
@@ -2450,6 +2572,8 @@ window.PUZZLEPOP_CONFIG = {
   function fetchStreak() {
     if (!session || !myProfile) {
       setText("streakFlame", ""); setText("streakBadges", ""); setText("streakLine", "");
+      streakDays = 0;
+      renderBars();
       return;
     }
     callRest("rpc/get_streak", "POST", {})
@@ -2476,6 +2600,8 @@ window.PUZZLEPOP_CONFIG = {
       else if (n >= 7) box.classList.add("flame-7");
       else if (n >= 3) box.classList.add("flame-3");
     }
+    streakDays = n;
+    renderBars();
   }
 
   /* --- "Someone just passed you!" + Rematch (real data only) --- */
@@ -2492,13 +2618,13 @@ window.PUZZLEPOP_CONFIG = {
     callRest("rank_snapshots?select=last_rank,last_total&" + filter).then(function (rows) {
       var prev = (rows && rows.length) ? rows[0] : null;
       var save = function () {
-        var body = { last_rank: me.rank, last_total: me.total,
+        var body = { last_rank: me.rank, last_total: Math.round(me.total),
           seen_at: new Date().toISOString() };
         var req = prev ?
           callRest("rank_snapshots?" + filter, "PATCH", body) :
           callRest("rank_snapshots", "POST", {
             user_id: session.user.id, week_start: w.startStr,
-            last_rank: me.rank, last_total: me.total });
+            last_rank: me.rank, last_total: Math.round(me.total) });
         req.catch(function () { /* snapshot is best-effort */ });
       };
       if (!prev) { save(); return; } // first sighting: record, no feed item
@@ -2543,8 +2669,15 @@ window.PUZZLEPOP_CONFIG = {
     }).catch(function () { /* feed is best-effort */ });
   }
 
-  /* --- Underdog: biggest climber of the week (pure, tested) --- */
+  /* --- Underdog: biggest climber of the week (pure, tested) ---
+   * Final AND start ranks use the same weekly value as the board:
+   * sum(total_score) / 7 when the migration has run, else the old
+   * sum-of-daily-bests fallback. Dividing by 7 preserves order, so
+   * start ranks are unaffected by the division itself — only by the
+   * switch from bests to totals. pointGain stays finalTotal minus
+   * the first day's best single game (tie-break only). */
   function computeClimbers(rows) {
+    var useTotal = weeklyUsesTotal(rows);
     var players = {};
     (rows || []).forEach(function (r) {
       var u = r.user_id;
@@ -2554,12 +2687,13 @@ window.PUZZLEPOP_CONFIG = {
       var p = players[u];
       p.days[r.game_date] = true;
       if (r.game_date < p.firstDay) p.firstDay = r.game_date;
-      p.finalTotal += r.best_score || 0;
+      p.finalTotal += useTotal ? (r.total_score || 0) : (r.best_score || 0);
       if ((r.best_score || 0) > p.maxDay) p.maxDay = r.best_score || 0;
       var t = r.updated_at ? Date.parse(r.updated_at) : 0;
       if (t > p.lastUpdate) p.lastUpdate = t;
     });
     var list = Object.keys(players).map(function (k) { return players[k]; });
+    if (useTotal) list.forEach(function (p) { p.finalTotal = p.finalTotal / 7; });
     list.forEach(function (p) {
       p.daysPlayed = Object.keys(p.days).length;
       p.firstDayBest = 0;
@@ -2581,13 +2715,13 @@ window.PUZZLEPOP_CONFIG = {
         var t = 0, m = 0, lu = 0;
         (rows || []).forEach(function (r) {
           if (r.user_id === q.user_id && r.game_date <= p.firstDay) {
-            t += r.best_score || 0;
+            t += useTotal ? (r.total_score || 0) : (r.best_score || 0);
             if ((r.best_score || 0) > m) m = r.best_score || 0;
             var tt = r.updated_at ? Date.parse(r.updated_at) : 0;
             if (tt > lu) lu = tt;
           }
         });
-        return { user_id: q.user_id, total: t, maxDay: m, lastUpdate: lu };
+        return { user_id: q.user_id, total: useTotal ? t / 7 : t, maxDay: m, lastUpdate: lu };
       });
       totals.sort(function (a, b) {
         if (b.total !== a.total) return b.total - a.total;
@@ -2617,7 +2751,7 @@ window.PUZZLEPOP_CONFIG = {
         var w = res.winner;
         line.textContent = "\uD83D\uDC36 Biggest climber this week: " + w.username +
           " \u2014 #" + w.startRank + " \u2192 #" + w.finalRank +
-          " (+" + w.improvement + " places, +" + w.pointGain.toLocaleString() + " pts). " +
+          " (+" + w.improvement + " places, +" + Math.round(w.pointGain).toLocaleString() + " pts). " +
           "Play on 3+ days to qualify.";
       } else {
         line.textContent = "No qualified climber yet \u2014 play ranked games on 3+ days this week to qualify for the Underdog badge.";
@@ -2976,6 +3110,8 @@ window.PUZZLEPOP_CONFIG = {
     setBarActive(name);
     // Spin status must never go stale: refresh it every time the tab opens.
     if (name === "spin") refreshSpinSection();
+    // Replay the progress-bar sweep every time the Profile tab opens.
+    if (name === "profile") sweepBars();
   }
   function wireBottomNav() {
     function leaveBoardModal() {
@@ -3137,9 +3273,28 @@ window.PUZZLEPOP_CONFIG = {
   }
   function fetchWeekRows() {
     var w = currentWeek();
-    return callRestAvatarFallback("ranked_scores?select=user_id,best_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
+    var full = "ranked_scores?select=user_id,best_score,total_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
       "&game_date=gte." + w.startStr + "&game_date=lte." + w.endStr +
-      "&limit=1000");
+      "&limit=1000";
+    weeklyFormulaFallback = false;
+    return attemptFetch(full);
+    /* Retry chain: strip whichever column the error names (total_score
+     * and/or avatar, in either order) and try again, so the board
+     * loads under every migration state. Each retry removes at least
+     * one field, so the chain always terminates. */
+    function attemptFetch(path) {
+      return callRest(path).catch(function (err) {
+        if (isTotalScoreColumnError(err)) {
+          var s = stripTotalScore(path);
+          if (s) { weeklyFormulaFallback = true; return attemptFetch(s); }
+        }
+        if (isAvatarColumnError(err)) {
+          var f = stripAvatarFields(path);
+          if (f) return attemptFetch(f);
+        }
+        throw err;
+      });
+    }
   }
   function fetchWeekBoard() {
     return fetchWeekRows().then(function (rows) { return aggregateWeekly(rows || []); });
@@ -3158,7 +3313,7 @@ window.PUZZLEPOP_CONFIG = {
       if (session && session.user && r.user_id === session.user.id) tr.className = "me";
       var prize = prizeForRank(r.rank);
       tr.innerHTML = "<td>" + r.rank + "</td><td>" + avatarCellHtml(r) + " " + escapeHtml(r.username) + "</td>" +
-        "<td>" + r.total.toLocaleString() + "</td>" +
+        "<td>" + Math.round(r.total).toLocaleString() + "</td>" +
         "<td>" + (prize ? "$" + prize.amount : "—") + "</td>";
       body.appendChild(tr);
     });
@@ -3186,6 +3341,7 @@ window.PUZZLEPOP_CONFIG = {
     setText("neighborRows", "");
     if ($("leaderboardRetryBtn")) $("leaderboardRetryBtn").hidden = true;
     fetchWeekBoard().then(function (board) {
+      setText("weeklyFormulaNote", weeklyFormulaFallback ? WEEKLY_FORMULA_MIGRATION_NOTE : "");
       if (!board.length) {
         lbBoard = [];
         renderLeaderboardPage();
@@ -3202,17 +3358,17 @@ window.PUZZLEPOP_CONFIG = {
         if (n) {
           var myEl = $("myRank");
           if (myEl) myEl.innerHTML = avatarCellHtml(n.me) + " You: #" + n.me.rank + " — " +
-            n.me.total.toLocaleString() + " pts this week.";
+            Math.round(n.me.total).toLocaleString() + " pts this week.";
           if (n.me.rank > 50) {
             var nb = "";
             if (n.above) nb += n.above.total - n.me.total > 0 ?
-              ((n.above.total - n.me.total).toLocaleString() + " points behind #" +
+              (Math.round(n.above.total - n.me.total).toLocaleString() + " points behind #" +
               n.above.rank + " (" + n.above.username + "). ") : "";
-            if (n.below) nb += (n.me.total - n.below.total).toLocaleString() +
+            if (n.below) nb += Math.round(n.me.total - n.below.total).toLocaleString() +
               " points ahead of #" + n.below.rank + " (" + n.below.username + ").";
             setText("neighborRows", nb);
           } else if (n.above) {
-            setText("neighborRows", (n.above.total - n.me.total).toLocaleString() +
+            setText("neighborRows", Math.round(n.above.total - n.me.total).toLocaleString() +
               " points behind #" + n.above.rank + " (" + n.above.username + ") — beat it!");
           }
         } else {
@@ -3582,6 +3738,9 @@ window.PUZZLEPOP_CONFIG = {
     clearAuthError();
     updateBadge();
     renderAvatarSection();
+    // Bars follow auth state: guests see the log-in hint even before
+    // any progress load (init renders auth but not progress).
+    renderBars();
   }
   function readAuthForm() {
     // Null-safe: the auth form has no username/region fields (those live
@@ -3710,6 +3869,7 @@ window.PUZZLEPOP_CONFIG = {
       progressLoaded = false;
       serverLevel = 1; serverBalance = 0; serverCompleted = 0;
       coinsToday = 0; coinsTodaySources = {}; nextCoinInMin = 0;
+      streakDays = 0;
       renderProgress();
       setText("authNotice", "Logged out. Casual play still works — log in again for ranked games.");
       renderAuth();
@@ -3828,6 +3988,9 @@ window.PUZZLEPOP_CONFIG = {
     prizeForRank: prizeForRank,
     aggregateWeekly: aggregateWeekly,
     computeClimbers: computeClimbers,
+    journeyProgress: journeyProgress,
+    streakProgress: streakProgress,
+    renderBars: renderBars,
     neighborsFor: neighborsFor,
     feedbackFor: feedbackFor,
     gateActive: gateActive,
