@@ -399,12 +399,12 @@
 
 
 /* ===== app shell: persistent bottom navigation (gradient pills) ===== */
-.bottom-nav{position:fixed;left:50%;transform:translateX(-50%) translateY(0);bottom:10px;z-index:250;width:min(720px,calc(100vw - 16px));display:flex;gap:4px;padding:5px;background:var(--panel);border:2px solid var(--line);border-radius:999px;box-shadow:0 14px 30px rgba(0,0,0,.28);transition:transform .35s cubic-bezier(.34,1.3,.64,1),opacity .3s ease;}
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%) translateY(0);bottom:10px;z-index:250;width:min(720px,calc(100vw - 16px));display:flex;gap:3px;padding:4px;background:var(--panel);border:2px solid var(--line);border-radius:999px;box-shadow:0 14px 30px rgba(0,0,0,.28);transition:transform .35s cubic-bezier(.34,1.3,.64,1),opacity .3s ease;}
 .bottom-nav.bar-hidden{transform:translateX(-50%) translateY(160%);opacity:0;pointer-events:none;}
-.bnav-btn{flex:1;border:none;background:transparent;border-radius:999px;padding:6px 1px 5px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;font-family:inherit;color:var(--muted);transition:transform .15s ease,background .25s ease,color .25s ease,box-shadow .25s ease;position:relative;overflow:hidden;}
+.bnav-btn{flex:1 1 auto;min-width:0;border:none;background:transparent;border-radius:999px;padding:6px 1px 5px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;font-family:inherit;color:var(--muted);transition:transform .15s ease,background .25s ease,color .25s ease,box-shadow .25s ease;position:relative;overflow:hidden;}
 .bnav-btn:active{transform:scale(.92);}
 .bnav-ic{font-size:17px;line-height:1;}
-.bnav-lb{font-size:10px;font-weight:900;white-space:nowrap;line-height:1.2;}
+.bnav-lb{font-size:9px;font-weight:900;white-space:nowrap;line-height:1.2;}
 .bnav-btn.active{background:var(--grad);color:#fff;box-shadow:0 8px 20px rgba(255,80,50,.45);transform:scale(1.06);}
 .bnav-btn.active::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:navShine 2.8s ease-in-out infinite;}
 @keyframes navShine{0%,60%{left:-80%;}100%{left:160%;}}
@@ -487,8 +487,16 @@ body.nav-on-board .wrap{padding-bottom:92px;}
    board without affecting fitBoard (which skips fixed children). The old
    body-level .bg-decor cubes are hidden now that the Game page uses this
    layer, so no page ever shows two cube sets at once. The welcome modal carries the same layer as its first child, with its content lifted above it. */
-#page-board,#page-prizes,#page-spin,#page-profile{position:relative;}
-#page-board > :not(.lb-bg),#page-prizes > :not(.lb-bg),#page-spin > :not(.lb-bg),#page-profile > :not(.lb-bg){position:relative;z-index:1;}
+#page-board,#page-prizes,#page-spin,#page-profile,#page-contact{position:relative;}
+#page-board > :not(.lb-bg),#page-prizes > :not(.lb-bg),#page-spin > :not(.lb-bg),#page-profile > :not(.lb-bg),#page-contact > :not(.lb-bg){position:relative;z-index:1;}
+/* Contact Us page: same shell as the other tab pages (jelly-cube layer
+   behind content, internal scroll like Profile so the shell stays one-screen). */
+#page-contact{overflow-y:auto;}
+.contact-discord-btn{display:block;text-align:center;padding:14px 10px;font-size:16px;text-decoration:none;margin:2px 0 6px;}
+#announcementsList{list-style:none;margin:8px 0;padding:0;}
+#announcementsList li{padding:10px 12px;margin:0 0 8px;border:1px solid var(--line);border-radius:12px;background:var(--panel);}
+#announcementsList li p{margin:4px 0 0;}
+.contact-form textarea.t-input{resize:vertical;min-height:64px;}
 .welcome-modal > :not(.lb-bg){position:relative;z-index:1;}
 .lb-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
 .lb-bg.game-bg{position:fixed;z-index:-1;}
@@ -677,6 +685,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-prizes" data-view="prizes"><span class="bnav-ic">💰</span><span class="bnav-lb">Prizes</span></button>
   <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span></button>
   <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
+  <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span></button>
 </nav>
 
 <div class="overlay ad-overlay" id="adOverlay" role="dialog" aria-modal="true" aria-label="Ad break">
@@ -840,7 +849,18 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <input class="t-input" id="avatarUpload" type="file" accept="image/*" />
   <p class="muted" id="avatarUploadStatus"></p>
 </div>
-</section></div>
+</section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Join our Discord to chat with us and catch the latest news.</p></div>
+<a class="btn btn-primary contact-discord-btn" id="discordJoinBtn" href="#" target="_blank" rel="noopener">💬 Join our Discord</a>
+<p class="muted" id="discordLinkText"></p>
+<h3>📣 Announcements</h3>
+<p id="contactAnnNote" class="muted"></p>
+<ul id="announcementsList"></ul>
+<form class="contact-form" id="announceForm" hidden>
+<input class="t-input" id="announceTitle" type="text" placeholder="Announcement title" maxlength="100" />
+<textarea class="t-input" id="announceBody" placeholder="Message" rows="3" maxlength="1000"></textarea>
+<button class="btn btn-primary" id="announcePostBtn" type="submit">Post announcement</button>
+</form>
+<p id="announceStatus" class="muted"></p></section></div>
   </div>
 </div>
 
@@ -1784,6 +1804,11 @@ window.PuzzlePopGrantPowerups=function(h,b){ hammers+=h; bombs+=b; updatePowerBt
 window.PUZZLEPOP_CONFIG = {
   SUPABASE_URL: "https://ugirlrgreszaercbxwel.supabase.co",
   SUPABASE_PUBLISHABLE_KEY: "sb_publishable_L3OOsEz5OKFvIeSStS82fg_JWsC7stg",
+
+  /* Community: the owner's public Discord invite, shown on Contact Us.
+   * Single source of truth — the game renders the Join button AND the
+   * plain link text from this constant. Guests can use it too. */
+  DISCORD_URL: "https://discord.gg/9ddP5Sp6JK",
 
   /* Prize tiers: rank ranges are inclusive. */
   PRIZE_TIERS: [
@@ -3266,7 +3291,7 @@ window.PUZZLEPOP_CONFIG = {
   /* ================= multi-page panel (no scrolling) ================= */
   /* The bottom bar IS the navigation now: Game = the board, the rest open
      the full-screen tournament view on that page. */
-  var PAGES = ["board", "prizes", "spin", "profile"];
+  var PAGES = ["board", "prizes", "spin", "profile", "contact"];
   /* Bottom-bar play state: hidden while a game is in motion, back on Back. */
   var barPlaying = false;
   var barPinned = false;
@@ -3279,7 +3304,7 @@ window.PUZZLEPOP_CONFIG = {
   var barPadOn = false;
   var currentPageName = "profile";
   function setBarActive(view) {
-    ["game", "board", "prizes", "spin", "profile"].forEach(function (v) {
+    ["game", "board", "prizes", "spin", "profile", "contact"].forEach(function (v) {
       var btn = $("bnav-" + v);
       if (btn) btn.classList.toggle("active", v === view);
     });
@@ -3296,6 +3321,8 @@ window.PUZZLEPOP_CONFIG = {
     if (name === "spin") refreshSpinSection();
     // Replay the progress-bar sweep every time the Profile tab opens.
     if (name === "profile") sweepBars();
+    // Contact Us refreshes on every open: Discord link + announcements.
+    if (name === "contact") refreshContactSection();
   }
   function wireBottomNav() {
     function leaveBoardModal() {
@@ -3403,6 +3430,82 @@ window.PUZZLEPOP_CONFIG = {
     if (tw) tw.addEventListener("click", function () { showSpinSub("wheel"); });
     if (tb) tb.addEventListener("click", function () { showSpinSub("board"); });
   }
+  /* ================= Contact Us: Discord + owner announcements ================= */
+  /* Owner gate: the announce form shows ONLY for this user id, and the
+     database enforces the same rule (see schema-announcements-migration.sql),
+     so hiding the form is presentation only — never the protection. */
+  var OWNER_USER_ID = "7dc7db5f-012f-43e0-b4d3-69b2505e42fa";
+  function isOwner() {
+    return !!(session && session.user && session.user.id === OWNER_USER_ID);
+  }
+  function renderAnnouncements(rows) {
+    var list = $("announcementsList");
+    if (!list) return;
+    var note = $("contactAnnNote");
+    if (rows === null) {
+      /* Table missing (migration not run) or fetch failed: degrade
+         gracefully — Discord still works, no error banner, no broken page. */
+      list.innerHTML = "";
+      if (note) note.textContent = "Announcements coming soon";
+      return;
+    }
+    if (note) note.textContent = "";
+    if (!rows.length) {
+      list.innerHTML = "<li class=\"empty-state\">No announcements yet.</li>";
+      return;
+    }
+    list.innerHTML = "";
+    rows.forEach(function (r) {
+      var li = document.createElement("li");
+      var h = document.createElement("b");
+      h.textContent = r.title || "";
+      var p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = r.body || "";
+      li.appendChild(h);
+      li.appendChild(p);
+      list.appendChild(li);
+    });
+  }
+  function refreshContactSection() {
+    /* Discord: single source of truth is CFG.DISCORD_URL (config.js).
+       The button works for guests too — it is a plain link, no login. */
+    var btn = $("discordJoinBtn");
+    if (btn && CFG.DISCORD_URL) btn.href = CFG.DISCORD_URL;
+    var txt = $("discordLinkText");
+    if (txt && CFG.DISCORD_URL) txt.textContent = CFG.DISCORD_URL;
+    var form = $("announceForm");
+    if (form) form.hidden = !isOwner();
+    callRest("announcements?select=id,title,body,created_at&order=created_at.desc&limit=50")
+      .then(function (rows) { renderAnnouncements(rows || []); },
+        function () { renderAnnouncements(null); });
+  }
+  function wireContactSection() {
+    var form = $("announceForm");
+    if (!form) return;
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      if (!isOwner()) return;
+      var titleEl = $("announceTitle"), bodyEl = $("announceBody");
+      var title = titleEl ? titleEl.value.trim() : "";
+      var body = bodyEl ? bodyEl.value.trim() : "";
+      if (!title || !body) {
+        setText("announceStatus", "Write a title and a message first.");
+        return;
+      }
+      callRest("announcements", "POST", { title: title, body: body })
+        .then(function () {
+          if (titleEl) titleEl.value = "";
+          if (bodyEl) bodyEl.value = "";
+          setText("announceStatus", "Posted!");
+          refreshContactSection();
+        }, function (err) {
+          setText("announceStatus", "Could not post: " +
+            (err && err.message ? err.message : "try again."));
+        });
+    });
+  }
+
   /* ================= tournament view ================= */
   function openPanel(page) {
     var ov = $("tournamentOverlay");
@@ -4419,6 +4522,7 @@ window.PUZZLEPOP_CONFIG = {
     wireBottomNav();
     wireLeaderboardPaging();
     wireSpinTabs();
+    wireContactSection();
     wireEntryFlow();
     runEntryFlow();
     renderTiers();
