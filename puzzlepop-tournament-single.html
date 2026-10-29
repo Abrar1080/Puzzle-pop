@@ -335,7 +335,7 @@
   .welcome-modal .btn{width:100%;padding:14px 12px;font-size:15px;margin-bottom:10px;}
   .welcome-modal .t-btn-row .btn{width:auto;}
   .login-mascot{width:110px;height:96px;margin:0 auto 6px;}
-  .login-mascot svg{width:100%;height:100%;display:block;overflow:visible;}
+  .login-mascot svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 6px 10px rgba(30,64,175,.35));}
   .login-mascot .m-pupil{transition:transform .18s ease;}
   .login-mascot.look-email .m-pupil{transform:translate(var(--look-x,0px),5px);}
   .login-mascot .m-paw{transition:transform .5s ease;transform-box:fill-box;transform-origin:center;}
@@ -346,13 +346,29 @@
   .login-mascot.grin .m-smile{display:none;}
   .login-mascot.grin .m-bounce{animation:mascotBounce .6s ease;}
   @keyframes mascotBounce{0%,100%{transform:translateY(0);}30%{transform:translateY(-10px);}60%{transform:translateY(2px);}}
-  @media (prefers-reduced-motion: reduce){.login-mascot .m-paw,.login-mascot .m-pupil{transition:none;}.login-mascot.grin .m-bounce{animation:none;}}
+  /* Monster life: gentle idle breathing, blinking, and an occasional
+     candy munch on a loop. Pure CSS, same wiring as before: the JS
+     look-email / paws-cover / grin classes still drive the login
+     behaviours on top of these. */
+  .login-mascot .m-idle{animation:monsterBob 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%;}
+  @keyframes monsterBob{0%,100%{transform:translateY(0) scale(1,1);}50%{transform:translateY(-2px) scale(1.01,.99);}}
+  .login-mascot .m-lid{transform:scaleY(0);transform-box:fill-box;transform-origin:50% 0;animation:monsterBlink 4.8s ease-in-out infinite;}
+  @keyframes monsterBlink{0%,88%,100%{transform:scaleY(0);}92%,94%{transform:scaleY(1);}}
+  .login-mascot .m-candy{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:monsterMunch 7s ease-in-out infinite;}
+  @keyframes monsterMunch{0%,68%{opacity:0;transform:translate(26px,14px) scale(.6);}72%{opacity:1;transform:translate(0,0) scale(1);}76%{transform:translate(0,-2px) scale(1);}80%{transform:translate(0,1px) scale(1);}84%{transform:translate(0,-2px) scale(1);}88%{opacity:1;transform:translate(0,0) scale(1);}92%,100%{opacity:0;transform:translate(0,6px) scale(.6);}}
+  @media (prefers-reduced-motion: reduce){.login-mascot .m-paw,.login-mascot .m-pupil{transition:none;}.login-mascot.grin .m-bounce{animation:none;}.login-mascot .m-idle,.login-mascot .m-lid,.login-mascot .m-candy{animation:none;}}
   .social-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 12px;font-size:15px;font-weight:800;border-radius:14px;cursor:pointer;margin-bottom:10px;border:2px solid var(--line);transition:transform .18s ease, filter .18s ease;}
   .social-btn:active{transform:scale(.96);}
   .social-google{background:#fff;color:#1F2937;}
   .social-apple{background:#000;color:#fff;border-color:#000;}
   :root[data-theme="dark"] .social-google{background:#F2F4F8;color:#1F2937;}
   .g-mark{font-weight:900;color:#4285F4;font-size:18px;line-height:1;}
+  .forgot-link{display:block;margin:2px 2px 10px auto;background:none;border:none;color:var(--muted);font-weight:800;font-size:13px;text-decoration:underline;cursor:pointer;padding:4px 2px;}
+  .social-row{display:flex;gap:10px;margin-bottom:10px;}
+  .social-logo{flex:1;width:auto;margin-bottom:0;height:52px;padding:0;}
+  .social-logo svg{width:26px;height:26px;display:block;}
+  .social-facebook{background:#fff;}
+  @media (prefers-reduced-motion: reduce){.social-btn{transition:none;}}
   .guest-link{display:block;margin:8px auto 0;background:none;border:none;color:var(--muted);font-weight:700;font-size:13px;text-decoration:underline;cursor:pointer;padding:8px;}
   @media (max-height:640px){.login-mascot{width:92px;height:80px;margin-bottom:4px;}.welcome-modal{padding:14px 18px 10px;}.welcome-modal h2{font-size:24px;}}
   /* Unmissable auth errors + guest banner */
@@ -465,12 +481,13 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 .lb-bg.game-bg{position:fixed;z-index:-1;}
 .bg-decor{display:none;}
 .lb-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 15% 20%,rgba(255,209,102,.28),transparent 45%),radial-gradient(circle at 85% 75%,rgba(167,139,250,.25),transparent 45%),radial-gradient(circle at 80% 15%,rgba(56,189,248,.22),transparent 40%);animation:lbGlow 9s ease-in-out infinite alternate;}
-.lb-bg i{position:absolute;display:block;border-radius:24%;opacity:.32;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.35);animation:lbDrift 14s ease-in-out infinite alternate;}
-.lb-bg i:nth-child(1){width:64px;height:64px;left:4%;top:8%;background:#FF6B6B;animation-delay:-2s;}
-.lb-bg i:nth-child(2){width:40px;height:40px;right:7%;top:20%;background:#FFD166;animation-delay:-6s;animation-duration:17s;}
-.lb-bg i:nth-child(3){width:52px;height:52px;left:10%;bottom:14%;background:#4ADE80;animation-delay:-9s;animation-duration:19s;}
-.lb-bg i:nth-child(4){width:34px;height:34px;right:12%;bottom:24%;background:#38BDF8;animation-delay:-4s;animation-duration:15s;}
-.lb-bg i:nth-child(5){width:26px;height:26px;left:46%;top:4%;background:#C084FC;animation-delay:-11s;animation-duration:16s;}
+.lb-bg i{position:absolute;display:block;border-radius:24%;opacity:.32;box-shadow:inset 0 -10px 14px rgba(0,0,0,.22), inset 0 6px 8px rgba(255,255,255,.5), 0 10px 18px rgba(0,0,0,.18);animation:lbDrift 14s ease-in-out infinite alternate;}
+.lb-bg i::after{content:"";position:absolute;left:12%;top:8%;width:38%;height:22%;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,0));transform:rotate(-24deg);}
+.lb-bg i:nth-child(1){width:64px;height:64px;left:4%;top:8%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(165deg,#FF9A9A,#FF6B6B 55%,#D63B3B);animation-delay:-2s;}
+.lb-bg i:nth-child(2){width:40px;height:40px;right:7%;top:20%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(165deg,#FFE08A,#FFD166 55%,#E5A800);animation-delay:-6s;animation-duration:17s;}
+.lb-bg i:nth-child(3){width:52px;height:52px;left:10%;bottom:14%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(165deg,#86EFAC,#4ADE80 55%,#16A34A);animation-delay:-9s;animation-duration:19s;}
+.lb-bg i:nth-child(4){width:34px;height:34px;right:12%;bottom:24%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(165deg,#7DD3FC,#38BDF8 55%,#0284C7);animation-delay:-4s;animation-duration:15s;}
+.lb-bg i:nth-child(5){width:26px;height:26px;left:46%;top:4%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(165deg,#D8B4FE,#C084FC 55%,#9333EA);animation-delay:-11s;animation-duration:16s;}
 @keyframes lbDrift{from{transform:translateY(0) rotate(-6deg);}to{transform:translateY(-24px) rotate(10deg);}}
 @keyframes lbGlow{from{opacity:.7;}to{opacity:1;}}
 #page-board .page-head h2{animation:lbHeadIn .5s ease both;}
@@ -541,20 +558,35 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <div class="splash-bar"><i></i></div>
 </div></div>
 <div class="welcome-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Sign in to PuzzlePop"><div class="welcome-modal">
-  <div class="login-mascot" id="loginMascot" aria-hidden="true"><svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PuzzlePop candy buddy"><defs><linearGradient id="candyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFC53D"/><stop offset="100%" stop-color="#FF6B35"/></linearGradient></defs><g class="m-bounce"><rect x="18" y="8" width="84" height="82" rx="26" fill="url(#candyGrad)"/><ellipse cx="42" cy="26" rx="18" ry="10" fill="#FFFFFF" opacity="0.5"/><circle cx="32" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><circle cx="88" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><ellipse cx="46" cy="44" rx="12" ry="13" fill="#FFFFFF"/><ellipse cx="74" cy="44" rx="12" ry="13" fill="#FFFFFF"/><circle class="m-pupil" cx="46" cy="44" r="5.5" fill="#23203A"/><circle class="m-pupil" cx="74" cy="44" r="5.5" fill="#23203A"/><path class="m-smile" d="M48,66 Q60,75 72,66" stroke="#7C2D12" stroke-width="3" fill="none" stroke-linecap="round"/><path class="m-grin" d="M44,64 Q60,88 76,64 Z" fill="#7C2D12"/><ellipse class="m-paw m-paw-left" cx="26" cy="84" rx="13" ry="9" fill="#FF6B35"/><ellipse class="m-paw m-paw-right" cx="94" cy="84" rx="13" ry="9" fill="#FF6B35"/></g></svg></div>
+  <div class="login-mascot" id="loginMascot" aria-hidden="true"><svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PuzzlePop blue monster"><defs><linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA"/><stop offset="55%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#2563EB"/></linearGradient><radialGradient id="furGloss" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.25"/><stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient><radialGradient id="pupilGloss" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="18%" stop-color="#FFFFFF"/><stop offset="32%" stop-color="#5B5470"/><stop offset="100%" stop-color="#17142A"/></radialGradient></defs><g class="m-idle"><g class="m-bounce"><ellipse cx="30" cy="16" rx="11" ry="10" fill="#3B82F6"/><ellipse cx="30" cy="17" rx="5.5" ry="5" fill="#93C5FD"/><ellipse cx="90" cy="16" rx="11" ry="10" fill="#3B82F6"/><ellipse cx="90" cy="17" rx="5.5" ry="5" fill="#93C5FD"/><circle cx="30" cy="10" r="6" fill="#3B82F6"/><circle cx="45" cy="6" r="6" fill="#60A5FA"/><circle cx="60" cy="5" r="6" fill="#3B82F6"/><circle cx="75" cy="6" r="6" fill="#60A5FA"/><circle cx="90" cy="10" r="6" fill="#3B82F6"/><rect x="18" y="8" width="84" height="82" rx="26" fill="url(#furGrad)"/><ellipse cx="60" cy="74" rx="24" ry="13" fill="#93C5FD" opacity="0.75"/><ellipse cx="46" cy="26" rx="26" ry="14" fill="url(#furGloss)"/><circle cx="32" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><circle cx="88" cy="60" r="5" fill="#FF8FA3" opacity="0.85"/><ellipse cx="46" cy="44" rx="13" ry="14" fill="#FFFFFF"/><ellipse cx="74" cy="44" rx="13" ry="14" fill="#FFFFFF"/><circle class="m-pupil" cx="46" cy="44" r="6" fill="url(#pupilGloss)"/><circle class="m-pupil" cx="74" cy="44" r="6" fill="url(#pupilGloss)"/><ellipse class="m-lid" cx="46" cy="44" rx="13" ry="14" fill="#3B82F6"/><ellipse class="m-lid" cx="74" cy="44" rx="13" ry="14" fill="#3B82F6"/><path d="M50,63 L55,63 L52.5,69 Z" fill="#FFFFFF"/><path d="M65,63 L70,63 L67.5,69 Z" fill="#FFFFFF"/><path class="m-smile" d="M48,66 Q60,75 72,66" stroke="#1E3A8A" stroke-width="3" fill="none" stroke-linecap="round"/><path class="m-grin" d="M44,64 Q60,88 76,64 Z" fill="#1E3A8A"/><g class="m-candy"><rect x="45" y="56" width="8" height="5" rx="2" fill="#F472B6" transform="rotate(-20 49 58)"/><rect x="67" y="56" width="8" height="5" rx="2" fill="#F472B6" transform="rotate(20 71 58)"/><circle cx="60" cy="58" r="7" fill="#EC4899"/><circle cx="58" cy="56" r="2" fill="#FFFFFF" opacity="0.85"/></g><ellipse class="m-paw m-paw-left" cx="26" cy="84" rx="13" ry="9" fill="url(#furGrad)"/><ellipse class="m-paw m-paw-right" cx="94" cy="84" rx="13" ry="9" fill="url(#furGrad)"/></g></g></svg></div>
   <h2>PuzzlePop</h2>
   <p>Sign in to play ranked games and win weekly prizes.</p>
   <p id="authNotice" class="muted"></p>
   <div id="authSection">
     <input class="t-input" id="authEmail" type="email" placeholder="Email address" autocomplete="email" />
     <input class="t-input" id="authPassword" type="password" placeholder="Password (min 6 characters)" autocomplete="current-password" />
+    <button type="button" id="forgotLink" class="forgot-link">Forgot password?</button>
     <div class="t-btn-row">
       <button class="btn btn-primary" id="signupBtn">Sign up</button>
       <button class="btn btn-ghost" id="loginBtn">Log in</button>
     </div>
-    <button class="social-btn social-google" id="googleBtn" type="button"><span class="g-mark" aria-hidden="true">G</span> Continue with Google</button>
-    <button class="social-btn social-apple" id="appleBtn" type="button">Continue with Apple</button>
+    <div class="social-row" role="group" aria-label="Continue with a social account">
+      <button class="social-btn social-logo social-google" id="googleBtn" type="button" aria-label="Continue with Google"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg></button>
+      <button class="social-btn social-logo social-apple" id="appleBtn" type="button" aria-label="Continue with Apple"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.693 1.636-3.34 1.662-3.422-.034-.013-3.168-1.219-3.197-4.844-.026-3.045 2.495-4.506 2.607-4.576-.138-.21-2.92-1.014-5.07-1.014zM15.338 3.14c.686-.828 1.14-1.98 1.014-3.14-1.013.04-2.208.687-2.94 1.52-.653.753-1.213 1.947-1.073 3.1 1.14.087 2.307-.573 2.999-1.48z"/></svg></button>
+      <button class="social-btn social-logo social-facebook" id="facebookBtn" type="button" aria-label="Continue with Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></button>
+    </div>
     <p class="muted">New here? Sign up with email + password. If email confirmation is on, check your inbox for the confirmation link, then log in.</p>
+  </div>
+  <div id="forgotSection" hidden>
+    <input class="t-input" id="forgotEmail" type="email" placeholder="Email address" autocomplete="email" />
+    <button class="btn btn-primary" id="forgotSendBtn">Send reset link</button>
+    <button type="button" id="forgotBackLink" class="guest-link">Back to login</button>
+  </div>
+  <div id="resetSection" hidden>
+    <input class="t-input" id="resetPassword" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+    <input class="t-input" id="resetConfirm" type="password" placeholder="Confirm new password" autocomplete="new-password" />
+    <button class="btn btn-primary" id="resetSaveBtn">Set new password</button>
+    <button type="button" id="resetBackLink" class="guest-link">Back to login</button>
   </div>
   <button type="button" id="guestLink" class="guest-link">Continue as guest</button>
 </div></div>
@@ -782,255 +814,6 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
       <p id="profileIntro"><b>Choose your tournament username</b> (3–20 letters, numbers or underscores — this is the name on the leaderboard):</p>
       <input class="t-input" id="profileUsername" type="text" placeholder="Username" maxlength="20" />
       <input class="t-input" id="profileRegion" type="text" placeholder="Region (optional, e.g. Pakistan)" maxlength="40" />
-      <label class="t-label" for="profileCountry">Country (required to join the tournament)</label>
-      <select class="t-input" id="profileCountry">
-        <option value="">Select your country</option>
-        <option value="Afghanistan">Afghanistan</option>
-        <option value="Albania">Albania</option>
-        <option value="Algeria">Algeria</option>
-        <option value="American Samoa">American Samoa</option>
-        <option value="Andorra">Andorra</option>
-        <option value="Angola">Angola</option>
-        <option value="Anguilla">Anguilla</option>
-        <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-        <option value="Argentina">Argentina</option>
-        <option value="Armenia">Armenia</option>
-        <option value="Aruba">Aruba</option>
-        <option value="Australia">Australia</option>
-        <option value="Austria">Austria</option>
-        <option value="Azerbaijan">Azerbaijan</option>
-        <option value="Bahamas">Bahamas</option>
-        <option value="Bahrain">Bahrain</option>
-        <option value="Bangladesh">Bangladesh</option>
-        <option value="Barbados">Barbados</option>
-        <option value="Belarus">Belarus</option>
-        <option value="Belgium">Belgium</option>
-        <option value="Belize">Belize</option>
-        <option value="Benin">Benin</option>
-        <option value="Bermuda">Bermuda</option>
-        <option value="Bhutan">Bhutan</option>
-        <option value="Bolivia">Bolivia</option>
-        <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-        <option value="Botswana">Botswana</option>
-        <option value="Bouvet Island">Bouvet Island</option>
-        <option value="Brazil">Brazil</option>
-        <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
-        <option value="British Virgin Islands">British Virgin Islands</option>
-        <option value="Brunei">Brunei</option>
-        <option value="Bulgaria">Bulgaria</option>
-        <option value="Burkina Faso">Burkina Faso</option>
-        <option value="Burundi">Burundi</option>
-        <option value="Cambodia">Cambodia</option>
-        <option value="Cameroon">Cameroon</option>
-        <option value="Canada">Canada</option>
-        <option value="Cape Verde">Cape Verde</option>
-        <option value="Cayman Islands">Cayman Islands</option>
-        <option value="Central African Republic">Central African Republic</option>
-        <option value="Chad">Chad</option>
-        <option value="Chile">Chile</option>
-        <option value="China">China</option>
-        <option value="Christmas Island">Christmas Island</option>
-        <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
-        <option value="Colombia">Colombia</option>
-        <option value="Comoros">Comoros</option>
-        <option value="Congo">Congo</option>
-        <option value="Congo (Democratic Republic of the)">Congo (Democratic Republic of the)</option>
-        <option value="Cook Islands">Cook Islands</option>
-        <option value="Costa Rica">Costa Rica</option>
-        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-        <option value="Croatia">Croatia</option>
-        <option value="Cuba">Cuba</option>
-        <option value="Curaçao">Curaçao</option>
-        <option value="Cyprus">Cyprus</option>
-        <option value="Czech Republic">Czech Republic</option>
-        <option value="Denmark">Denmark</option>
-        <option value="Djibouti">Djibouti</option>
-        <option value="Dominica">Dominica</option>
-        <option value="Dominican Republic">Dominican Republic</option>
-        <option value="Ecuador">Ecuador</option>
-        <option value="Egypt">Egypt</option>
-        <option value="El Salvador">El Salvador</option>
-        <option value="Equatorial Guinea">Equatorial Guinea</option>
-        <option value="Eritrea">Eritrea</option>
-        <option value="Estonia">Estonia</option>
-        <option value="Eswatini">Eswatini</option>
-        <option value="Ethiopia">Ethiopia</option>
-        <option value="Falkland Islands">Falkland Islands</option>
-        <option value="Fiji">Fiji</option>
-        <option value="Finland">Finland</option>
-        <option value="France">France</option>
-        <option value="French Guiana">French Guiana</option>
-        <option value="French Polynesia">French Polynesia</option>
-        <option value="French Southern and Antarctic Lands">French Southern and Antarctic Lands</option>
-        <option value="Gabon">Gabon</option>
-        <option value="Gambia">Gambia</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Germany">Germany</option>
-        <option value="Ghana">Ghana</option>
-        <option value="Gibraltar">Gibraltar</option>
-        <option value="Greece">Greece</option>
-        <option value="Greenland">Greenland</option>
-        <option value="Grenada">Grenada</option>
-        <option value="Guadeloupe">Guadeloupe</option>
-        <option value="Guam">Guam</option>
-        <option value="Guatemala">Guatemala</option>
-        <option value="Guernsey">Guernsey</option>
-        <option value="Guinea">Guinea</option>
-        <option value="Guinea-Bissau">Guinea-Bissau</option>
-        <option value="Guyana">Guyana</option>
-        <option value="Haiti">Haiti</option>
-        <option value="Heard Island and McDonald Islands">Heard Island and McDonald Islands</option>
-        <option value="Honduras">Honduras</option>
-        <option value="Hong Kong">Hong Kong</option>
-        <option value="Hungary">Hungary</option>
-        <option value="Iceland">Iceland</option>
-        <option value="India">India</option>
-        <option value="Indonesia">Indonesia</option>
-        <option value="Iran">Iran</option>
-        <option value="Iraq">Iraq</option>
-        <option value="Ireland">Ireland</option>
-        <option value="Isle of Man">Isle of Man</option>
-        <option value="Israel">Israel</option>
-        <option value="Italy">Italy</option>
-        <option value="Jamaica">Jamaica</option>
-        <option value="Japan">Japan</option>
-        <option value="Jersey">Jersey</option>
-        <option value="Jordan">Jordan</option>
-        <option value="Kazakhstan">Kazakhstan</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Kiribati">Kiribati</option>
-        <option value="Kosovo">Kosovo</option>
-        <option value="Kuwait">Kuwait</option>
-        <option value="Kyrgyzstan">Kyrgyzstan</option>
-        <option value="Laos">Laos</option>
-        <option value="Latvia">Latvia</option>
-        <option value="Lebanon">Lebanon</option>
-        <option value="Lesotho">Lesotho</option>
-        <option value="Liberia">Liberia</option>
-        <option value="Libya">Libya</option>
-        <option value="Liechtenstein">Liechtenstein</option>
-        <option value="Lithuania">Lithuania</option>
-        <option value="Luxembourg">Luxembourg</option>
-        <option value="Madagascar">Madagascar</option>
-        <option value="Malawi">Malawi</option>
-        <option value="Malaysia">Malaysia</option>
-        <option value="Maldives">Maldives</option>
-        <option value="Mali">Mali</option>
-        <option value="Malta">Malta</option>
-        <option value="Marshall Islands">Marshall Islands</option>
-        <option value="Martinique">Martinique</option>
-        <option value="Mauritania">Mauritania</option>
-        <option value="Mauritius">Mauritius</option>
-        <option value="Mayotte">Mayotte</option>
-        <option value="Mexico">Mexico</option>
-        <option value="Micronesia">Micronesia</option>
-        <option value="Moldova">Moldova</option>
-        <option value="Monaco">Monaco</option>
-        <option value="Mongolia">Mongolia</option>
-        <option value="Montenegro">Montenegro</option>
-        <option value="Montserrat">Montserrat</option>
-        <option value="Morocco">Morocco</option>
-        <option value="Mozambique">Mozambique</option>
-        <option value="Myanmar">Myanmar</option>
-        <option value="Namibia">Namibia</option>
-        <option value="Nauru">Nauru</option>
-        <option value="Nepal">Nepal</option>
-        <option value="Netherlands">Netherlands</option>
-        <option value="New Caledonia">New Caledonia</option>
-        <option value="New Zealand">New Zealand</option>
-        <option value="Nicaragua">Nicaragua</option>
-        <option value="Niger">Niger</option>
-        <option value="Nigeria">Nigeria</option>
-        <option value="Niue">Niue</option>
-        <option value="Norfolk Island">Norfolk Island</option>
-        <option value="North Korea">North Korea</option>
-        <option value="North Macedonia">North Macedonia</option>
-        <option value="Northern Mariana Islands">Northern Mariana Islands</option>
-        <option value="Norway">Norway</option>
-        <option value="Oman">Oman</option>
-        <option value="Pakistan">Pakistan</option>
-        <option value="Palau">Palau</option>
-        <option value="Palestine">Palestine</option>
-        <option value="Panama">Panama</option>
-        <option value="Papua New Guinea">Papua New Guinea</option>
-        <option value="Paraguay">Paraguay</option>
-        <option value="Peru">Peru</option>
-        <option value="Philippines">Philippines</option>
-        <option value="Pitcairn Islands">Pitcairn Islands</option>
-        <option value="Poland">Poland</option>
-        <option value="Portugal">Portugal</option>
-        <option value="Puerto Rico">Puerto Rico</option>
-        <option value="Qatar">Qatar</option>
-        <option value="Réunion">Réunion</option>
-        <option value="Romania">Romania</option>
-        <option value="Russia">Russia</option>
-        <option value="Rwanda">Rwanda</option>
-        <option value="Saint Barthélemy">Saint Barthélemy</option>
-        <option value="Saint Helena">Saint Helena</option>
-        <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
-        <option value="Saint Lucia">Saint Lucia</option>
-        <option value="Saint Martin">Saint Martin</option>
-        <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
-        <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
-        <option value="Samoa">Samoa</option>
-        <option value="San Marino">San Marino</option>
-        <option value="Sao Tome and Principe">Sao Tome and Principe</option>
-        <option value="Saudi Arabia">Saudi Arabia</option>
-        <option value="Senegal">Senegal</option>
-        <option value="Serbia">Serbia</option>
-        <option value="Seychelles">Seychelles</option>
-        <option value="Sierra Leone">Sierra Leone</option>
-        <option value="Singapore">Singapore</option>
-        <option value="Sint Maarten">Sint Maarten</option>
-        <option value="Slovakia">Slovakia</option>
-        <option value="Slovenia">Slovenia</option>
-        <option value="Solomon Islands">Solomon Islands</option>
-        <option value="Somalia">Somalia</option>
-        <option value="South Africa">South Africa</option>
-        <option value="South Georgia and the South Sandwich Islands">South Georgia and the South Sandwich Islands</option>
-        <option value="South Korea">South Korea</option>
-        <option value="South Sudan">South Sudan</option>
-        <option value="Spain">Spain</option>
-        <option value="Sri Lanka">Sri Lanka</option>
-        <option value="Sudan">Sudan</option>
-        <option value="Suriname">Suriname</option>
-        <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
-        <option value="Sweden">Sweden</option>
-        <option value="Switzerland">Switzerland</option>
-        <option value="Syria">Syria</option>
-        <option value="Taiwan">Taiwan</option>
-        <option value="Tajikistan">Tajikistan</option>
-        <option value="Tanzania">Tanzania</option>
-        <option value="Thailand">Thailand</option>
-        <option value="Timor-Leste">Timor-Leste</option>
-        <option value="Togo">Togo</option>
-        <option value="Tokelau">Tokelau</option>
-        <option value="Tonga">Tonga</option>
-        <option value="Trinidad and Tobago">Trinidad and Tobago</option>
-        <option value="Tunisia">Tunisia</option>
-        <option value="Turkey">Turkey</option>
-        <option value="Turkmenistan">Turkmenistan</option>
-        <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
-        <option value="Tuvalu">Tuvalu</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Ukraine">Ukraine</option>
-        <option value="United Arab Emirates">United Arab Emirates</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="United States">United States</option>
-        <option value="U.S. Virgin Islands">U.S. Virgin Islands</option>
-        <option value="Uruguay">Uruguay</option>
-        <option value="Uzbekistan">Uzbekistan</option>
-        <option value="Vanuatu">Vanuatu</option>
-        <option value="Vatican City">Vatican City</option>
-        <option value="Venezuela">Venezuela</option>
-        <option value="Vietnam">Vietnam</option>
-        <option value="Wallis and Futuna">Wallis and Futuna</option>
-        <option value="Western Sahara">Western Sahara</option>
-        <option value="Yemen">Yemen</option>
-        <option value="Zambia">Zambia</option>
-        <option value="Zimbabwe">Zimbabwe</option>
-        <option value="Åland Islands">Åland Islands</option>
-      </select>
       <button class="btn btn-primary" id="saveProfileBtn">Save tournament profile</button>
       <p id="profileNotice" class="muted"></p>
     </div>
@@ -1940,9 +1723,11 @@ window.PuzzlePopGrantReward=function(pts){score+=pts; if(score>best){best=score;
 /* Tournament edition helpers (tournament.js calls these). */
 window.PuzzlePopSyncGate=function(){ if(window.PuzzlePopTournament && window.PuzzlePopTournament.gateActive()){ unlockedCount=Math.min(LEVELS.length, window.PuzzlePopTournament.gateLevel()); if(levelIdx>=unlockedCount) levelIdx=unlockedCount-1; renderLevelPanel(); saveProgress(); } };
 window.PuzzlePopGrantPowerups=function(h,b){ hammers+=h; bombs+=b; updatePowerBtns(); };
-/* Login mascot: an original candy-block buddy that watches email typing,
-   covers its eyes while the password is typed, and grins when done.
-   Behaviour pattern only — the character is our own, not the Short's. */
+/* Login mascot: an ORIGINAL blue furry monster (our own character, drawn
+   in SVG — not a copy, trace, or embed of any reference artwork) that
+   watches email typing, covers its eyes while the password is typed,
+   and grins when done, plus idle breathing, blinking, and a candy-munch
+   loop so it feels alive. Same wiring and classes as before. */
 (function(){
   var m = document.getElementById("loginMascot");
   var em = document.getElementById("authEmail");
@@ -2252,6 +2037,16 @@ window.PUZZLEPOP_CONFIG = {
       return res.json();
     });
   }
+  /* Same shape, PUT: the password update (PUT /auth/v1/user) needs the
+   * recovery session's Bearer token, which authHeaders supplies. */
+  function callAuthPut(path, body) {
+    return fetch(CFG.SUPABASE_URL + "/auth/v1/" + path, {
+      method: "PUT", headers: authHeaders(), body: JSON.stringify(body)
+    }).then(function (res) {
+      if (!res.ok) return apiErrorMessage(res, "Update failed").then(function (m) { throw new Error(m); });
+      return res.json();
+    });
+  }
   /* Session refresh, shared across concurrent callers: while one refresh
      is in flight, every other expired call awaits the SAME promise instead
      of firing its own refresh. Cleared on settle so a later expiry triggers
@@ -2347,31 +2142,14 @@ window.PUZZLEPOP_CONFIG = {
     var p2 = path.replace(",avatar,avatar_url", "");
     return p2 !== path ? p2 : null;
   }
-  /* Country-column gating: the country column exists only after
-   * schema-country-migration.sql runs. Same PostgREST wordings as the
-   * avatar/total_score columns, same graceful pattern. */
-  var COUNTRY_MIGRATION_NOTE = "Country needs the country migration run in Supabase first — run it and your country will save.";
-  function isCountryColumnError(err) {
-    var m = (err && err.message) || "";
-    return /country/i.test(m) && (/does not exist/i.test(m) || /could not find/i.test(m) || /schema cache/i.test(m));
-  }
-  function stripCountryField(path) {
-    var p2 = path.replace(",country", "");
-    return p2 !== path ? p2 : null;
-  }
-  /* Retry chain: strip whichever column the error names (avatar and/or
-   * country, in either order) and try again, so the profile loads under
-   * every migration state. Each retry removes at least one field, so
-   * the chain always terminates. */
+  /* Retry chain: strip the avatar fields the error names and try again,
+   * so the profile loads whether or not the avatar migration has run.
+   * Each retry removes at least one field, so the chain terminates. */
   function callRestAvatarFallback(path, method, body) {
     return callRest(path, method, body).catch(function (err) {
       if (isAvatarColumnError(err)) {
         var fb = stripAvatarFields(path);
         if (fb) return callRestAvatarFallback(fb, method, body);
-      }
-      if (isCountryColumnError(err)) {
-        var fc = stripCountryField(path);
-        if (fc) return callRestAvatarFallback(fc, method, body);
       }
       throw err;
     });
@@ -2441,6 +2219,30 @@ window.PUZZLEPOP_CONFIG = {
     var pending = null;
     try { pending = sessionStorage.getItem(OAUTH_PENDING_KEY); } catch (e) { pending = null; }
     function clearPending() { try { sessionStorage.removeItem(OAUTH_PENDING_KEY); } catch (e) { /* ignore */ } }
+    /* Password-recovery landing: Supabase returns type=recovery with a
+     * fresh access token. Keep that session (the password update needs
+     * it), clean the hash so a refresh cannot re-trigger the form, and
+     * let runEntryFlow + renderAuth land on the Set-new-password form
+     * instead of the board. */
+    (function () {
+      var hp = {};
+      hash.slice(1).split("&").forEach(function (pair) {
+        var kv = pair.split("=");
+        if (kv[0]) hp[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || "");
+      });
+      if (hp.type === "recovery" && hp.access_token) {
+        clearPending();
+        session = { access_token: hp.access_token,
+                    refresh_token: hp.refresh_token || null,
+                    user: null };
+        saveSession(session);
+        pendingPasswordReset = true;
+        try {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        } catch (e) { /* ignore */ }
+      }
+    })();
+    if (pendingPasswordReset) return;
     function paramFrom(name, src) {
       var m = src.match(new RegExp("[?&#]" + name + "=([^&]*)"));
       return m ? decodeURIComponent(m[1]).replace(/\+/g, " ") : "";
@@ -2448,6 +2250,7 @@ window.PUZZLEPOP_CONFIG = {
     function providerFromText(t) {
       t = (t || "").toLowerCase();
       if (t.indexOf("apple") !== -1) return "apple";
+      if (t.indexOf("facebook") !== -1) return "facebook";
       if (t.indexOf("google") !== -1) return "google";
       return pending || null;
     }
@@ -2499,7 +2302,7 @@ window.PUZZLEPOP_CONFIG = {
   /* ================= profile ================= */
   function fetchMyProfile() {
     if (!session || !session.user) return Promise.resolve(null);
-    return callRestAvatarFallback("profiles?id=eq." + session.user.id + "&select=id,username,region,country,avatar,avatar_url")
+    return callRestAvatarFallback("profiles?id=eq." + session.user.id + "&select=id,username,region,avatar,avatar_url")
       .then(function (rows) { return rows && rows.length ? rows[0] : null; })
       .catch(function () { return null; });
   }
@@ -2635,16 +2438,10 @@ window.PUZZLEPOP_CONFIG = {
       }
     }
     // Ranked toggle lock. Gate order: logged in → profile exists →
-    // country selected → tournament unlocked (level 15). Until the
-    // country migration runs, no stored country exists, so ranked stays
-    // locked for everyone — that is the rule working, not a bug.
+    // tournament unlocked (level 15).
     var t = $("rankedToggle");
     if (t) {
-      if (session && myProfile && progressLoaded && !myProfile.country) {
-        if (rankedOn) setRanked(false);
-        t.disabled = true;
-        setText("rankedStatus", "Select your country in Profile to join the tournament.");
-      } else if (session && myProfile && progressLoaded && !tournamentUnlocked()) {
+      if (session && myProfile && progressLoaded && !tournamentUnlocked()) {
         if (rankedOn) setRanked(false);
         t.disabled = true;
         setText("rankedStatus", "Locked — the tournament unlocks at Level " + unlockLevel +
@@ -4082,15 +3879,12 @@ window.PUZZLEPOP_CONFIG = {
   function fillProfileForm() {
     var un = $("profileUsername");
     var rg = $("profileRegion");
-    var ct = $("profileCountry");
     if (myProfile) {
       if (un) { un.value = myProfile.username || ""; un.readOnly = true; }
       if (rg) rg.value = myProfile.region || "";
-      if (ct) ct.value = myProfile.country || "";
     } else {
       if (un) { un.value = ""; un.readOnly = false; }
       if (rg) rg.value = "";
-      if (ct) ct.value = "";
     }
   }
   function renderAuth() {
@@ -4118,11 +3912,9 @@ window.PUZZLEPOP_CONFIG = {
         setText("accountInfo", "Playing as " + myProfile.username +
           (myProfile.region ? " (" + myProfile.region + ")" : "") +
           " — " + (session.user ? session.user.email : ""));
-        // Existing players keep the form visible so they can add or
-        // change their country (compulsory for ranked). The username
-        // itself is not renamed here.
-        setText("profileIntro", "Your tournament profile — update your country to join the tournament:");
-        show(profileSection);
+        // Existing profile: the form stays hidden — it only appears to
+        // choose a username. The username itself is not renamed here.
+        hide(profileSection);
       } else {
         // Logged in but no tournament profile yet: ask for a username.
         var pi = $("profileIntro");
@@ -4136,6 +3928,10 @@ window.PUZZLEPOP_CONFIG = {
       hide(accountSection);
       hide(profileSection);
     }
+    // Recovery landing: the reset form stays on screen even though a
+    // session now exists (runEntryFlow shows it first; this re-asserts
+    // it after every renderAuth, e.g. the init profile fetch).
+    if (pendingPasswordReset) { showWelcome(); showResetView(); }
     var gn = $("guestNotice");
     if (gn) gn.hidden = !( !loggedIn && isGuestMode() );
     clearAuthError();
@@ -4176,7 +3972,10 @@ window.PUZZLEPOP_CONFIG = {
    * handle every return path in handleAuthRedirect (error params, or a
    * return with no session at all). Nothing here fakes a login. */
   var OAUTH_PENDING_KEY = "pp_oauth_pending";
-  function socialLabel(provider) { return provider === "apple" ? "Apple" : "Google"; }
+  /* True while a password-recovery landing is in progress: the reset
+   * form must stay on screen even though a session now exists. */
+  var pendingPasswordReset = false;
+  function socialLabel(provider) { if (provider === "apple") return "Apple"; if (provider === "facebook") return "Facebook"; return "Google"; }
   function buildSocialUrl(provider) {
     var redirect = window.location.href.split("#")[0].split("?")[0];
     return CFG.SUPABASE_URL + "/auth/v1/authorize?provider=" + provider +
@@ -4219,6 +4018,11 @@ window.PUZZLEPOP_CONFIG = {
       window.location.href = buildSocialUrl(provider);
     });
   }
+  /* Login / forgot / reset views: only one is visible at a time, so
+   * the login screen stays one-screen tall in every state. */
+  function showAuthView() { show($("authSection")); hide($("forgotSection")); hide($("resetSection")); }
+  function showForgotView() { hide($("authSection")); show($("forgotSection")); hide($("resetSection")); }
+  function showResetView() { hide($("authSection")); hide($("forgotSection")); show($("resetSection")); }
   function wireAuth() {
     var signupBtn = $("signupBtn");
     if (signupBtn) signupBtn.addEventListener("click", function () {
@@ -4257,6 +4061,83 @@ window.PUZZLEPOP_CONFIG = {
     if (googleBtn) googleBtn.addEventListener("click", function () { socialSignIn("google"); });
     var appleBtn = $("appleBtn");
     if (appleBtn) appleBtn.addEventListener("click", function () { socialSignIn("apple"); });
+    var facebookBtn = $("facebookBtn");
+    if (facebookBtn) facebookBtn.addEventListener("click", function () { socialSignIn("facebook"); });
+    /* ---- Forgot password: email -> recover link -> reset form ---- */
+    var forgotLink = $("forgotLink");
+    if (forgotLink) forgotLink.addEventListener("click", function () {
+      clearAuthError();
+      var fe = $("forgotEmail");
+      var ae = $("authEmail");
+      if (fe && ae) fe.value = ae.value || "";
+      showForgotView();
+    });
+    var forgotBackLink = $("forgotBackLink");
+    if (forgotBackLink) forgotBackLink.addEventListener("click", function () {
+      clearAuthError();
+      showAuthView();
+    });
+    var forgotSendBtn = $("forgotSendBtn");
+    if (forgotSendBtn) forgotSendBtn.addEventListener("click", function () {
+      clearAuthError();
+      var email = ($("forgotEmail").value || "").trim();
+      if (!email) { setText("authNotice", "Enter your email first."); return; }
+      // The reset link must return to this page; the owner allowlists
+      // this URL under Supabase Auth -> URL Configuration -> Redirect
+      // URLs (otherwise Supabase falls back to the Site URL).
+      var redirect = window.location.href.split("#")[0].split("?")[0];
+      forgotSendBtn.disabled = true;
+      setText("authNotice", "Sending reset link…");
+      callAuth("recover", { email: email, redirect_to: redirect })
+        .then(function () {
+          setText("authNotice", "If an account exists for this email, we've sent a reset link.");
+        })
+        .catch(function (err) {
+          var m = err && err.message ? err.message : "";
+          // Never reveal whether the email exists: a not-found style
+          // failure gets the same generic message as success.
+          if (/not found|no user|does not exist/i.test(m)) {
+            setText("authNotice", "If an account exists for this email, we've sent a reset link.");
+          } else {
+            showAuthError("Couldn't send reset link: ", err);
+          }
+        })
+        .then(function () { forgotSendBtn.disabled = false; });
+    });
+    var resetSaveBtn = $("resetSaveBtn");
+    if (resetSaveBtn) resetSaveBtn.addEventListener("click", function () {
+      clearAuthError();
+      var pw = ($("resetPassword").value || "");
+      var cf = ($("resetConfirm").value || "");
+      if (pw.length < 6) { setText("authNotice", "New password must be at least 6 characters."); return; }
+      if (pw !== cf) { setText("authNotice", "Passwords don't match."); return; }
+      setText("authNotice", "Updating your password…");
+      callAuthPut("user", { password: pw })
+        .then(function () {
+          // Fresh login from here: drop the recovery session so the
+          // login view is a real login, not a half-logged-in state.
+          session = null;
+          saveSession(null);
+          setGuestMode(false);
+          myProfile = null;
+          setRanked(false);
+          pendingPasswordReset = false;
+          var rp = $("resetPassword"); if (rp) rp.value = "";
+          var rc = $("resetConfirm"); if (rc) rc.value = "";
+          showAuthView();
+          setText("authNotice", "Password updated. Log in with your new password.");
+          renderAuth();
+        })
+        .catch(function (err) { showAuthError("Couldn't update password: ", err); });
+    });
+    var resetBackLink = $("resetBackLink");
+    if (resetBackLink) resetBackLink.addEventListener("click", function () {
+      clearAuthError();
+      pendingPasswordReset = false;
+      var rp = $("resetPassword"); if (rp) rp.value = "";
+      var rc = $("resetConfirm"); if (rc) rc.value = "";
+      showAuthView();
+    });
     var logoutBtn = $("logoutBtn");
     if (logoutBtn) logoutBtn.addEventListener("click", function () {
       if (session && session.access_token) {
@@ -4284,7 +4165,6 @@ window.PUZZLEPOP_CONFIG = {
       clearAuthError();
       var name = ($("profileUsername").value || "").trim();
       var region = ($("profileRegion").value || "").trim();
-      var country = ($("profileCountry").value || "").trim();
       if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) {
         setText("profileNotice", "Username must be 3–20 letters, numbers or underscores.");
         return;
@@ -4297,45 +4177,21 @@ window.PUZZLEPOP_CONFIG = {
       var hadProfile = !!myProfile;
       var prevAvatar = myProfile ? myProfile.avatar : null;
       var prevAvatarUrl = myProfile ? myProfile.avatar_url : null;
-      var prevCountry = myProfile ? myProfile.country : null;
-      var countryNote = null;
-      // Step 1: identity first — country only when selected, so the
-      // save works even before the country migration adds the column.
-      // A casual profile without a country is allowed; ranked stays
-      // locked until a country is picked (toggle gate + server check).
+      // Step 1: identity first, then the picture (step 2 below).
       var saveStep;
       if (hadProfile) {
-        // Existing profile: update region/country only (the username
+        // Existing profile: update region only (the username
         // is not renamed here).
-        var patchBody = { region: region || null };
-        if (country) patchBody.country = country;
-        saveStep = callRest("profiles?id=eq." + session.user.id, "PATCH", patchBody)
-          .catch(function (err) {
-            if (country && isCountryColumnError(err)) {
-              countryNote = COUNTRY_MIGRATION_NOTE;
-              return callRest("profiles?id=eq." + session.user.id, "PATCH", { region: region || null });
-            }
-            throw err;
-          })
+        saveStep = callRest("profiles?id=eq." + session.user.id, "PATCH", { region: region || null })
           .then(function () {
             myProfile = { id: session.user.id, username: myProfile.username, region: region,
-              country: countryNote ? (prevCountry || null) : (country || prevCountry || null),
               avatar: prevAvatar, avatar_url: prevAvatarUrl };
           });
       } else {
         var postBody = { id: session.user.id, username: name, region: region || null };
-        if (country) postBody.country = country;
         saveStep = callRest("profiles", "POST", postBody)
-          .catch(function (err) {
-            if (country && isCountryColumnError(err)) {
-              countryNote = COUNTRY_MIGRATION_NOTE;
-              return callRest("profiles", "POST", { id: session.user.id, username: name, region: region || null });
-            }
-            throw err;
-          })
           .then(function () {
             myProfile = { id: session.user.id, username: name, region: region,
-              country: countryNote ? null : (country || null),
               avatar: prevAvatar, avatar_url: prevAvatarUrl };
           });
       }
@@ -4344,7 +4200,7 @@ window.PUZZLEPOP_CONFIG = {
       saveStep.then(function () {
           // Step 2: only if the user actually chose a picture.
           if (!selectedAvatar) {
-            setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
+            setText("profileNotice", okNote);
             renderAuth();
             refreshTournamentData();
             return;
@@ -4353,7 +4209,7 @@ window.PUZZLEPOP_CONFIG = {
             .then(function () {
               myProfile.avatar = selectedAvatar;
               myProfile.avatar_url = null;
-              setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
+              setText("profileNotice", okNote);
               setText("avatarStatus", "Avatar saved!");
               renderAuth();
               refreshTournamentData();
@@ -4364,10 +4220,10 @@ window.PUZZLEPOP_CONFIG = {
               // picture that was not saved.
               selectedAvatar = prevAvatar;
               if (isAvatarColumnError(avErr)) {
-                setText("profileNotice", okNote + (countryNote ? " " + countryNote : "") + " " + AVATAR_MIGRATION_NOTE);
+                setText("profileNotice", okNote + " " + AVATAR_MIGRATION_NOTE);
                 setText("avatarStatus", AVATAR_MIGRATION_NOTE);
               } else {
-                setText("profileNotice", okNote + (countryNote ? " " + countryNote : ""));
+                setText("profileNotice", okNote);
                 setText("avatarStatus", "Could not save picture: " + avErr.message);
               }
               renderAuth();
@@ -4399,12 +4255,6 @@ window.PUZZLEPOP_CONFIG = {
           t.checked = false;
           setRanked(false);
           setText("rankedStatus", "Choose your tournament username first (account section above).");
-          return;
-        }
-        if (!myProfile.country) {
-          t.checked = false;
-          setRanked(false);
-          setText("rankedStatus", "Select your country in Profile to join the tournament.");
           return;
         }
         if (!tournamentUnlocked()) {
@@ -4517,6 +4367,7 @@ window.PUZZLEPOP_CONFIG = {
     // Splash is visible from page load (CSS) and fades on its own after
     // ~1.5s; JS hides it at 1.5s so the next screen appears on time.
     setTimeout(hideSplash, 1500);
+    if (pendingPasswordReset) { showWelcome(); showResetView(); return; }
     if (session) return;        // logged in: splash only, straight to the board
     if (isGuestMode()) return;  // guest choice already made this visit
     showWelcome();              // logged out: auth screen waits under the splash until it fades
