@@ -408,6 +408,9 @@
 .bnav-btn.active{background:var(--grad);color:#fff;box-shadow:0 8px 20px rgba(255,80,50,.45);transform:scale(1.06);}
 .bnav-btn.active::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:navShine 2.8s ease-in-out infinite;}
 @keyframes navShine{0%,60%{left:-80%;}100%{left:160%;}}
+/* Unread-announcements dot on the Contact button: static red dot, no
+   animation, so reduced-motion needs no special handling. */
+.bnav-dot{position:absolute;top:3px;right:7px;width:9px;height:9px;border-radius:50%;background:#ef4444;border:2px solid var(--panel);z-index:2;}
 .back-row{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;}
 .back-row[hidden]{display:none;}
 .play-back-btn{border:none;border-radius:999px;padding:13px 22px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:16px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
@@ -685,7 +688,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-prizes" data-view="prizes"><span class="bnav-ic">💰</span><span class="bnav-lb">Prizes</span></button>
   <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span></button>
   <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
-  <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span></button>
+  <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span><span class="bnav-dot" id="contactNewDot" hidden aria-label="New announcements"></span></button>
 </nav>
 
 <div class="overlay ad-overlay" id="adOverlay" role="dialog" aria-modal="true" aria-label="Ad break">
@@ -3438,6 +3441,47 @@ window.PUZZLEPOP_CONFIG = {
   function isOwner() {
     return !!(session && session.user && session.user.id === OWNER_USER_ID);
   }
+  /* Unread-announcements badge: the in-app notification for new posts.
+     Seen state is per viewer in localStorage (guest key vs per-user key).
+     There is no push server for this static page, so the badge IS the
+     notification mechanism — no push permission prompt is ever faked. */
+  var ANN_SEEN_PREFIX = "pp_ann_seen_";
+  function annSeenKey() {
+    return ANN_SEEN_PREFIX + (session && session.user && session.user.id ? session.user.id : "guest");
+  }
+  function getAnnSeen() {
+    try { return localStorage.getItem(annSeenKey()); } catch (e) { return null; }
+  }
+  function setAnnSeen(id) {
+    try { localStorage.setItem(annSeenKey(), String(id)); } catch (e) { /* ignore */ }
+  }
+  function setAnnBadge(on) {
+    var dot = $("contactNewDot");
+    if (dot) dot.hidden = !on;
+  }
+  function isAnnNewer(newest, seen) {
+    if (seen === null || seen === undefined) return true;
+    var n = Number(newest), s = Number(seen);
+    if (!isNaN(n) && !isNaN(s)) return n > s;
+    return String(newest) !== String(seen);
+  }
+  function updateAnnBadge(rows) {
+    /* Never badge while the user is looking at Contact itself. */
+    if (currentPageName === "contact") { setAnnBadge(false); return; }
+    if (!rows || !rows.length) { setAnnBadge(false); return; }
+    var newest = rows[0] && rows[0].id;
+    if (newest === undefined || newest === null) { setAnnBadge(false); return; }
+    setAnnBadge(isAnnNewer(newest, getAnnSeen()));
+  }
+  function markAnnSeen(rows) {
+    if (rows && rows.length && rows[0] && rows[0].id !== undefined && rows[0].id !== null) setAnnSeen(rows[0].id);
+    setAnnBadge(false);
+  }
+  function refreshAnnBadge() {
+    callRest("announcements?select=id,title,body,created_at&order=created_at.desc&limit=50")
+      .then(function (rows) { updateAnnBadge(rows || []); },
+        function () { setAnnBadge(false); });
+  }
   function renderAnnouncements(rows) {
     var list = $("announcementsList");
     if (!list) return;
@@ -3476,8 +3520,11 @@ window.PUZZLEPOP_CONFIG = {
     if (txt && CFG.DISCORD_URL) txt.textContent = CFG.DISCORD_URL;
     var form = $("announceForm");
     if (form) form.hidden = !isOwner();
+    /* Opening Contact clears the badge immediately; the load below then
+       records the newest announcement as seen. */
+    setAnnBadge(false);
     callRest("announcements?select=id,title,body,created_at&order=created_at.desc&limit=50")
-      .then(function (rows) { renderAnnouncements(rows || []); },
+      .then(function (rows) { renderAnnouncements(rows || []); markAnnSeen(rows || []); },
         function () { renderAnnouncements(null); });
   }
   function wireContactSection() {
@@ -3515,6 +3562,10 @@ window.PUZZLEPOP_CONFIG = {
     renderWeekInfo();
     refreshTournamentData();
     showPage(page || (session ? "board" : "profile"));
+    /* Badge check on every hub open (except Contact itself, which marks
+       seen): this is how users notice a new announcement while on other
+       tabs, since there is no push channel. */
+    if (currentPageName !== "contact") refreshAnnBadge();
     syncBarVisibility();
   }
   function closePanel() {
