@@ -732,11 +732,11 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <div class="t-head"><h2>🏆 Weekly Tournament</h2></div>
     <p class="muted" id="tournamentNotice">One global board — prizes paid manually in crypto after winners claim.</p>
 
-    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total ranked score ÷ 7.</p></div><h3>⏱️ This week</h3>
+    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total ranked score.</p></div><h3>⏱️ This week</h3>
     <p class="week-card"><b id="weekRange"></b><br /><span id="countdown"></span></p>
 
     <h3>Live leaderboard — top 50</h3>
-    <p class="muted">Weekly = total of all ranked games ÷ 7. Ranked Classic games only.</p>
+    <p class="muted">Weekly = total of all ranked games. Ranked Classic games only.</p>
     <p id="weeklyFormulaNote" class="muted"></p>
     <p id="myRank"></p>
     <p id="neighborRows" class="muted"></p>
@@ -760,10 +760,10 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     
 <h3>📜 Key rules</h3>
-<p class="muted">One global board • Mon 00:00–Sun 23:59 UTC • Score = total of all ranked games ÷ 7 • Top 50 frozen, claim with wallet, owner pays manually • 1 account per person, fakes disqualified • Full rules in the setup guide.</p>
+<p class="muted">One global board • Mon 00:00–Sun 23:59 UTC • Score = total of all ranked games • Top 50 frozen, claim with wallet, owner pays manually • 1 account per person, fakes disqualified • Full rules in the setup guide.</p>
 </section>
     <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabBoard">🎯 Mini-board</button></div><div id="spinWheelView">
-    <p class="muted">One free spin per day for players at level 12+. Prizes go DIRECTLY to your leaderboard total — the board shows your total ÷ 7, so a win moves your board score by about a seventh of the prize.</p>
+    <p class="muted">One free spin per day for players at level 12+. Prizes go DIRECTLY to your leaderboard total — a 250,000 win adds exactly 250,000 to your board score.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
     <p class="spin-legend">🟡 100k — 30% &nbsp; 🟠 130k — 25% &nbsp; 🔵 160k — 20% &nbsp; 🟣 200k — 15% &nbsp; 🔴 250k — 10%</p>
@@ -1960,8 +1960,8 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* Rows from ranked_scores -> ranked weekly values, best first.
    * RANKING = SCORE, NOT XP. Weekly value = (sum of ALL ranked games'
-   * scores in the week) / 7: each day's total_score summed over the
-   * week, then divided by 7. A player with many medium games outranks
+   * scores in the week): each day's total_score summed over the
+   * week, with NO division. A player with many medium games outranks
    * a player with few brilliant games: that IS the rule. Rank by the
    * EXACT value; display rounds to the nearest whole number.
    * FALLBACK (weekly-total migration not run yet): rows carry no
@@ -1992,7 +1992,6 @@ window.PUZZLEPOP_CONFIG = {
       if (t > map[u].lastUpdate) map[u].lastUpdate = t;
     });
     var arr = Object.keys(map).map(function (k) { return map[k]; });
-    if (useTotal) arr.forEach(function (r) { r.total = r.total / 7; });
     arr.sort(function (a, b) {
       if (b.total !== a.total) return b.total - a.total;
       if (b.maxDay !== a.maxDay) return b.maxDay - a.maxDay;
@@ -2213,7 +2212,7 @@ window.PUZZLEPOP_CONFIG = {
    * sum-of-daily-bests formula because total_score is missing. The
    * board still loads; the leaderboard shows a plain note about it. */
   var weeklyFormulaFallback = false;
-  var WEEKLY_FORMULA_MIGRATION_NOTE = "Weekly totals still use the old daily-best sum \u2014 run the weekly-total migration in Supabase once to switch to total \u00f7 7.";
+  var WEEKLY_FORMULA_MIGRATION_NOTE = "Weekly totals still use the old daily-best sum \u2014 run the weekly-total migration in Supabase once to switch to total scores.";
 
   /* ================= auth flows ================= */
   function storeSessionFromAuth(data) {
@@ -2874,10 +2873,8 @@ window.PUZZLEPOP_CONFIG = {
 
   /* --- Underdog: biggest climber of the week (pure, tested) ---
    * Final AND start ranks use the same weekly value as the board:
-   * sum(total_score) / 7 when the migration has run, else the old
-   * sum-of-daily-bests fallback. Dividing by 7 preserves order, so
-   * start ranks are unaffected by the division itself — only by the
-   * switch from bests to totals. pointGain stays finalTotal minus
+   * sum(total_score) when the migration has run, else the old
+   * sum-of-daily-bests fallback. pointGain stays finalTotal minus
    * the first day's best single game (tie-break only). */
   function computeClimbers(rows) {
     var useTotal = weeklyUsesTotal(rows);
@@ -2896,7 +2893,6 @@ window.PUZZLEPOP_CONFIG = {
       if (t > p.lastUpdate) p.lastUpdate = t;
     });
     var list = Object.keys(players).map(function (k) { return players[k]; });
-    if (useTotal) list.forEach(function (p) { p.finalTotal = p.finalTotal / 7; });
     list.forEach(function (p) {
       p.daysPlayed = Object.keys(p.days).length;
       p.firstDayBest = 0;
@@ -2924,7 +2920,7 @@ window.PUZZLEPOP_CONFIG = {
             if (tt > lu) lu = tt;
           }
         });
-        return { user_id: q.user_id, total: useTotal ? t / 7 : t, maxDay: m, lastUpdate: lu };
+        return { user_id: q.user_id, total: t, maxDay: m, lastUpdate: lu };
       });
       totals.sort(function (a, b) {
         if (b.total !== a.total) return b.total - a.total;
