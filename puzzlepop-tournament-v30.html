@@ -496,7 +496,6 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   .coin-bar-label{margin:4px 0 0;}
 .pass-feed{border:2px solid #FFB020;border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
 .pass-feed.pass-hold{border-color:var(--line);}
-#accountSection #accountInfo{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);font-weight:800;}
 #panelAuthHint{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow-sm);}
 .t-check{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow-sm);}
 .week-card{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
@@ -565,7 +564,6 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #spinResult:empty{display:none;}
 #spinBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #spinRetryBtn:not([hidden]){display:block;width:100%;margin-top:8px;}
-#unlockLevelBtn{display:block;width:100%;padding:12px;font-size:14px;}
 #saveProfileBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #panelAuthBtn{display:block;width:100%;padding:12px;}
 #logoutBtn{display:block;width:100%;margin-top:10px;}
@@ -597,7 +595,8 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   #page-profile .profile-monogram{flex:none;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.10);border:2px solid #E8C766;display:grid;place-items:center;font-size:26px;font-weight:900;color:#FFFFFF;box-shadow:inset 0 2px 8px rgba(0,0,0,.25);}
   #page-profile .profile-hero-main{min-width:0;}
   #page-profile .profile-hero-name{font-family:"Baloo 2",cursive;font-size:28px;font-weight:900;color:#FFFFFF;margin:0;line-height:1.2;word-break:break-word;}
-  #page-profile .profile-hero-badge{display:inline-block;margin:6px 0 0;padding:4px 12px;border-radius:999px;background:#E8C766;color:#1A1A1A;font-size:12px;font-weight:900;}
+  #page-profile .profile-hero-email{margin:4px 0 0;font-size:13px;font-weight:700;color:rgba(255,255,255,.82);word-break:break-word;}
+  #page-profile .profile-monogram img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
   #page-profile .streak-card, #page-spin .streak-card{background:var(--panel);border:2px solid #FFB020;border-radius:22px;padding:14px 16px;box-shadow:var(--shadow-sm);margin:0 0 12px;}
   #page-profile .streak-card h3, #page-spin .streak-card h3{margin:0 0 6px;font-family:"Baloo 2",cursive;font-size:18px;}
   #page-profile .streak-card .muted, #page-spin .streak-card .muted{margin:6px 0 10px;}
@@ -637,8 +636,10 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   #page-profile .profile-stat-hero{grid-column:1/-1;font-family:"Baloo 2",cursive;font-size:19px;line-height:1.35;}
   #page-profile .profile-stat-tile.muted{font-size:12.5px;}
   #page-profile #profileSection{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px 16px;box-shadow:var(--shadow-sm);margin:12px 0;}
+  #page-profile #avatarBlock{background:linear-gradient(135deg,#0F2440 0%,#1E2A4A 55%,#2A2F45 100%);color:#FFFFFF;border:1px solid rgba(232,199,102,.55);border-radius:22px;padding:14px 16px;box-shadow:var(--shadow-sm);margin:12px 0;}
+  #page-profile #avatarBlock h3{color:#FFFFFF;margin:0 0 8px;}
+  #page-profile #avatarBlock .muted{color:rgba(255,255,255,.78);}
   #page-profile #profileSection .t-input{border-radius:14px;padding:13px 14px;}
-  #page-profile #accountSection #accountInfo{border-radius:22px;padding:14px 16px;}
   #page-profile .coin-bar-track{height:16px;}
   #page-profile .coin-bar-fill{background:linear-gradient(90deg,#C9A227,#E8C766);}
   #page-profile .coin-bar-fill:not(.full)::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 25%,rgba(255,255,255,.35) 50%,transparent 75%);}
@@ -765,8 +766,8 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-game" data-view="game"><span class="bnav-ic">🎮</span><span class="bnav-lb">Game</span></button>
   <button type="button" class="bnav-btn" id="bnav-board" data-view="board"><span class="bnav-ic">🏅</span><span class="bnav-lb">Leaderboard</span></button>
   <button type="button" class="bnav-btn" id="bnav-prizes" data-view="prizes"><span class="bnav-ic">💰</span><span class="bnav-lb">Prizes</span></button>
-  <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span></button>
-  <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span><span class="bnav-dot" id="profileBonusDot" hidden aria-label="Daily login bonus ready"></span></button>
+  <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span><span class="bnav-dot" id="spinBonusDot" hidden aria-label="Daily login bonus ready"></span></button>
+  <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
   <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span><span class="bnav-dot" id="contactNewDot" hidden aria-label="New announcements"></span></button>
 </nav>
 
@@ -836,6 +837,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     <h3>💳 Your prize claims</h3>
     <ul id="claimsList"></ul>
+    <div id="underdogClaim"></div>
 
     <h3>✅ Winners paid — payment proof</h3>
     <p class="muted">Paid winners and their payment proof. Wallet addresses are never shown here.</p>
@@ -860,56 +862,16 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     </div><div id="spinStreakView" hidden><div class="streak-card" data-streak-card><h3>🔥 Daily bonus streak</h3><p class="streak-dayline">Log in to start your streak.</p><ul class="streak-ladder"></ul><p class="muted streak-status">Log in to claim your daily bonus.</p><p class="muted streak-unlock-line"></p><button class="btn btn-primary streak-collect-btn" disabled>Collect daily bonus</button><button class="btn btn-ghost streak-retry-btn" hidden>↻ Retry</button></div></div>
 
-    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account, badges, and tournament progress.</p></div>
-<div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-badge" id="profileHeroBadge">Level 1</p></div></div>
-<div class="streak-card" data-streak-card><h3>🔥 Daily bonus streak</h3><p class="streak-dayline">Log in to start your streak.</p><ul class="streak-ladder"></ul><p class="muted streak-status">Log in to claim your daily bonus.</p><p class="muted streak-unlock-line"></p><button class="btn btn-primary streak-collect-btn" disabled>Collect daily bonus</button><button class="btn btn-ghost streak-retry-btn" hidden>↻ Retry</button></div>
+    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
+<div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-email" id="profileHeroEmail"></p></div></div>
 <p id="guestNotice" class="guest-banner" hidden>Playing as guest — casual games only. Sign in or sign up to unlock ranked games and the weekly tournament.</p>
     <div id="panelAuthHint" hidden>
       <p class="muted">Sign in to unlock ranked games and the weekly tournament.</p>
       <button class="btn btn-primary" id="panelAuthBtn">Go to sign-in screen</button>
     </div>
-    <div id="accountSection" hidden>
-      <p id="accountInfo"></p>
-      <p id="streakLine" class="muted"></p>
-      <h3>🏅 Your badges</h3>
-      <ul id="badgesList"></ul>
-      <div id="underdogClaim"></div>
-      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
-    </div>
-    <div class="progress-fold" id="progressFold">
-      <h3>📈 My progress</h3>
-      <div class="progress-box" id="progressBox">
-        <div class="profile-stat-tiles">
-          <p class="profile-stat-tile profile-stat-hero"><b id="progressLevel"></b></p>
-          <p class="profile-stat-tile muted" id="progressCoins"></p>
-          <p class="profile-stat-tile muted" id="progressBanked"></p>
-        </div>
-        <div class="coin-bar" id="dailyCoinBar">
-          <div class="coin-bar-track"><div class="coin-bar-fill" id="dailyCoinFill"></div></div>
-          <p id="dailyCoinLabel" class="muted coin-bar-label"></p>
-        </div>
-        <div class="coin-bar" id="journeyBar">
-          <div class="coin-bar-track"><div class="coin-bar-fill" id="journeyFill"></div></div>
-          <p id="journeyLabel" class="muted coin-bar-label"></p>
-        </div>
-        <p id="progressWait" class="muted"></p>
-        <p id="progressToGo" class="muted"></p>
-        <p id="streakFlame"></p>
-        <p id="streakBadges" class="muted"></p>
-        <button class="btn btn-primary" id="unlockLevelBtn">Unlock next level (1 daily coin)</button>
-        <p id="unlockBalance" class="muted"></p>
-        <p id="unlockStatus" class="muted"></p>
-      </div>
-
-      <h3>🎮 Ranked mode</h3>
-      <label class="t-check"><input type="checkbox" id="rankedToggle" /> Play ranked (Classic games count)</label>
-      <p id="rankedStatus" class="muted">Ranked OFF — your games are casual only.</p>
-      <p id="todayBest" class="muted"></p>
-    </div>
     <div id="profileSection" hidden>
       <p id="profileIntro"><b>Choose your tournament username</b> (3–20 letters, numbers or underscores — this is the name on the leaderboard):</p>
       <input class="t-input" id="profileUsername" type="text" placeholder="Username" maxlength="20" />
-      <input class="t-input" id="profileRegion" type="text" placeholder="Region (optional, e.g. Pakistan)" maxlength="40" />
       <button class="btn btn-primary" id="saveProfileBtn">Save tournament profile</button>
       <p id="profileNotice" class="muted"></p>
     </div>
@@ -924,6 +886,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <input class="t-input" id="avatarUpload" type="file" accept="image/*" />
   <p class="muted" id="avatarUploadStatus"></p>
 </div>
+<button class="btn btn-ghost" id="logoutBtn" hidden>Log out</button>
 </section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Join our Discord to chat with us and catch the latest news.</p></div>
 <a class="btn btn-primary contact-discord-btn" id="discordJoinBtn" href="#" target="_blank" rel="noopener">💬 Join our Discord</a>
 <p class="muted" id="discordLinkText"></p>
@@ -990,15 +953,16 @@ var mode="classic", levelIdx=0, levelStars={}, unlockedCount=1, hammers=2, bombs
    Now they persist in ONE owner-scoped blob:
      guest:      pp_progress_guest
      logged in:  pp_progress_<user id>
-   The tournament GATE (serverLevel / max_level_completed / daily coins)
-   stays server-side and authoritative: on gate sync, unlockedCount and
-   levelIdx are clamped to the server-unlocked level, never beyond it.
+   v30 AUTO-LEVELS: level progression is automatic and LOCAL — completing
+   a level's target unlocks the next level and moves the player to it.
+   The server level (serverLevel / max_level_completed) still feeds the
+   v20 tournament grandfathering rule only; it NEVER clamps local levels.
    v16 guest carry-over (see migrateGuestProgress in tournament.js):
    on first login/signup on this device, the guest blob is COPIED to
    pp_progress_<user id> — only when the account has no real progress
    yet, never overwriting, never moving (the guest blob stays usable
-   for guest play). Carried stars and best survive the gate clamp;
-   carried unlocked/level are clamped to the server level on sync.
+   for guest play). Carried stars, best, unlocked and level all survive
+   (v30: no server clamp on sync).
    Per-game state (board, score, hammers, bombs, undo) is
    intentionally NOT persisted: a reload starts a fresh game. */
 var levelOwnerId = null; /* null = guest */
@@ -1551,14 +1515,9 @@ function renderEndOverlay(kind){
     var st=starsFor(score);
     if(st>(levelStars[levelIdx]||0)) levelStars[levelIdx]=st;
     if(goalDone && levelIdx+2>unlockedCount){
-      if(window.PuzzlePopTournament && window.PuzzlePopTournament.gateActive()){
-        /* Gated: never advance past the server-unlocked level locally.
-           The server level only rises via unlock_next_level() (1 daily
-           coin, after completing the current level). */
-        unlockedCount=Math.min(LEVELS.length, window.PuzzlePopTournament.gateLevel());
-      } else {
-        unlockedCount=Math.min(LEVELS.length, levelIdx+2);
-      }
+      /* v30 AUTO-LEVELS: completing the level auto-unlocks the next
+         one locally — no server gate, no daily-coin button. */
+      unlockedCount=Math.min(LEVELS.length, levelIdx+2);
     }
     for(var i=0;i<3;i++) sr.children[i].className = i<st ? "" : "off";
     renderLevelPanel();
@@ -1787,11 +1746,8 @@ document.getElementById("hammerBtn").addEventListener("click", function(){ armPo
 document.getElementById("bombBtn").addEventListener("click", function(){ armPower("bomb"); });
 document.getElementById("hintBtn").addEventListener("click", showHint);
 document.getElementById("nextLevelBtn").addEventListener("click", function(){
-  if(window.PuzzlePopTournament && window.PuzzlePopTournament.gateActive() &&
-     levelIdx+2 > window.PuzzlePopTournament.gateLevel()){
-    showBanner("🔒 Level "+(levelIdx+2)+" is locked — unlock it with 1 daily coin in the 🏆 panel","great");
-    return;
-  }
+  /* v30 AUTO-LEVELS: the next level is already unlocked by completing
+     this one, so Next Level just starts it. */
   startLevel(Math.min(LEVELS.length-1, levelIdx+1));
 });
 document.getElementById("keepPlayingBtn").addEventListener("click", function(){ overlayEl.classList.remove("show"); showBanner("Goal smashed — keep popping! 🎉","perfect"); });
@@ -1848,7 +1804,11 @@ setTimeout(fitBoard, 350);
 setTimeout(fitBoard, 900);
 window.PuzzlePopGrantReward=function(pts){score+=pts; if(score>best){best=score; saveProgress();} animateScore(score); bestEl.textContent=best; var fs=document.getElementById("finalScore"); if(fs)fs.textContent=score;};
 /* Tournament edition helpers (tournament.js calls these). */
-window.PuzzlePopSyncGate=function(){ if(window.PuzzlePopTournament && window.PuzzlePopTournament.gateActive()){ unlockedCount=Math.min(LEVELS.length, window.PuzzlePopTournament.gateLevel()); if(levelIdx>=unlockedCount) levelIdx=unlockedCount-1; renderLevelPanel(); saveProgress(); } };
+/* v30 AUTO-LEVELS: local progress is the authority for levels, so the
+   old server-clamp sync is now a documented no-op (kept so tournament.js
+   syncGameGate() keeps working). The server level still feeds only the
+   v20 tournament grandfathering rule. */
+window.PuzzlePopSyncGate=function(){ /* no-op: local levels are never clamped */ };
 window.PuzzlePopGrantPowerups=function(h,b){ hammers+=h; bombs+=b; updatePowerBtns(); };
 /* Login mascot: a rigged SVG blue monster drawn to match the user's
    reference photo (the photo itself is NOT embedded — the character is
@@ -2592,6 +2552,8 @@ window.PUZZLEPOP_CONFIG = {
     }
   };
   function gateActive() { return !!(session && myProfile && progressLoaded); }
+  /* v30: server level feeds ONLY the v20 tournament grandfathering
+   * rule — it no longer clamps local level progress (auto-levels). */
   function gateLevel() { return serverLevel; }
   /* v20 tournament gate: a 7-day daily-bonus streak (ever), or
    * grandfathered level 12. False until the server bonus state has
@@ -2743,135 +2705,25 @@ window.PUZZLEPOP_CONFIG = {
       renderProgress();
     });
   }
+  /* v30: Profile progress UI (progressFold, bars, unlock button, ranked
+     toggle) was removed from Profile, so renderProgress no longer writes
+     any of those elements. It keeps refreshing the two displays that
+     still exist (Profile hero, Prizes unlock explainer); all data
+     fetching (fetchProgress, fetchBonusState, grantDailyCoin,
+     reportLevelComplete) is untouched, and daily-coin grants keep
+     running server-side with no spend UI — coins simply accumulate. */
   function renderProgress() {
-    if (!session) {
-      setText("progressLevel", "Log in to track your tournament progress. Guest level progress does not count.");
-      setText("progressCoins", "");
-      setText("progressWait", "");
-      setText("progressBanked", "");
-      setText("progressToGo", "");
-      setText("unlockBalance", "");
-    } else if (!myProfile) {
-      setText("progressLevel", "Choose your tournament username above to start earning daily coins.");
-      setText("progressCoins", "");
-      setText("progressWait", "");
-      setText("progressBanked", "");
-      setText("progressToGo", "");
-      setText("unlockBalance", "");
-    } else if (!progressLoaded || !bonusStateLoaded) {
-      setText("progressLevel", "Loading your progress…");
-      setText("progressBanked", "");
-      setText("unlockBalance", "");
-    } else if (bonusPending) {
-      setText("progressLevel", "Tournament streaks need a quick Supabase update — the owner runs it once, then streaks go live here.");
-      setText("progressCoins", "Daily coins today: " + coinsToday + "/2");
-      setText("progressBanked", bankedText());
-      setText("progressToGo", "Daily coins still work for level unlocks while the streak update is pending.");
-      setText("unlockBalance", "Balance: " + serverBalance + " coins");
-    } else if (bonusUnlocked) {
-      setText("progressLevel", "Tournament unlocked! You are Level " + serverLevel + ".");
-      setText("progressCoins", "Daily coins today: " + coinsToday + "/2");
-      setText("progressBanked", bankedText());
-      setText("progressToGo", "Keep playing ranked games to climb the weekly board.");
-      setText("unlockBalance", "Balance: " + serverBalance + " coins");
-    } else {
-      setText("progressLevel", "Tournament unlocks after a 7-day daily-bonus streak — your streak is " + bonusStreak + " day" + (bonusStreak === 1 ? "" : "s") + ".");
-      setText("progressCoins", "Daily coins today: " + coinsToday + "/2" +
-        " (first game: " + (coinsTodaySources.first_game ? "collected ✓" : "not yet") +
-        ", daily goal: " + (coinsTodaySources.daily_goal ? "collected ✓" : "not yet") + ")");
-      setText("progressBanked", bankedText());
-      setText("progressToGo", bonusDaysToUnlock + " more day" + (bonusDaysToUnlock === 1 ? "" : "s") +
-        " to unlock the tournament. Open daily and collect your bonus — miss a day and your streak restarts.");
-      /* v21: the level-up cost note moved here from the banked tile,
-         so players can judge the unlock button against their balance. */
-      setText("unlockBalance", "Balance: " + serverBalance + " coins — each level-up costs 1 daily coin.");
-    }
-    // Honest wait state (never a fake countdown to nothing).
-    if (session && myProfile && progressLoaded) {
-      if (coinsToday >= 2) {
-        setText("progressWait", "Daily coins done for today — come back tomorrow for 2 more.");
-      } else if (nextCoinInMin > 0) {
-        setText("progressWait", "Next daily coin in " + nextCoinInMin + " min.");
-      } else {
-        setText("progressWait", "Next daily coin available now — finish a game or complete the daily goal.");
-      }
-    }
-    // Ranked toggle lock. Gate order: logged in → profile exists →
-    // tournament unlocked (7-day bonus streak, or grandfathered).
-    var t = $("rankedToggle");
-    if (t) {
-      if (session && myProfile && progressLoaded && bonusStateLoaded && !tournamentUnlocked()) {
-        if (rankedOn) setRanked(false);
-        t.disabled = true;
-        setText("rankedStatus", bonusLockMessage());
-      } else if (session && myProfile && progressLoaded) {
-        t.disabled = false;
-      } else if (!session || !myProfile) {
-        t.disabled = false;
-      }
-    }
-    var ub = $("unlockLevelBtn");
-    if (ub) {
-      ub.disabled = !(session && myProfile && progressLoaded &&
-        serverLevel < 18 && serverCompleted >= serverLevel && serverBalance >= 1);
-    }
-    renderBars();
     updateProfileHero();
     refreshUnlockExplainer();
   }
-  /* ---- Animated progress bars: daily coins, journey ----
-   * Both read the SAME server state as the texts around them —
-   * no new endpoints, no local counters. Widths animate through the
-   * CSS transition whenever the value changes; sweepBars() replays
-   * the sweep when the Profile tab opens. The journey bar is the
-   * v20 tournament streak (days/7), NOT the old coins journey.
-   * (v21: the playing-days streak is ONE text line in renderStreak,
-   * not a bar — the old streak bar was removed, not re-skinned.) */
+  /* Milestone math for the playing-days streak (3/7/30): pure function,
+     kept because the suite + public hooks still use it even though its
+     Profile display line left with progressFold in v30. */
   function streakProgress(n) {
     n = Math.max(0, n || 0);
     if (n >= 30) return { target: 30, pct: 100, full: true };
     var target = n < 3 ? 3 : (n < 7 ? 7 : 30);
     return { target: target, pct: n / target * 100, full: false };
-  }
-  function setBarFill(fillId, pct, full) {
-    var f = $(fillId);
-    if (!f) return;
-    f.style.width = pct + "%";
-    f.classList.toggle("full", !!full);
-  }
-  function renderBars() {
-    var loggedIn = !!(session && myProfile);
-    // Daily coins: 0/1/2 -> 0%/50%/100%.
-    var dc = loggedIn && progressLoaded ? Math.min(2, Math.max(0, coinsToday || 0)) : 0;
-    setBarFill("dailyCoinFill", dc * 50, dc >= 2);
-    if (!session) setText("dailyCoinLabel", "Log in to collect daily coins");
-    else if (!myProfile) setText("dailyCoinLabel", "Choose your tournament username above to collect daily coins");
-    else if (!progressLoaded) setText("dailyCoinLabel", "Today's coins: 0/2");
-    else if (dc >= 2) setText("dailyCoinLabel", "Today's coins done — come back tomorrow for 2 more");
-    else setText("dailyCoinLabel", "Today's coins: " + dc + "/2");
-    // Journey (v20): the tournament streak, capped at 7 days. Shine
-    // only when the gate is truly reached — never a fake full bar.
-    var unlocked = loggedIn && progressLoaded && bonusStateLoaded && bonusUnlocked;
-    var jpct = loggedIn && progressLoaded && bonusStateLoaded ? streakUnlockPct(bonusStreak, bonusUnlocked) : 0;
-    setBarFill("journeyFill", jpct, unlocked);
-    if (!session) setText("journeyLabel", "Log in to collect daily coins");
-    else if (!myProfile) setText("journeyLabel", "Choose your tournament username above to start your journey");
-    else if (!progressLoaded || !bonusStateLoaded) setText("journeyLabel", "Tournament streak: 0/7 days");
-    else if (bonusPending) setText("journeyLabel", "Tournament streaks need a quick Supabase update");
-    else if (unlocked) setText("journeyLabel", "Tournament unlocked!");
-    else setText("journeyLabel", "Tournament streak: " + Math.min(bonusStreak, 7) + "/7 days");
-  }
-  function sweepBars() {
-    var ids = ["dailyCoinFill", "journeyFill"];
-    var any = false;
-    ids.forEach(function (id) {
-      var f = $(id);
-      if (f) { f.style.width = "0%"; f.classList.remove("full"); any = true; }
-    });
-    if (!any) return;
-    var raf = (typeof window !== "undefined" && window.requestAnimationFrame) ||
-      function (cb) { return setTimeout(cb, 30); };
-    raf(function () { raf(function () { renderBars(); }); });
   }
   function grantDailyCoin(source) {
     if (!session || !myProfile) return Promise.resolve(null);
@@ -2907,27 +2759,6 @@ window.PUZZLEPOP_CONFIG = {
       })
       .catch(function () { return null; });
   }
-  function wireProgressButtons() {
-    var ub = $("unlockLevelBtn");
-    if (ub) ub.addEventListener("click", function () {
-      if (!session || !myProfile) { setText("unlockStatus", "Log in and choose a username first."); return; }
-      setText("unlockStatus", "Unlocking…");
-      callRest("rpc/unlock_next_level", "POST", {})
-        .then(function (res) {
-          if (res) {
-            if (res.level !== undefined) serverLevel = res.level;
-            if (res.balance !== undefined) serverBalance = res.balance;
-            if (res.max_level_completed !== undefined) serverCompleted = res.max_level_completed;
-          }
-          setText("unlockStatus", "Level " + serverLevel + " unlocked!");
-          renderProgress();
-          syncGameGate();
-        })
-        .catch(function (err) {
-          setText("unlockStatus", "Could not unlock: " + err.message);
-        });
-    });
-  }
   /* Merges a new pending power-up bonus into the stored one. If either
    * part is casual-only, the merged bonus stays casual-only, so a
    * spin-bought power-up can never leak into a ranked game. */
@@ -2942,49 +2773,25 @@ window.PUZZLEPOP_CONFIG = {
     try { localStorage.setItem(DAILY_BONUS_KEY, JSON.stringify(merged)); } catch (e) { /* ignore */ }
     return merged;
   }
+  /* v30 exactly-once power-up banking: a prize's hammers/bombs are
+   * banked into pp_daily_bonus at most once per marker key
+   * (user + date + kind). Fresh claims bank + mark; an
+   * already-claim for the same prize banks ONLY when no marker
+   * exists — that is the orphaned-prize case (first claim's banking
+   * lost: response lost, other surface, storage cleared). The marker
+   * write follows the banking synchronously in the same tick, so no
+   * interleaving can double-bank. Coins are NEVER banked here:
+   * coin grants stay server-side only. */
+  function bankPrizeOnce(markerKey, hammers, bombs) {
+    if (!markerKey || !(hammers || bombs)) return false;
+    try { if (localStorage.getItem(markerKey)) return false; } catch (e) { return false; }
+    storePendingBonus(hammers, bombs, false);
+    try { localStorage.setItem(markerKey, "1"); } catch (e) { /* ignore */ }
+    return true;
+  }
 
   /* ================= engagement: streak, pass feed, climber, spin ================= */
   /* --- Streak flame (server-side: get_streak() reads game_days) --- */
-  function fetchStreak() {
-    if (!session || !myProfile) {
-      setText("streakFlame", ""); setText("streakBadges", ""); setText("streakLine", "");
-      streakDays = 0;
-      renderBars();
-      return;
-    }
-    callRest("rpc/get_streak", "POST", {})
-      .then(function (res) { renderStreak(res); })
-      .catch(function () { /* streak shows on next panel open */ });
-  }
-  function renderStreak(res) {
-    var n = (res && typeof res.streak === "number") ? res.streak : 0;
-    var milestones = (res && res.milestones) || [];
-    /* v21: the playing-days streak is ONE line (no flame line + bar +
-       bar label). Milestone thresholds stay 3/7/30 via streakProgress. */
-    var sp = streakProgress(n);
-    var overall = sp.full
-      ? ("🔥 Overall streak: " + n + " days — top badge reached")
-      : ("🔥 Overall streak: " + n + (n === 1 ? " day" : " days") +
-         " — next badge at " + sp.target + " days");
-    setText("streakFlame", overall);
-    setText("streakLine", overall);
-    var badgeText = "";
-    if (milestones.length) {
-      badgeText = "Badges: " + milestones.map(function (m) { return "\uD83D\uDD25 " + m + "-day"; }).join(" \u00B7 ");
-    }
-    setText("streakBadges", badgeText);
-    // Milestone frame: the progress box border glows at each milestone.
-    var box = $("progressBox");
-    if (box) {
-      box.classList.remove("flame-3", "flame-7", "flame-30");
-      if (n >= 30) box.classList.add("flame-30");
-      else if (n >= 7) box.classList.add("flame-7");
-      else if (n >= 3) box.classList.add("flame-3");
-    }
-    streakDays = n;
-    renderBars();
-  }
-
   /* --- "Someone just passed you!" + Rematch (real data only) --- */
   function refreshPassFeed(board) {
     var feed = $("passFeed");
@@ -3024,7 +2831,8 @@ window.PUZZLEPOP_CONFIG = {
         btn.textContent = "Rematch";
         btn.addEventListener("click", function () {
           if (!tournamentUnlocked()) {
-            setText("rankedStatus", "Locked \u2014 the tournament unlocks after a 7-day daily-bonus streak.");
+            var sb = window.PuzzlePopShowBanner;
+            if (sb) { try { sb("Locked \u2014 the tournament unlocks after a 7-day daily-bonus streak.", "great"); } catch (e) {} }
             return;
           }
           setRanked(true);
@@ -3769,7 +3577,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   function refreshStreakCard() {
     var cards = streakCards();
-    var dot = $("profileBonusDot");
+    var dot = $("spinBonusDot");
     if (!cards.length) return;
     setStreakButtons(true, true);
     renderStreakLadder();
@@ -3887,7 +3695,13 @@ window.PUZZLEPOP_CONFIG = {
         return callRest("rpc/claim_daily_bonus", "POST", {});
       }).then(function (res) {
         if (res && res.already) {
-          /* Server is truth: another tab/device claimed already. */
+          /* Server is truth: another tab/device claimed already.
+           * v30: bank the +2/+2 power-ups exactly once if this
+           * day was never banked (orphaned prize) — the marker
+           * stops any second already-claim from banking again. */
+          bankPrizeOnce(
+            "pp_streak_banked_" + ((session && session.user && session.user.id) || "guest") + "_" + fmtDateUTC(new Date()),
+            2, 2);
           return fetchBonusState().then(function () {
             setStreakText("streak-status", "Already claimed today \u2014 your streak is safe.");
           });
@@ -3895,7 +3709,9 @@ window.PUZZLEPOP_CONFIG = {
         /* Grant the power-ups through the shared pending-bonus
          * inventory (next game), exactly like the underdog pack.
          * The CLAIM DECISION was the server's. */
-        storePendingBonus(2, 2, false);
+        bankPrizeOnce(
+          "pp_streak_banked_" + ((session && session.user && session.user.id) || "guest") + "_" + fmtDateUTC(new Date()),
+          2, 2);
         return fetchBonusState().then(function () {
           refreshLeaderboard();
           setStreakText("streak-status", "Claimed! Day " + ((res && res.ladder_day) || bonusLadderDay) +
@@ -4375,7 +4191,17 @@ window.PUZZLEPOP_CONFIG = {
     callRest("rpc/claim_scratch_card", "POST", isRepeat ? { p_kind: "repeat" } : {}).then(function (res) {
       scratchClaimInFlight = false;
       if (res && res.already) {
-        /* Server is truth: another tab/device claimed already. */
+        /* Server is truth: another tab/device claimed already.
+         * v30: bank the prize's power-ups exactly once if this
+         * prize was never banked (orphaned prize) — the marker
+         * stops any second already-claim from banking again. */
+        var alreadyPrize = scratchPrizeFromClaim(res);
+        if (alreadyPrize && (alreadyPrize.hammers || alreadyPrize.bombs)) {
+          bankPrizeOnce(
+            "pp_scratch_banked_" + ((session && session.user && session.user.id) || "guest") + "_" +
+            (res.scratch_date || fmtDateUTC(new Date())) + "_" + (res.kind || (isRepeat ? "repeat" : "free")),
+            alreadyPrize.hammers, alreadyPrize.bombs);
+        }
         return fetchScratchState().then(function () {
           setText("scratchStatus", "Already scratched today \u2014 your prize is safe.");
         });
@@ -4390,7 +4216,10 @@ window.PUZZLEPOP_CONFIG = {
        * only banks it for the next game, where the player taps the
        * extra hammers/bombs while playing. */
       if (prize && (prize.hammers || prize.bombs)) {
-        storePendingBonus(prize.hammers, prize.bombs, false);
+        bankPrizeOnce(
+          "pp_scratch_banked_" + ((session && session.user && session.user.id) || "guest") + "_" +
+          (res.scratch_date || fmtDateUTC(new Date())) + "_" + (isRepeat ? "repeat" : "free"),
+          prize.hammers, prize.bombs);
       }
       if (res && res.claimed_at) scratchLastClaimAt = new Date(res.claimed_at).getTime();
       else scratchLastClaimAt = Date.now();
@@ -4508,8 +4337,6 @@ window.PUZZLEPOP_CONFIG = {
   function setRanked(on) {
     rankedOn = !!on;
     try { localStorage.setItem(RANKED_KEY, rankedOn ? "1" : "0"); } catch (e) { /* ignore */ }
-    var t = $("rankedToggle");
-    if (t) t.checked = rankedOn;
     syncRankedBtn();
     updateBadge();
   }
@@ -4611,8 +4438,8 @@ window.PUZZLEPOP_CONFIG = {
       if (kind === "win" && mode === "level" && typeof levelIdx === "number") {
         reportLevelComplete(levelIdx + 1, score).then(function () {
           if (serverCompleted >= serverLevel && serverLevel < 18) {
-            overlayNote("Level " + serverLevel + " complete! Unlock Level " +
-              (serverLevel + 1) + " with 1 daily coin on your Profile tab.");
+            overlayNote("Level " + serverLevel + " complete! Level " +
+              (serverLevel + 1) + " unlocked — your next level game starts there.");
           }
         });
       }
@@ -4699,8 +4526,6 @@ window.PUZZLEPOP_CONFIG = {
     setBarActive(name);
     // Spin status must never go stale: refresh it every time the tab opens.
     if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); }
-    // Replay the progress-bar sweep every time the Profile tab opens.
-    if (name === "profile") sweepBars();
     // Daily login bonus state must never go stale either.
     if (name === "profile") refreshStreakCard();
     // Prizes unlock explainer must never go stale either.
@@ -5018,7 +4843,7 @@ window.PUZZLEPOP_CONFIG = {
     refreshUnderdogBadges();
     refreshProofList();
     refreshProofOwnerForm();
-    if (session && myProfile) { fetchProgress(); fetchBonusState(); refreshMyClaims(); refreshTodayBest(); fetchStreak(); }
+    if (session && myProfile) { fetchProgress(); fetchBonusState(); refreshMyClaims(); }
     else { renderProgress(); }
     // Live state is idempotent: re-evaluate after every refresh path
     // (login, logout, submit) as well as on tab switches.
@@ -5343,21 +5168,6 @@ window.PUZZLEPOP_CONFIG = {
       .catch(function (err) {
         list.innerHTML = "<li class=\"error-state\">Could not load last week's winners: " + escapeHtml(err.message) + "</li>";
       });
-  }
-  function refreshTodayBest() {
-    if (!session || !session.user) return;
-    var today = fmtDateUTC(new Date());
-    callRest("ranked_scores?select=best_score,games_played" +
-      "&user_id=eq." + session.user.id + "&game_date=eq." + today)
-      .then(function (rows) {
-        if (rows && rows.length) {
-          setText("todayBest", "Today's best: " + rows[0].best_score.toLocaleString() +
-            " pts (" + rows[0].games_played + " ranked games today)");
-        } else {
-          setText("todayBest", "No ranked games today yet.");
-        }
-      })
-      .catch(function () { /* keep previous text */ });
   }
   function refreshMyClaims() {
     var list = $("claimsList");
@@ -5846,29 +5656,22 @@ window.PUZZLEPOP_CONFIG = {
   }
   function fillProfileForm() {
     var un = $("profileUsername");
-    var rg = $("profileRegion");
     if (myProfile) {
       if (un) { un.value = myProfile.username || ""; un.readOnly = true; }
-      if (rg) rg.value = myProfile.region || "";
     } else {
       if (un) { un.value = ""; un.readOnly = false; }
-      if (rg) rg.value = "";
     }
   }
   function renderAuth() {
     syncLevelOwner();
     var loggedIn = !!session;
     var authSection = $("authSection");
-    var accountSection = $("accountSection");
     var profileSection = $("profileSection");
     var panelHint = $("panelAuthHint");
     if (loggedIn) {
       hide(authSection);
       hideWelcome();
       if (panelHint) panelHint.hidden = true;
-      show(accountSection);
-      setText("accountInfo", session.user && session.user.email ?
-        ("Logged in as " + session.user.email) : "Logged in.");
       // Fill the form only when the section is newly revealed or the
       // profile itself just arrived/changed, so a later renderAuth
       // (panel reopen, refresh) never wipes text the player is
@@ -5877,9 +5680,6 @@ window.PUZZLEPOP_CONFIG = {
       var profileFormId = myProfile ? myProfile.id : null;
       var profileChanged = profileFormId !== lastProfileFormId;
       if (myProfile) {
-        setText("accountInfo", "Playing as " + myProfile.username +
-          (myProfile.region ? " (" + myProfile.region + ")" : "") +
-          " — " + (session.user ? session.user.email : ""));
         // Existing profile: the form stays hidden — it only appears to
         // choose a username. The username itself is not renamed here.
         hide(profileSection);
@@ -5893,21 +5693,21 @@ window.PUZZLEPOP_CONFIG = {
     } else {
       show(authSection);
       if (panelHint) panelHint.hidden = false;
-      hide(accountSection);
       hide(profileSection);
     }
     // Recovery landing: the reset form stays on screen even though a
     // session now exists (runEntryFlow shows it first; this re-asserts
     // it after every renderAuth, e.g. the init profile fetch).
     if (pendingPasswordReset) { showWelcome(); showResetView(); }
+    var lb2 = $("logoutBtn");
+    if (lb2) lb2.hidden = !loggedIn;
     var gn = $("guestNotice");
     if (gn) gn.hidden = !( !loggedIn && isGuestMode() );
     clearAuthError();
     updateBadge();
     renderAvatarSection();
-    // Bars follow auth state: guests see the log-in hint even before
-    // any progress load (init renders auth but not progress).
-    renderBars();
+    // v30: Profile progress bars are gone with progressFold; the hero
+    // below is the only Profile display renderAuth refreshes.
     updateProfileHero();
     // Daily login bonus state refreshes on every auth transition and
     // on init — the Profile tab hook alone would leave the button and
@@ -5923,24 +5723,24 @@ window.PUZZLEPOP_CONFIG = {
    * level, and it is refreshed from renderAuth AND renderProgress so
    * the badge never goes stale after a level-up. No avatar upload is
    * implied: the avatar migration is unrun, so there are no photos. */
+  /* Premium Profile hero (v30): big avatar/monogram + username + user
+     email. No level badge — level UI left Profile entirely. The monogram
+     shows the player's preset avatar (or photo) when one exists, else
+     the name initial. Display-only: mirrors myProfile / session. */
   function updateProfileHero() {
     var nameEl = $("profileHeroName");
-    var badgeEl = $("profileHeroBadge");
+    var emailEl = $("profileHeroEmail");
     var monoEl = $("profileMonogram");
-    if (!nameEl || !badgeEl || !monoEl) return;
+    if (!nameEl || !monoEl) return;
     var name = (myProfile && myProfile.username) ||
       (session && session.user && session.user.email) || "Guest player";
     nameEl.textContent = name;
-    var initial = (name.charAt(0) || "").toUpperCase();
-    monoEl.textContent = /^[A-Z0-9]/.test(initial) ? initial : "🧩";
-    if (session) {
-      badgeEl.textContent = "Tournament Level " + serverLevel;
+    if (emailEl) emailEl.textContent = (session && session.user && session.user.email) || "";
+    if (myProfile && (myProfile.avatar || myProfile.avatar_url)) {
+      monoEl.innerHTML = currentAvatarHtml();
     } else {
-      var localLevel = 1;
-      try {
-        if (window.PuzzlePopLevels) localLevel = window.PuzzlePopLevels.getState().level + 1;
-      } catch (e) { localLevel = 1; }
-      badgeEl.textContent = "Level " + localLevel;
+      var initial = (name.charAt(0) || "").toUpperCase();
+      monoEl.textContent = /^[A-Z0-9]/.test(initial) ? initial : "🧩";
     }
   }
   function readAuthForm() {
@@ -6169,7 +5969,6 @@ window.PUZZLEPOP_CONFIG = {
     if (saveProfileBtn) saveProfileBtn.addEventListener("click", function () {
       clearAuthError();
       var name = ($("profileUsername").value || "").trim();
-      var region = ($("profileRegion").value || "").trim();
       if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) {
         setText("profileNotice", "Username must be 3–20 letters, numbers or underscores.");
         return;
@@ -6185,18 +5984,14 @@ window.PUZZLEPOP_CONFIG = {
       // Step 1: identity first, then the picture (step 2 below).
       var saveStep;
       if (hadProfile) {
-        // Existing profile: update region only (the username
-        // is not renamed here).
-        saveStep = callRest("profiles?id=eq." + session.user.id, "PATCH", { region: region || null })
-          .then(function () {
-            myProfile = { id: session.user.id, username: myProfile.username, region: region,
-              avatar: prevAvatar, avatar_url: prevAvatarUrl };
-          });
+        // Existing profile: the username is not renamed here, and
+        // v30 posts username only — no region update at all.
+        saveStep = Promise.resolve();
       } else {
-        var postBody = { id: session.user.id, username: name, region: region || null };
+        var postBody = { id: session.user.id, username: name };
         saveStep = callRest("profiles", "POST", postBody)
           .then(function () {
-            myProfile = { id: session.user.id, username: name, region: region,
+            myProfile = { id: session.user.id, username: name,
               avatar: prevAvatar, avatar_url: prevAvatarUrl };
           });
       }
@@ -6242,64 +6037,6 @@ window.PUZZLEPOP_CONFIG = {
         });
     });
   }
-  function wireRankedToggle() {
-    var t = $("rankedToggle");
-    if (!t) return;
-    t.checked = rankedOn;
-    t.addEventListener("change", function () {
-      if (t.checked) {
-        if (!session) {
-          t.checked = false;
-          setRanked(false);
-          setText("rankedStatus", isGuestMode() ?
-            "Playing as guest — sign in or sign up to play ranked games." :
-            "Log in first to play ranked games.");
-          return;
-        }
-        if (!myProfile) {
-          t.checked = false;
-          setRanked(false);
-          setText("rankedStatus", "Choose your tournament username first (account section above).");
-          return;
-        }
-        if (!bonusStateLoaded) {
-          setText("rankedStatus", "Loading your tournament streak…");
-          ensureGateState().then(function () {
-            renderProgress(); refreshStreakCard(); refreshUnlockExplainer();
-            if (tournamentUnlocked()) {
-              setRanked(true);
-              setText("rankedStatus", "Ranked ON — starting a fresh Classic game that counts toward this week.");
-              var classicBtn = document.querySelector('[data-mode="classic"]');
-              if (classicBtn) classicBtn.click();
-              closePanel();
-            } else {
-              t.checked = false;
-              setRanked(false);
-              setText("rankedStatus", bonusLockMessage());
-            }
-          });
-          return;
-        }
-        if (!tournamentUnlocked()) {
-          t.checked = false;
-          setRanked(false);
-          setText("rankedStatus", bonusLockMessage());
-          return;
-        }
-        setRanked(true);
-        setText("rankedStatus", "Ranked ON — starting a fresh Classic game that counts toward this week.");
-        // Force Classic rules and a clean game: setMode() starts newGame(),
-        // which fires onNewGame() and marks this game as ranked.
-        var classicBtn = document.querySelector('[data-mode="classic"]');
-        if (classicBtn) classicBtn.click();
-        closePanel();
-      } else {
-        setRanked(false);
-        setText("rankedStatus", "Ranked OFF — your games are casual only.");
-      }
-    });
-  }
-
   /* Game-page Ranked button: the SAME control as the ranked toggle, not
    * a second state. It drives the toggle's change handler, so gates,
    * messages, mode-switch and state stay identical by construction:
@@ -6308,22 +6045,48 @@ window.PUZZLEPOP_CONFIG = {
    * game (switching mode first would have made that game casual).
    * A blocked tap changes nothing; the toggle handler's reason is
    * also shown on the game page as a banner. */
+  /* Game-page Ranked button (v30): the ONLY ranked control now that
+     the Profile toggle is gone. Same gates as the old toggle (login,
+     profile, 7-day streak unlock) with the reason shown as a game-page
+     banner; turning ON switches to Classic so the fresh game counts. */
   function wireRankedBtn() {
     var b = $("rankedBtn");
     if (!b) return;
     syncRankedBtn();
-    b.addEventListener("click", function () {
-      var t = $("rankedToggle");
-      if (!t) return;
-      var wasOn = rankedOn;
-      t.checked = !rankedOn;
-      t.dispatchEvent(new Event("change", { bubbles: true }));
-      syncRankedBtn();
-      if (!rankedOn && !wasOn) {
-        var reason = ($("rankedStatus") && $("rankedStatus").textContent) || "";
-        var sb = window.PuzzlePopShowBanner;
-        if (reason && sb) { try { sb(reason, "great"); } catch (e) { /* noop */ } }
+    function reasonBanner(msg) {
+      var sb = window.PuzzlePopShowBanner;
+      if (msg && sb) { try { sb(msg, "great"); } catch (e) { /* noop */ } }
+    }
+    function tryTurnOn() {
+      if (tournamentUnlocked()) {
+        setRanked(true);
+        var classicBtn = document.querySelector('[data-mode="classic"]');
+        if (classicBtn) classicBtn.click();
+      } else {
+        setRanked(false);
+        reasonBanner(bonusLockMessage());
       }
+    }
+    b.addEventListener("click", function () {
+      if (!session) {
+        reasonBanner(isGuestMode() ?
+          "Playing as guest — sign in or sign up to play ranked games." :
+          "Log in first to play ranked games.");
+        return;
+      }
+      if (!myProfile) {
+        reasonBanner("Choose your tournament username first.");
+        return;
+      }
+      if (!bonusStateLoaded) {
+        ensureGateState().then(function () {
+          renderProgress(); refreshStreakCard(); refreshUnlockExplainer();
+          tryTurnOn();
+        });
+        return;
+      }
+      if (rankedOn) { setRanked(false); return; }
+      tryTurnOn();
     });
   }
 
@@ -6341,7 +6104,6 @@ window.PUZZLEPOP_CONFIG = {
     computeClimbers: computeClimbers,
     streakUnlockPct: streakUnlockPct,
     streakProgress: streakProgress,
-    renderBars: renderBars,
     neighborsFor: neighborsFor,
     feedbackFor: feedbackFor,
     gateActive: gateActive,
@@ -6452,9 +6214,7 @@ window.PUZZLEPOP_CONFIG = {
     var refreshBtn = $("leaderboardRefreshBtn");
     if (refreshBtn) refreshBtn.addEventListener("click", function () { lbStartManualSpin(); refreshTournamentData(); });
     wireAuth();
-    wireRankedToggle();
     wireRankedBtn();
-    wireProgressButtons();
     wireSpin();
     wireStreakClaim();
     wireScratchCard();
