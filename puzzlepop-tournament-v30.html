@@ -1531,6 +1531,15 @@ function renderEndOverlay(kind){
   document.getElementById("playAgainBtn").textContent = isLevel ? (won ? "↻ Replay Level" : "↻ Retry Level") : (mode==="daily" ? "↻ Replay Daily" : "↻ Play Again");
   document.getElementById("nextLevelBtn").style.display = (isLevel && goalDone && levelIdx<LEVELS.length-1) ? "" : "none";
   document.getElementById("keepPlayingBtn").style.display = won ? "" : "none";
+  /* v30 AUTO-LEVELS (move): AFTER the overlay text and the server report
+     above — both still refer to the COMPLETED level — the next level
+     becomes the current level, so the player's next game IS the next
+     level. Final level: no advance past the end. */
+  if (isLevel && goalDone && levelIdx < LEVELS.length - 1) {
+    levelIdx++;
+    renderLevelPanel();
+    saveProgress();
+  }
   overlayEl.classList.add("show");
 }
 function renderLevelPanel(){
@@ -1746,9 +1755,10 @@ document.getElementById("hammerBtn").addEventListener("click", function(){ armPo
 document.getElementById("bombBtn").addEventListener("click", function(){ armPower("bomb"); });
 document.getElementById("hintBtn").addEventListener("click", showHint);
 document.getElementById("nextLevelBtn").addEventListener("click", function(){
-  /* v30 AUTO-LEVELS: the next level is already unlocked by completing
-     this one, so Next Level just starts it. */
-  startLevel(Math.min(LEVELS.length-1, levelIdx+1));
+  /* v30 AUTO-LEVELS (move): completing a level already moved the player
+     to the next level, so Next Level starts the CURRENT (already-next)
+     level — it must never skip one ahead. */
+  startLevel(levelIdx);
 });
 document.getElementById("keepPlayingBtn").addEventListener("click", function(){ overlayEl.classList.remove("show"); showBanner("Goal smashed — keep popping! 🎉","perfect"); });
 var soundBtn=document.getElementById("soundBtn");
