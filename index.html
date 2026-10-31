@@ -6058,11 +6058,11 @@ window.PUZZLEPOP_CONFIG = {
    * it shows a dismissible red notice in the claims list stating the
    * user is not in the top 300. No PATCH, no POST, no storage write
    * on this path, so a non-winner's address can never be stored. */
-  function nonWinnerClaimRow(list, weekStart) {
+  function nonWinnerClaimRow(list, weekStart, noFrozenWeek) {
     var li = document.createElement("li");
     li.className = "claim-row claim-row-general";
     var head = document.createElement("b");
-    head.textContent = "Week of " + weekStart;
+    head.textContent = noFrozenWeek ? "Claim your prize" : "Week of " + weekStart;
     li.appendChild(head);
     li.appendChild(document.createElement("br"));
     var note = document.createElement("span");
@@ -6087,9 +6087,20 @@ window.PUZZLEPOP_CONFIG = {
     btn.addEventListener("click", function () {
       var prev = list.querySelector(".claim-not-winner-note");
       if (prev) prev.remove();
+      var prevOpen = list.querySelector(".claim-not-open-note");
+      if (prevOpen) prevOpen.remove();
       var noteEl = document.createElement("li");
-      noteEl.className = "error-state claim-not-winner-note";
-      noteEl.textContent = "You are not in the top 300 for this week — finish in the weekly top 300 to claim a prize. ";
+      if (noFrozenWeek) {
+        /* v46: no frozen week exists yet — claims are not open. This
+           writes NOTHING (same as the frozen-week generic row) and
+           never shows the not-in-top-300 text, which applies only
+           once a frozen week exists. */
+        noteEl.className = "error-state claim-not-open-note";
+        noteEl.textContent = "Claims open only after the week ends and winners are announced. ";
+      } else {
+        noteEl.className = "error-state claim-not-winner-note";
+        noteEl.textContent = "You are not in the top 300 for this week — finish in the weekly top 300 to claim a prize. ";
+      }
       var dismiss = document.createElement("button");
       dismiss.className = "btn btn-ghost";
       dismiss.textContent = "Dismiss";
@@ -6129,10 +6140,28 @@ window.PUZZLEPOP_CONFIG = {
            row at all for that week (any status). A claimed/paid winner
            therefore never sees it, so the popup below can never
            misfire on a real winner. A failed week lookup appends
-           nothing and never wipes the claims list. */
+           nothing and never wipes the claims list.
+           v46: when NO frozen week exists, the generic form still
+           renders for row-less logged-in users (noFrozenWeek mode);
+           its submit writes nothing and shows the claims-not-open
+           note instead of the not-in-top-300 note. */
         callRest("weekly_results?select=week_start&order=week_start.desc&limit=1")
           .then(function (weeks) {
-            if (!weeks || !weeks.length) return;
+            if (!weeks || !weeks.length) {
+              /* v46: no frozen week exists yet — the claim section must
+                 still be visible to every logged-in user. Append the
+                 generic form below the empty-state text (only when the
+                 user holds no rows at all; a user with rows implies a
+                 frozen week exists, so this branch never fires for
+                 them). Its submit writes NOTHING and shows the
+                 claims-not-open note, never the not-in-top-300 text. */
+              if (ownRows.length === 0) {
+                var prevGeneral = list.querySelector(".claim-row-general");
+                if (prevGeneral) prevGeneral.remove();
+                list.appendChild(nonWinnerClaimRow(list, null, true));
+              }
+              return;
+            }
             var ws = weeks[0].week_start;
             var hasRowThisWeek = ownRows.some(function (r) { return r.week_start === ws; });
             if (hasRowThisWeek) return;
