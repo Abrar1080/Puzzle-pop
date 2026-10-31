@@ -573,7 +573,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 /* Contact Us page: same shell as the other tab pages (jelly-cube layer
    behind content, internal scroll like Profile so the shell stays one-screen). */
 #page-contact{overflow-y:auto;}
-.contact-discord-btn{display:block;text-align:center;padding:14px 10px;font-size:16px;text-decoration:none;margin:2px 0 6px;}
+.contact-email-btn{display:block;text-align:center;padding:14px 10px;font-size:16px;text-decoration:none;margin:2px 0 6px;}
 #announcementsList{list-style:none;margin:8px 0;padding:0;}
 #announcementsList li{padding:10px 12px;margin:0 0 8px;border:1px solid var(--line);border-radius:12px;background:var(--panel);}
 #announcementsList li p{margin:4px 0 0;}
@@ -929,9 +929,8 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralListSection"><h3>👥 Friends you referred</h3><ul id="referralList"></ul><p class="muted" id="referralListNote"></p></div>
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
-</section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Join our Discord to chat with us and catch the latest news.</p></div>
-<a class="btn btn-primary contact-discord-btn" id="discordJoinBtn" href="#" target="_blank" rel="noopener">💬 Join our Discord</a>
-<p class="muted" id="discordLinkText"></p>
+</section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Questions, prize help, or feedback? Email us directly.</p></div>
+<a class="btn btn-primary contact-email-btn" id="contactEmailBtn" href="mailto:support@puzzleearn.online">📧 support@puzzleearn.online</a>
 <h3>📣 Announcements</h3>
 <p id="contactAnnNote" class="muted"></p>
 <ul id="announcementsList"></ul>
@@ -1912,10 +1911,11 @@ window.PUZZLEPOP_CONFIG = {
   SUPABASE_URL: "https://ugirlrgreszaercbxwel.supabase.co",
   SUPABASE_PUBLISHABLE_KEY: "sb_publishable_L3OOsEz5OKFvIeSStS82fg_JWsC7stg",
 
-  /* Community: the owner's public Discord invite, shown on Contact Us.
-   * Single source of truth — the game renders the Join button AND the
-   * plain link text from this constant. Guests can use it too. */
-  DISCORD_URL: "https://discord.gg/9ddP5Sp6JK",
+  /* Contact: the owner's business email, shown on Contact Us.
+   * Single source of truth — the game renders the email button
+   * from this constant (mailto link + visible address). Guests can
+   * use it too. */
+  CONTACT_EMAIL: "support@puzzleearn.online",
 
   /* Prize tiers: rank ranges are inclusive. */
   PRIZE_TIERS: [
@@ -5387,12 +5387,14 @@ window.PUZZLEPOP_CONFIG = {
     });
   }
   function refreshContactSection() {
-    /* Discord: single source of truth is CFG.DISCORD_URL (config.js).
-       The button works for guests too — it is a plain link, no login. */
-    var btn = $("discordJoinBtn");
-    if (btn && CFG.DISCORD_URL) btn.href = CFG.DISCORD_URL;
-    var txt = $("discordLinkText");
-    if (txt && CFG.DISCORD_URL) txt.textContent = CFG.DISCORD_URL;
+    /* Contact email: single source of truth is CFG.CONTACT_EMAIL
+       (config.js). The button works for guests too — it is a plain
+       mailto link, no login. */
+    var btn = $("contactEmailBtn");
+    if (btn && CFG.CONTACT_EMAIL) {
+      btn.href = "mailto:" + CFG.CONTACT_EMAIL;
+      btn.textContent = CFG.CONTACT_EMAIL;
+    }
     var form = $("announceForm");
     if (form) form.hidden = !isOwner();
     /* Opening Contact clears the badge immediately; the load below then
