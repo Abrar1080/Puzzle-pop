@@ -928,7 +928,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <button class="btn btn-ghost" id="referralsPageBtn">🎁 Referrals</button>
 </section><section class="tpage" id="page-referrals"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎁 Referrals</h2><p class="page-sub">Invite friends, climb the monthly board, win real prizes.</p></div>
 <div class="referral-section" id="referralLinkSection"><h3>🔗 Your referral link</h3><p class="muted" id="referralGuestNote" hidden>Log in to get your referral link.</p><button class="btn btn-primary" id="referralAuthBtn" hidden>Go to sign-in</button><div id="referralLinkWrap"><input class="t-input" id="referralLinkInput" type="text" readonly /><button class="btn btn-primary" id="referralCopyBtn">Copy link</button><button class="btn btn-ghost" id="referralShareBtn">Share</button></div><p class="muted" id="referralLinkNote"></p></div>
-<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who unlocks the tournament earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$100</b></li><li>2nd — <b>$90</b></li><li>3rd — <b>$80</b></li><li>4th — <b>$70</b></li><li>5th — <b>$60</b></li><li>6th — <b>$50</b></li><li>7th — <b>$40</b></li><li>8th — <b>$30</b></li><li>9th–100th — <b>$20 each</b></li></ul><p class="muted">Top 100 referrers of the month share $2,360. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th referral — <b>250,000 coins</b></li><li data-ladder-pos="8">8th referral — <b>280,000 coins</b></li><li data-ladder-pos="9">9th referral — <b>310,000 coins</b></li><li data-ladder-pos="10">10th referral — <b>350,000 coins</b></li><li data-ladder-pos="11">11th–100th referral — <b>400,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
+<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who reaches a 5-day streak earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$100</b></li><li>2nd — <b>$90</b></li><li>3rd — <b>$80</b></li><li>4th — <b>$70</b></li><li>5th — <b>$60</b></li><li>6th — <b>$50</b></li><li>7th — <b>$40</b></li><li>8th — <b>$30</b></li><li>9th–100th — <b>$20 each</b></li></ul><p class="muted">Top 100 referrers of the month share $2,360. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th referral — <b>250,000 coins</b></li><li data-ladder-pos="8">8th referral — <b>280,000 coins</b></li><li data-ladder-pos="9">9th referral — <b>310,000 coins</b></li><li data-ladder-pos="10">10th referral — <b>350,000 coins</b></li><li data-ladder-pos="11">11th–100th referral — <b>400,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
 <div class="referral-section" id="referralStatsSection"><h3>📊 Your referrals</h3><p id="referralStatsText" class="muted">Loading…</p><p class="muted" id="referralStatsNote"></p></div>
 <div class="referral-section" id="referralListSection"><h3>👥 Friends you referred</h3><ul id="referralList"></ul><p class="muted" id="referralListNote"></p></div>
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
@@ -2769,10 +2769,12 @@ window.PUZZLEPOP_CONFIG = {
       bonusCoinsToday = (res && typeof res.coins_today === "number") ? res.coins_today : 0;
       bonusDaysToUnlock = (res && typeof res.days_to_unlock === "number") ? res.days_to_unlock : 4;
       bonusStateLoaded = true; bonusPending = false;
-      /* v41: an unlocked report (streak-ever OR grandfathered level>=12,
-       * both come through here as unlocked=true) fires the referral
-       * unlock payout hook exactly once per session. */
-      if (bonusUnlocked) maybeProcessReferralUnlock();
+      /* v49: a 5-day-streak report fires the referral SUCCESS payout
+       * hook exactly once per session. Deliberately NOT gated on
+       * unlock: unlock is day 4, referral success is day 5, and the
+       * once-per-session guard would swallow the day-5 fire if the
+       * hook had already fired (and set the flag) at unlock. */
+      if (bonusStreak >= 5) maybeProcessReferralUnlock();
       refreshStreakCard(); renderProgress();
     }).catch(function (err) {
       if (bonusMigrationMissing(err)) {
@@ -3966,10 +3968,12 @@ window.PUZZLEPOP_CONFIG = {
       maybeShowAd().then(function () {
         return callRest("rpc/claim_daily_bonus", "POST", {});
       }).then(function (res) {
-        /* v41: a claim result reporting unlocked=true also fires the
-         * referral unlock payout hook (fetchBonusState below fires it
-         * too; the per-session guard makes the double call harmless). */
-        if (res && res.unlocked) maybeProcessReferralUnlock();
+        /* v49: a claim result reporting streak >= 5 also fires the
+         * referral SUCCESS payout hook (fetchBonusState below fires it
+         * too; the per-session guard makes the double call harmless).
+         * Gated on streak, not unlocked: unlock is day 4, success is
+         * day 5. */
+        if (res && res.streak >= 5) maybeProcessReferralUnlock();
         if (res && res.already) {
           /* Server is truth: another tab/device claimed already.
            * v37: the original claim already recorded the +2/+2
@@ -4861,7 +4865,9 @@ window.PUZZLEPOP_CONFIG = {
     return base ? base + "?ref=" + encodeURIComponent(code) : null;
   }
   var referralShareText = "";
-  /* Unlock payout hook: fires at most once per session (the RPC is
+  /* Referral SUCCESS payout hook (v49: success = referred friend
+   * reaches a 5-day streak, stricter than the 4-day tournament
+   * unlock): fires at most once per session (the RPC is
    * idempotent, so a double call is safe, but it is never spammed).
    * On processed:true it immediately claims pending bonuses so the
    * friend's 500,000 welcome coins land on the board without waiting
@@ -4958,7 +4964,7 @@ window.PUZZLEPOP_CONFIG = {
     callRest("rpc/get_referral_overview", "POST", {}).then(function (res) {
       var total = (res && typeof res.total === "number") ? res.total : 0;
       var successful = (res && typeof res.successful === "number") ? res.successful : 0;
-      setText("referralStatsText", total + " total referrals • " + successful + " unlocked the tournament");
+      setText("referralStatsText", total + " total referrals • " + successful + " reached a 5-day streak");
       updateReferralTierHighlight(successful);
       setText("referralStatsNote", "");
       var list = $("referralList");
@@ -4974,8 +4980,11 @@ window.PUZZLEPOP_CONFIG = {
       rows.forEach(function (r) {
         var li = document.createElement("li");
         var streak = (typeof r.streak === "number") ? r.streak : 0;
+        /* v49: r.unlocked is the SUCCESS-event flag (a
+         * referral_unlock_events row exists), NOT the tournament
+         * unlock flag: success is a 5-day streak, unlock is day 4. */
         li.textContent = (r.username || "Player") + " — " + streak + "-day streak — " +
-          (r.unlocked ? "Unlocked ✓" : "Day " + streak + " (unlocks on day 4)");
+          (r.unlocked ? "Successful ✓" : "Day " + streak + " (succeeds on day 5)");
         list.appendChild(li);
       });
     }).catch(function (err) {
