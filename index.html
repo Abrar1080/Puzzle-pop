@@ -881,7 +881,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <ul id="prizeTiers"></ul>
     <p class="muted">Per player; the owner may change amounts before a week starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
 </section>
-    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
+    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
     <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 7 — a 75,000 win adds exactly 75,000 to your board score after unlock.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
@@ -3250,7 +3250,7 @@ window.PUZZLEPOP_CONFIG = {
     delete adBridgePending[id];
     p.reject(new Error("ad_unavailable"));
   };
-  /* NATIVE NOTIFICATION BRIDGE (v39): the Android apps expose
+  /* NATIVE NOTIFICATION BRIDGE (v39, fixed v47): the Android apps expose
    * window.AndroidNotifyBridge (a WebView JavascriptInterface) with
    * hasPermission(), requestPermission(), scheduleTimer(slot,
    * fireAtMs, title, text), cancelTimer(slot) and cancelAllTimers().
@@ -3258,10 +3258,18 @@ window.PUZZLEPOP_CONFIG = {
    * there, so the web can never fake a notification; countdowns +
    * the NEW dot stay the whole web experience. Scheduling is
    * PERMISSION-GATED: without the granted permission nothing is
-   * ever scheduled (the prompt is offered once, never nagging).
-   * Fire times are SERVER-ANCHORED (ledger claim times and
-   * serverNowMs(), never the device clock) — the same anchors the
-   * in-app countdowns use, so the alert and the countdown agree.
+   * ever scheduled.
+   * v47: the DISPLAY anchors stay server-anchored (ledger claim
+   * times and serverNowMs(), never the device clock) — but the
+   * ALARM input is converted to a device-clock delay (see
+   * scheduleNotifyTimer): feeding a server timestamp straight to
+   * AlarmManager RTC_WAKEUP fired ~6.5h late on a clock-skewed
+   * phone, which is exactly how reminders "never" arrived.
+   * v47: the permission prompt is no longer one-shot-silent: a
+   * "Not now" re-shows the prompt on a later visit, and once the
+   * system dialog was requested the prompt becomes a Settings
+   * hint instead of re-triggering a dead dialog (once per visit,
+   * never nagging within a visit).
    * Native slot semantics: one alarm per slot; a new claim for the
    * same slot replaces the old alarm (no duplicates). */
   function hasNotifyBridge() {
@@ -3280,6 +3288,21 @@ window.PUZZLEPOP_CONFIG = {
   function markNotifyAsked() {
     try { localStorage.setItem(NOTIFY_ASKED_KEY, "1"); } catch (e) {}
   }
+  /* v47: records that the SYSTEM dialog was requested at least once
+   * (Allow tapped). Distinct from the old asked flag: a "Not now"
+   * never sets this, so a later visit can still offer the Allow
+   * prompt; once the system dialog was requested, later visits
+   * show the Settings hint instead. */
+  var NOTIFY_SYSTEM_ASKED_KEY = "pp_notify_system_asked_v47";
+  function notifySystemAsked() {
+    try { return localStorage.getItem(NOTIFY_SYSTEM_ASKED_KEY) === "1"; } catch (e) { return false; }
+  }
+  function markNotifySystemAsked() {
+    try { localStorage.setItem(NOTIFY_SYSTEM_ASKED_KEY, "1"); } catch (e) {}
+  }
+  /* v47: once-per-visit cap for the prompt/hint (in-memory, so a
+   * later visit re-shows it). Never nagging within one visit. */
+  var notifyPromptShownThisVisit = false;
   function notifyPermissionGranted() {
     try {
       if (!hasNotifyBridge()) return false;
@@ -3290,9 +3313,30 @@ window.PUZZLEPOP_CONFIG = {
     return false;
   }
   function maybeAskNotifyPermission() {
-    if (!hasNotifyBridge() || notifyPermissionGranted() || notifyAsked()) return;
     var box = $("notifyPrompt");
-    if (box) box.hidden = false;
+    if (!hasNotifyBridge()) return;
+    if (notifyPermissionGranted()) { if (box) box.hidden = true; return; }
+    if (!box || notifyPromptShownThisVisit) return;
+    if (notifySystemAsked()) {
+      /* System dialog was already requested and permission still
+       * isn't granted: re-triggering it is useless (permanently
+       * denied) or a repeat — show the Settings hint instead. */
+      var p = box.querySelector("p");
+      if (p) p.textContent = "Reminders are off — turn them on in Settings → Apps → PuzzlePop → Notifications, then your next spin or scratch will schedule a reminder.";
+      var allow = $("notifyAllowBtn");
+      if (allow) allow.hidden = true;
+      var later = $("notifyLaterBtn");
+      if (later) later.textContent = "Got it";
+    } else {
+      var allowBtn = $("notifyAllowBtn");
+      if (allowBtn) allowBtn.hidden = false;
+      var laterBtn = $("notifyLaterBtn");
+      if (laterBtn) laterBtn.textContent = "Not now";
+      var promptText = box.querySelector("p");
+      if (promptText) promptText.textContent = "Want a reminder when your next scratch card or spin is ready?";
+    }
+    box.hidden = false;
+    notifyPromptShownThisVisit = true;
   }
   function notifyPromptAnswer(allow) {
     markNotifyAsked();
@@ -3300,6 +3344,7 @@ window.PUZZLEPOP_CONFIG = {
     if (box) box.hidden = true;
     if (allow && hasNotifyBridge()
       && typeof window.AndroidNotifyBridge.requestPermission === "function") {
+      markNotifySystemAsked();
       try { window.AndroidNotifyBridge.requestPermission(); } catch (e) {}
     }
   }
@@ -3314,6 +3359,33 @@ window.PUZZLEPOP_CONFIG = {
       later.dataset.notifyWired = "1";
       later.addEventListener("click", function () { notifyPromptAnswer(false); });
     }
+  }
+  /* v47 owner-only test notification: posts IMMEDIATELY via the
+   * bridge (no timer wait), so the owner can prove the posting
+   * path on his phone. Hidden entirely for non-owners (same
+   * isOwner() gate as the announcement/proof forms). No-op on
+   * web (no bridge). Without permission it offers the prompt
+   * instead of silently doing nothing. */
+  function refreshNotifyTestBtn() {
+    var wrap = $("notifyTestWrap");
+    if (wrap) wrap.hidden = !isOwner();
+  }
+  function wireNotifyTestBtn() {
+    var btn = $("notifyTestBtn");
+    if (btn && !btn.dataset.notifyTestWired) {
+      btn.dataset.notifyTestWired = "1";
+      btn.addEventListener("click", function () {
+        if (!isOwner()) return;
+        if (!hasNotifyBridge()) return;
+        if (!notifyPermissionGranted()) { maybeAskNotifyPermission(); return; }
+        try {
+          if (typeof window.AndroidNotifyBridge.postTestNotification === "function") {
+            window.AndroidNotifyBridge.postTestNotification();
+          }
+        } catch (e) {}
+      });
+    }
+    refreshNotifyTestBtn();
   }
   /* Pure + testable: the fire time for a slot from its current
    * server-anchored claim time (0 = no anchor, schedule nothing).
@@ -3335,6 +3407,16 @@ window.PUZZLEPOP_CONFIG = {
     if (!notifyPermissionGranted()) { maybeAskNotifyPermission(); return; }
     var fireAt = notifyTimerFireMs(slot);
     if (!fireAt) return;
+    if (fireAt <= serverNowMs()) return; // Already ready — nothing future to remind about.
+    /* v47: convert the server-anchored fire time to a DEVICE-clock
+     * fire time. AlarmManager RTC_WAKEUP runs on the device clock,
+     * so handing it a server timestamp fires late by exactly the
+     * device's clock skew (proven ~6.5h on the owner's phone).
+     * The delay (fireAt - serverNowMs) is clock-independent, so
+     * device-now + delay fires on time on ANY device clock.
+     * Display countdowns keep using server time; only the alarm
+     * input changes. */
+    var fireAtDevice = Date.now() + (fireAt - serverNowMs());
     var title, text;
     if (slot === "scratch") {
       title = "Your scratch card is ready!";
@@ -3343,7 +3425,30 @@ window.PUZZLEPOP_CONFIG = {
       title = "Your extra spin is ready!";
       text = "Your next spin is waiting in PuzzlePop.";
     }
-    try { window.AndroidNotifyBridge.scheduleTimer(slot, fireAt, title, text); } catch (e) {}
+    try { window.AndroidNotifyBridge.scheduleTimer(slot, fireAtDevice, title, text); } catch (e) {}
+  }
+  /* v47: re-derive and re-schedule every LIVE countdown from
+   * server state. Slot-keyed scheduling replaces (never duplicates)
+   * the native alarm, so calling this on start, on page show, or
+   * after a permission grant is safe. When blocked by missing
+   * permission AND a live timer exists, the prompt/hint is offered
+   * (once per visit) instead of silently dropping the timer. */
+  function rescheduleLiveNotifyTimers() {
+    if (!hasNotifyBridge()) return;
+    var scratchLive = scratchStateLoaded && scratchLastClaimAt
+      && notifyTimerFireMs("scratch") > serverNowMs();
+    var wheelLive = adSpinStateLoaded && adSpinAnchorMs()
+      && notifyTimerFireMs("wheel") > serverNowMs();
+    if (!scratchLive && !wheelLive) return;
+    if (!notifyPermissionGranted()) { maybeAskNotifyPermission(); return; }
+    if (scratchLive) scheduleNotifyTimer("scratch");
+    if (wheelLive) scheduleNotifyTimer("wheel");
+  }
+  /* v47: called from the native permission-grant callback (and
+   * usable directly): a grant no longer leaves the missed timer
+   * lost — any live countdown is scheduled at once. No-op on web. */
+  function onNotifyPermissionGranted() {
+    rescheduleLiveNotifyTimers();
   }
   function cancelNotifyTimers() {
     if (!hasNotifyBridge()) return;
@@ -3387,6 +3492,7 @@ window.PUZZLEPOP_CONFIG = {
         adSpinFetching = false;
         adSpinStateLoaded = true; adSpinPending = false;
         refreshAdSpinSection();
+        rescheduleLiveNotifyTimers(); // v47: restore any live wheel timer lost to restart/logout
       }).catch(function (err) {
         adSpinFetching = false;
         if (adSpinMigrationMissing(err)) {
@@ -4128,6 +4234,7 @@ window.PUZZLEPOP_CONFIG = {
         scratchLastClaimAt = (rows && rows.length && rows[0].created_at) ? new Date(rows[0].created_at).getTime() : 0;
         scratchStateLoaded = true; scratchPending = false;
         refreshScratchCard();
+        rescheduleLiveNotifyTimers(); // v47: restore any live scratch timer lost to restart/logout
       }).catch(function (err) {
         scratchFetching = false;
         if (scratchMigrationMissing(err)) {
@@ -5155,7 +5262,7 @@ window.PUZZLEPOP_CONFIG = {
     });
     setBarActive(name);
     // Spin status must never go stale: refresh it every time the tab opens.
-    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); }
+    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); rescheduleLiveNotifyTimers(); refreshNotifyTestBtn(); }
     // Daily login bonus state must never go stale either.
     if (name === "profile") refreshStreakCard();
     // Contact Us refreshes on every open: Discord link + announcements.
@@ -7135,7 +7242,11 @@ window.PUZZLEPOP_CONFIG = {
     scheduleNotifyTimer: scheduleNotifyTimer,
     maybeAskNotifyPermission: maybeAskNotifyPermission,
     cancelNotifyTimers: cancelNotifyTimers,
-    notifyPermissionGranted: notifyPermissionGranted
+    notifyPermissionGranted: notifyPermissionGranted,
+    /* v47 notification-fix test seams. */
+    rescheduleLiveNotifyTimers: rescheduleLiveNotifyTimers,
+    onNotifyPermissionGranted: onNotifyPermissionGranted,
+    refreshNotifyTestBtn: refreshNotifyTestBtn
   };
 
   /* ================= premium entry flow: splash + auth screen ================= */
@@ -7192,6 +7303,7 @@ window.PUZZLEPOP_CONFIG = {
     wireScratchCard();
     wireAdSpin();
     wireNotifyPrompt(); // v39: notification permission prompt buttons
+    wireNotifyTestBtn(); // v47: owner-only immediate test notification
     wireBottomNav();
     wireReferralsPage();
     wireLeaderboardPaging();
@@ -7207,7 +7319,7 @@ window.PUZZLEPOP_CONFIG = {
     setInterval(tickCountdown, 1000);
     // Optimistic session from storage (validated quietly in background).
     if (session && session.user) {
-      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); } });
+      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); refreshNotifyTestBtn(); } });
     } else if (session) {
       // Session exists but user id unknown (OAuth redirect): fetch it.
       fetch(CFG.SUPABASE_URL + "/auth/v1/user", { headers: authHeaders() })
@@ -7220,7 +7332,7 @@ window.PUZZLEPOP_CONFIG = {
           }
           return null;
         })
-        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); } })
+        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); refreshNotifyTestBtn(); } })
         .catch(function () { renderAuth(); });
     }
     renderAuth();
