@@ -97,6 +97,10 @@
   .cell.will-clear{animation:willClear .5s ease infinite alternate;}
   @keyframes willClear{from{filter:brightness(1);}to{filter:brightness(1.35);}}
   .cell.clearing .blk{animation:clearOut .38s ease forwards;}
+.cell.gold{box-shadow:inset 0 0 0 2px #FFD166, inset 0 0 12px rgba(255,209,102,.55);}
+.cell.hole{background:#14142a !important;box-shadow:inset 0 2px 8px rgba(0,0,0,.65);}
+.cell .blk.tough{outline:3px solid #aab0c0;outline-offset:-3px;}
+.cell .blk.cracked{opacity:.6;outline:3px dashed #ff8c42;outline-offset:-3px;}
   @keyframes placeIn{0%{transform:scale(.4);opacity:0;}100%{transform:scale(1);opacity:1;}}
   @keyframes clearOut{0%{transform:scale(1);opacity:1;}60%{transform:scale(1.18);opacity:1;filter:brightness(1.6);}100%{transform:scale(0);opacity:0;}}
   /* block colors — glossy cube look */
@@ -882,7 +886,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <p class="muted">Per player; the owner may change amounts before a week starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
 </section>
     <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
-    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 7 — a 75,000 win adds exactly 75,000 to your board score after unlock.</p>
+    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 4 — a 75,000 win adds exactly 75,000 to your board score after unlock.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
     <p class="spin-legend">🟡 30k — 30% &nbsp; 🟠 39k — 25% &nbsp; 🔵 48k — 20% &nbsp; 🟣 60k — 15% &nbsp; 🔴 75k — 10%</p>
@@ -978,13 +982,78 @@ var LEVELS=[
   {name:"Legend Run", target:12500, prefill:27}, {name:"Candy Castle", target:15000, prefill:28},
   {name:"Candy Storm", target:18000, prefill:30}, {name:"Sugar Rush", target:21500, prefill:31},
   {name:"Grand Finale", target:25000, prefill:32}, {name:"Master Pop", target:29000, prefill:32},
-  {name:"Grandmaster", target:34000, prefill:33}, {name:"Legend Pop", target:40000, prefill:33}
+  {name:"Grandmaster", target:34000, prefill:33}, {name:"Legend Pop", target:40000, prefill:33},
+  {name:"Toffee Twist", target:46000, prefill:33}, {name:"Gumball Grove", target:53000, prefill:33},
+  {name:"Rocky Road", target:60000, prefill:30}, {name:"Fudge Falls", target:68000, prefill:30},
+  {name:"Caramel Cave", target:76000, prefill:30}, {name:"Jelly Jungle", target:85000, prefill:30},
+  {name:"Marshmallow Mountain", target:94000, prefill:30}, {name:"Licorice Lagoon", target:104000, prefill:30},
+  {name:"Bubblegum Bay", target:114000, prefill:30}, {name:"Choco Chasm", target:125000, prefill:30},
+  {name:"Peppermint Peak", target:136000, prefill:30}, {name:"Sugar Summit", target:148000, prefill:30},
+  {name:"Diamond Drop", target:160000, prefill:32}, {name:"Crystal Crush", target:173000, prefill:32},
+  {name:"Ruby Reef", target:186000, prefill:32}, {name:"Sapphire Sky", target:200000, prefill:32},
+  {name:"Emerald Isle", target:214000, prefill:32}, {name:"Topaz Tower", target:229000, prefill:32},
+  {name:"Opal Ocean", target:244000, prefill:32}, {name:"Amethyst Abyss", target:260000, prefill:32},
+  {name:"Grand Champion", target:276000, prefill:32}, {name:"Puzzle Legend", target:293000, prefill:32}
 ];
 function hashStr(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
 function mulberry32(seed){ var a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 
 /* ---------- State ---------- */
 var board, pieces, score, best, lines, combo, bestCombo, shuffleUsed, gameOver, soundOn, selectedSlot, undoStack, busy;
+/* ---------- v48 level twists (LEVEL mode only; Classic/Ranked/Daily never) ----------
+ * Twist ladder keyed by level NUMBER (levelIdx+1): 1-10 classic;
+ * 11-20 GOLD cells (+150 per gold cell cleared in a line); 21-30 HOLE cells
+ * (permanent, unfillable; a line clears once all its non-hole cells are
+ * filled); 31+ TOUGH blocks (prefilled blocks that crack on the first
+ * line-clear through them and break on the second). Gold bonus applies on
+ * line clears only; hammer/bomb smash through tough blocks and clear gold
+ * flags without bonus. Twist grids ride the undo snapshot; holeGrid is
+ * static per level (set at level start). Ranked games run Classic mode,
+ * so no twist can ever touch the money board. */
+var GOLD_BONUS=150, GOLD_COUNT=6, HOLE_COUNT=5, TOUGH_COUNT=6;
+function emptyGrid(){ var gr=[]; for(var i=0;i<SIZE;i++){ var row=[]; for(var j=0;j<SIZE;j++) row.push(false); gr.push(row);} return gr; }
+var goldGrid=emptyGrid(), holeGrid=emptyGrid(), toughGrid=emptyGrid(), crackedGrid=emptyGrid();
+function twistForLevel(levelNum){
+  if(levelNum>=31) return "tough";
+  if(levelNum>=21) return "holes";
+  if(levelNum>=11) return "gold";
+  return "none";
+}
+window.twistForLevel=twistForLevel; /* exposed for tests (game script is IIFE-scoped) */
+function twistMarker(levelNum){
+  var t=twistForLevel(levelNum);
+  return t==="gold" ? " \u2728" : t==="holes" ? " \uD83D\uDD73" : t==="tough" ? " \uD83E\uDEA8" : "";
+}
+function twistTeach(levelNum){
+  var t=twistForLevel(levelNum);
+  if(t==="gold") return "\u2728 Gold cells shine on the board \u2014 clear a line through one for +150 bonus points each!";
+  if(t==="holes") return "\uD83D\uDD73 Hole cells can never hold a piece \u2014 a line clears once all its other cells are filled!";
+  if(t==="tough") return "\uD83E\uDEA8 Tough blocks crack on the first clear through them and break on the second!";
+  return "";
+}
+function resetTwistGrids(){ goldGrid=emptyGrid(); holeGrid=emptyGrid(); toughGrid=emptyGrid(); crackedGrid=emptyGrid(); }
+function placeHoles(rng){
+  var placed=0, guard=0;
+  while(placed<HOLE_COUNT && guard++<500){
+    var r=Math.floor(rng()*SIZE), c=Math.floor(rng()*SIZE);
+    if(holeGrid[r][c]) continue;
+    holeGrid[r][c]=true; placed++;
+  }
+}
+function placeGold(rng){
+  var placed=0, guard=0;
+  while(placed<GOLD_COUNT && guard++<500){
+    var r=Math.floor(rng()*SIZE), c=Math.floor(rng()*SIZE);
+    if(board[r][c]>=0 || goldGrid[r][c]) continue;
+    goldGrid[r][c]=true; placed++;
+  }
+}
+function placeTough(rng){
+  var filled=[];
+  for(var r=0;r<SIZE;r++) for(var c=0;c<SIZE;c++) if(board[r][c]>=0) filled.push([r,c]);
+  for(var k=filled.length-1;k>0;k--){ var j=Math.floor(rng()*(k+1)); var t=filled[k]; filled[k]=filled[j]; filled[j]=t; }
+  for(var n=0;n<Math.min(TOUGH_COUNT, filled.length);n++) toughGrid[filled[n][0]][filled[n][1]]=true;
+}
 var mode="classic", levelIdx=0, levelStars={}, unlockedCount=1, hammers=2, bombs=1, armed=null, goalDone=false, dailyGoal=null, hintTimer=null, hintActive=false, hintCells=[];
 
 /* ---------- Persistent progress: levels + best (localStorage) ----------
@@ -1168,7 +1237,9 @@ function renderBoard(clearingSet){
   for(var r=0;r<SIZE;r++) for(var c=0;c<SIZE;c++){
     var el=cellEls[r][c], v=board[r][c];
     var key=r+","+c, isClearing = clearingSet && clearingSet[key];
-    var want = v>=0 ? '<div class="blk c'+v+'"></div>' : "";
+    var want = v>=0 ? '<div class="blk c'+v+(toughGrid[r][c] ? (crackedGrid[r][c] ? ' cracked' : ' tough') : '')+'"></div>' : "";
+    el.classList.toggle("gold", !!goldGrid[r][c]);
+    el.classList.toggle("hole", !!holeGrid[r][c]);
     if(el._v !== v || isClearing){
       el.innerHTML = want;
       if(isClearing && v>=0){ el.classList.add("clearing"); el.firstChild && el.firstChild.classList.add("c"+v); }
@@ -1185,7 +1256,7 @@ function canPlaceAt(shape, br, bc){
   for(var r=0;r<shape.length;r++) for(var c=0;c<shape[r].length;c++){
     if(!shape[r][c]) continue;
     var rr=br+r, cc=bc+c;
-    if(rr<0||rr>=SIZE||cc<0||cc>=SIZE||board[rr][cc]>=0) return false;
+    if(rr<0||rr>=SIZE||cc<0||cc>=SIZE||holeGrid[rr][cc]||board[rr][cc]>=0) return false;
   } return true;
 }
 function canPlaceAnywhere(shape){
@@ -1339,8 +1410,8 @@ function linesIfPlaced(shape, br, bc){
   var test=[]; for(var r=0;r<SIZE;r++){ test.push(board[r].slice()); }
   for(var r=0;r<shape.length;r++) for(var c=0;c<shape[r].length;c++) if(shape[r][c]) test[br+r][bc+c]=9;
   var rows=[], cols=[];
-  for(var r2=0;r2<SIZE;r2++){ var full=true; for(var c2=0;c2<SIZE;c2++) if(test[r2][c2]===-1){full=false;break;} if(full) rows.push(r2); }
-  for(var c3=0;c3<SIZE;c3++){ var full2=true; for(var r3=0;r3<SIZE;r3++) if(test[r3][c3]===-1){full2=false;break;} if(full2) cols.push(c3); }
+  for(var r2=0;r2<SIZE;r2++){ var full=true; for(var c2=0;c2<SIZE;c2++) if(!holeGrid[r2][c2] && test[r2][c2]===-1){full=false;break;} if(full) rows.push(r2); }
+  for(var c3=0;c3<SIZE;c3++){ var full2=true; for(var r3=0;r3<SIZE;r3++) if(!holeGrid[r3][c3] && test[r3][c3]===-1){full2=false;break;} if(full2) cols.push(c3); }
   return {rows:rows, cols:cols};
 }
 function clearPreview(){
@@ -1395,6 +1466,10 @@ window.PuzzlePopShowBanner = showBanner;
 function snapshot(){
   return {
     board: board.map(function(r){ return r.slice(); }),
+    gold: goldGrid.map(function(r){ return r.slice(); }),
+    holes: holeGrid.map(function(r){ return r.slice(); }),
+    tough: toughGrid.map(function(r){ return r.slice(); }),
+    cracked: crackedGrid.map(function(r){ return r.slice(); }),
     pieces: pieces.map(function(p){ return { shape: p.shape.map(function(r){ return r.slice(); }), color:p.color, used:p.used }; }),
     score:score, lines:lines, combo:combo, bestCombo:bestCombo, shuffleUsed:shuffleUsed, hammers:hammers, bombs:bombs, goalDone:goalDone
   };
@@ -1407,10 +1482,12 @@ function placePiece(idx, br, bc){
   var gained=shapeCells(p.shape)*10;
   sPlace(); renderBoard();
 
-  /* find full lines */
-  var rows=[], cols=[], r2,c2,full;
-  for(r2=0;r2<SIZE;r2++){ full=true; for(c2=0;c2<SIZE;c2++) if(board[r2][c2]===-1){full=false;break;} if(full) rows.push(r2); }
-  for(c2=0;c2<SIZE;c2++){ full=true; for(r2=0;r2<SIZE;r2++) if(board[r2][c2]===-1){full=false;break;} if(full) cols.push(c2); }
+  /* find full lines (hole-aware: a line with holes clears once all its
+     non-hole cells are filled; classic boards have no holes, so this is
+     identical to the old check there) */
+  var rows=[], cols=[], r2, c2;
+  for(r2=0;r2<SIZE;r2++) if(rowFull(r2)) rows.push(r2);
+  for(c2=0;c2<SIZE;c2++) if(colFull(c2)) cols.push(c2);
   var nLines=rows.length+cols.length;
 
   if(nLines>0){
@@ -1422,18 +1499,25 @@ function placePiece(idx, br, bc){
     var clearing={};
     rows.forEach(function(r){ for(var c=0;c<SIZE;c++) clearing[r+","+c]=board[r][c]; });
     cols.forEach(function(c){ for(var r=0;r<SIZE;r++) clearing[r+","+c]=board[r][c]; });
+    var goldHit=0;
+    Object.keys(clearing).forEach(function(k){ var parts=k.split(","); if(goldGrid[+parts[0]][+parts[1]]) goldHit++; });
+    if(goldHit>0) gained+=goldHit*GOLD_BONUS;
     renderBoard(clearing);
     Object.keys(clearing).forEach(function(k){ var parts=k.split(","); burstAt(+parts[0],+parts[1],"c"+clearing[k]); });
     sClear(nLines); busy=true;
     setTimeout(function(){
-      rows.forEach(function(r){ for(var c=0;c<SIZE;c++) board[r][c]=-1; });
-      cols.forEach(function(c){ for(var r=0;r<SIZE;r++) board[r][c]=-1; });
+      Object.keys(clearing).forEach(function(k){
+        var parts=k.split(","), rr=+parts[0], cc=+parts[1];
+        if(toughGrid[rr][cc] && !crackedGrid[rr][cc]){ crackedGrid[rr][cc]=true; }
+        else { board[rr][cc]=-1; toughGrid[rr][cc]=false; crackedGrid[rr][cc]=false; goldGrid[rr][cc]=false; }
+      });
       for(var r3=0;r3<SIZE;r3++) for(var c3=0;c3<SIZE;c3++){ cellEls[r3][c3]._v=undefined; }
       renderBoard(); busy=false;
       afterMove();
     }, 380);
     var rect=boardEl.getBoundingClientRect(), shellRect=shellEl.getBoundingClientRect();
     floatText("+"+lineScore, rect.left-shellRect.left+rect.width/2, rect.top-shellRect.top+rect.height/2-10, "#FFD166");
+    if(goldHit>0) floatText("GOLD +"+(goldHit*GOLD_BONUS), rect.left-shellRect.left+rect.width/2, rect.top-shellRect.top+rect.height/2+42, "#FFD166");
     if(streakBonus>0) floatText("STREAK +"+streakBonus, rect.left-shellRect.left+rect.width/2, rect.top-shellRect.top+rect.height/2+24, "#FF9F1C");
     if(nLines>=2 || combo>=3) confetti();
     if(nLines>=3){ shellEl.classList.remove("shake"); void shellEl.offsetWidth; shellEl.classList.add("shake"); }
@@ -1473,13 +1557,13 @@ function checkGameOver(){
 }
 
 /* ---------- Goals, levels, daily ---------- */
-function rowFull(r){ for(var c=0;c<SIZE;c++) if(board[r][c]===-1) return false; return true; }
-function colFull(c){ for(var r=0;r<SIZE;r++) if(board[r][c]===-1) return false; return true; }
+function rowFull(r){ for(var c=0;c<SIZE;c++) if(!holeGrid[r][c] && board[r][c]===-1) return false; return true; }
+function colFull(c){ for(var r=0;r<SIZE;r++) if(!holeGrid[r][c] && board[r][c]===-1) return false; return true; }
 function scatterPrefill(count, rng){
   var placed=0, guard=0;
   while(placed<count && guard++<500){
     var r=Math.floor(rng()*SIZE), c=Math.floor(rng()*SIZE);
-    if(board[r][c]>=0) continue;
+    if(board[r][c]>=0 || holeGrid[r][c]) continue;
     board[r][c]=Math.floor(rng()*8);
     if(rowFull(r)||colFull(c)){ board[r][c]=-1; continue; }
     placed++;
@@ -1507,7 +1591,7 @@ function updateGoalBar(){
   if(!g){ bar.hidden=true; return; }
   bar.hidden=false;
   var v = g.type==="score" ? score : lines;
-  document.getElementById("goalLabel").textContent = mode==="level" ? "⭐ Level "+(levelIdx+1)+" · "+LEVELS[levelIdx].name : "📅 "+dailyGoal.label;
+  document.getElementById("goalLabel").textContent = mode==="level" ? "⭐ Level "+(levelIdx+1)+" · "+LEVELS[levelIdx].name+twistMarker(levelIdx+1) : "📅 "+dailyGoal.label;
   document.getElementById("goalNums").textContent = v.toLocaleString()+" / "+g.target.toLocaleString()+(g.type==="score" ? " pts" : " lines");
   document.getElementById("goalFill").style.width = Math.min(100, Math.round(v/g.target*100))+"%";
   requestAnimationFrame(fitBoard);
@@ -1602,7 +1686,8 @@ function startLevel(i){
   document.querySelectorAll(".mode-btn").forEach(function(b){ b.classList.toggle("active", b.dataset.mode==="level"); });
   document.getElementById("levelPanel").hidden=true;
   newGame();
-  showBanner("⭐ Level "+(i+1)+" · "+LEVELS[i].name+" — reach "+LEVELS[i].target.toLocaleString()+" pts!","great");
+  var teachStart=(i+1===11||i+1===21||i+1===31) ? twistTeach(i+1) : "";
+  showBanner("⭐ Level "+(i+1)+" · "+LEVELS[i].name+" — reach "+LEVELS[i].target.toLocaleString()+" pts!"+(teachStart ? " "+teachStart : ""),"great");
 }
 function setMode(m){
   mode=m;
@@ -1611,7 +1696,7 @@ function setMode(m){
   if(m==="level" && levelIdx>=unlockedCount){ levelIdx=unlockedCount-1; saveProgress(); }
   newGame();
   if(m==="daily") showBanner("📅 "+dailyGoal.label,"great");
-  else if(m==="level") showBanner("⭐ Level "+(levelIdx+1)+" · "+LEVELS[levelIdx].name+" — reach "+LEVELS[levelIdx].target.toLocaleString()+" pts!","great");
+  else if(m==="level"){ var teachMode=(levelIdx+1===11||levelIdx+1===21||levelIdx+1===31) ? twistTeach(levelIdx+1) : ""; showBanner("⭐ Level "+(levelIdx+1)+" · "+LEVELS[levelIdx].name+" — reach "+LEVELS[levelIdx].target.toLocaleString()+" pts!"+(teachMode ? " "+teachMode : ""),"great"); }
   else showBanner("🎮 Classic — endless popping!","great");
 }
 
@@ -1646,7 +1731,7 @@ function applyPower(r,c){
   if(armed==="hammer"){
     if(board[r][c]<0){ sBad(); showBanner("Tap a filled block to smash it 🔨",""); return; }
     undoStack.push(snapshot()); hammers--; armed=null;
-    burstAt(r,c,"c"+board[r][c]); board[r][c]=-1; sSmash();
+    burstAt(r,c,"c"+board[r][c]); board[r][c]=-1; goldGrid[r][c]=false; toughGrid[r][c]=false; crackedGrid[r][c]=false; sSmash();
     floatText("SMASH!", cellCenterX(c), cellCenterY(r), "#FFD166");
   } else if(armed==="bomb"){
     undoStack.push(snapshot()); bombs--; armed=null;
@@ -1654,7 +1739,7 @@ function applyPower(r,c){
     for(var dr=-1;dr<=1;dr++) for(var dc=-1;dc<=1;dc++){
       var rr=r+dr, cc=c+dc;
       if(rr<0||rr>=SIZE||cc<0||cc>=SIZE) continue;
-      if(board[rr][cc]>=0){ burstAt(rr,cc,"c"+board[rr][cc]); board[rr][cc]=-1; hit=true; }
+      if(board[rr][cc]>=0){ burstAt(rr,cc,"c"+board[rr][cc]); board[rr][cc]=-1; goldGrid[rr][cc]=false; toughGrid[rr][cc]=false; crackedGrid[rr][cc]=false; hit=true; }
     }
     sBoom();
     shellEl.classList.remove("shake"); void shellEl.offsetWidth; shellEl.classList.add("shake");
@@ -1745,8 +1830,15 @@ function newGame(){
    * pending power-up bonuses (hammers+=h; bombs+=b), and running it
    * first meant the reset wiped the grant and destroyed the bonus. */
   if(window.PuzzlePopTournament)window.PuzzlePopTournament.onNewGame();
+  resetTwistGrids();
   if(mode==="level" && levelIdx>=unlockedCount){ levelIdx=unlockedCount-1; saveProgress(); }
-  if(mode==="level") scatterPrefill(LEVELS[levelIdx].prefill, mulberry32(1000+levelIdx*131));
+  if(mode==="level"){
+    var lrng=mulberry32(1000+levelIdx*131);
+    if(twistForLevel(levelIdx+1)==="holes") placeHoles(lrng);
+    scatterPrefill(LEVELS[levelIdx].prefill, lrng);
+    if(twistForLevel(levelIdx+1)==="gold") placeGold(lrng);
+    if(twistForLevel(levelIdx+1)==="tough") placeTough(lrng);
+  }
   else if(mode==="daily") setupDaily();
   scoreEl.textContent="0"; linesEl.textContent="0"; updateComboBadge();
   for(var r=0;r<SIZE;r++) for(var c=0;c<SIZE;c++) cellEls[r][c]._v=undefined;
@@ -1777,6 +1869,8 @@ document.getElementById("undoBtn").addEventListener("click", function(){
   var s=undoStack.pop();
   board=s.board; pieces=s.pieces; score=s.score; lines=s.lines; combo=s.combo; bestCombo=s.bestCombo; shuffleUsed=s.shuffleUsed;
   hammers=s.hammers; bombs=s.bombs; goalDone=s.goalDone; armed=null;
+  goldGrid=s.gold; holeGrid=s.holes; toughGrid=s.tough; crackedGrid=s.cracked;
+  for(var ui=0;ui<SIZE;ui++) for(var uj=0;uj<SIZE;uj++) cellEls[ui][uj]._v=undefined;
   selectedSlot=null;
   for(var r=0;r<SIZE;r++) for(var c=0;c<SIZE;c++) cellEls[r][c]._v=undefined;
   renderBoard(); scoreEl.textContent=score; bestEl.textContent=best; linesEl.textContent=lines;
@@ -1932,7 +2026,7 @@ window.PUZZLEPOP_CONFIG = {
   WEEK: { startDay: 1, timezone: "UTC" },
 
   /* Tournament unlock + daily-gated progression (mirrors schema.sql).
-   * v20: the tournament unlocks after a 7-day daily-bonus streak
+   * v20: the tournament unlocks after a 4-day daily-bonus streak
    * (see BONUS below), NOT by reaching a level. Levels, stars, and
    * daily coins still work exactly as before for game progression —
    * they just no longer gate the tournament. Grandfathering: players
@@ -1952,7 +2046,7 @@ window.PUZZLEPOP_CONFIG = {
    * and 2 bombs (pending-bonus inventory, next game). The ladder
    * CYCLES after day 7 (day 8 pays the day-1 amount) while the streak
    * count itself keeps growing. Ladder coins add to the weekly
-   * leaderboard total ONLY once the tournament is unlocked (7-day
+   * leaderboard total ONLY once the tournament is unlocked (4-day
    * streak ever, or grandfathered level 12); pre-entry claims award
    * the streak day + power-ups only, no points.
    * AD_GATE_ENABLED is the single ad-gate hook: ON since v29 — the
@@ -1964,7 +2058,7 @@ window.PUZZLEPOP_CONFIG = {
    * cannot run AdMob, so the gate only bites where the bridge
    * exists. */
   BONUS: {
-    STREAK_DAYS: 7,
+    STREAK_DAYS: 4,
     HAMMERS: 2,
     BOMBS: 2,
     AD_GATE_ENABLED: true,
@@ -1980,7 +2074,7 @@ window.PUZZLEPOP_CONFIG = {
   },
 
   // SPIN: one FREE spin per UTC day for tournament-unlocked players
-  // (7-day daily-bonus streak, or grandfathered level 12), drawn
+  // (4-day daily-bonus streak, or grandfathered level 12), drawn
   // SERVER-SIDE by claim_free_spin() from this fixed table. Prizes go
   // DIRECTLY to the day's ranked_scores.total_score, so the weekly
   // board (sum(total)) moves with every win. v20 prizes are the v12
@@ -2570,7 +2664,7 @@ window.PUZZLEPOP_CONFIG = {
   var streakDays = 0; // server streak (get_streak, games played), kept for the streak bar
   /* v20 daily-bonus streak: the TOURNAMENT gate. Server truth only,
    * from rpc/get_bonus_status — never localStorage, never guessed.
-   * bonusUnlocked is true once the player has EVER finished a 7-day
+   * bonusUnlocked is true once the player has EVER finished a 4-day
    * bonus streak OR was grandfathered (player_progress level >= 12
    * under the old rule); it stays true even if the streak later
    * breaks. bonusPending means the streak migration has not run yet:
@@ -2583,7 +2677,7 @@ window.PUZZLEPOP_CONFIG = {
   var bonusNextCoins = 0;
   var bonusCollectedInCycle = 0;
   var bonusCoinsToday = 0;
-  var bonusDaysToUnlock = 7;
+  var bonusDaysToUnlock = 4;
   var bonusStateLoaded = false;
   var bonusPending = false;
   /* v28: stale-account guard. The bonus vars above are per-account
@@ -2602,7 +2696,7 @@ window.PUZZLEPOP_CONFIG = {
     bonusNextCoins = 0;
     bonusCollectedInCycle = 0;
     bonusCoinsToday = 0;
-    bonusDaysToUnlock = 7;
+    bonusDaysToUnlock = 4;
     bonusStateLoaded = false;
     bonusPending = false;
   }
@@ -2627,7 +2721,7 @@ window.PUZZLEPOP_CONFIG = {
   /* v30: server level feeds ONLY the v20 tournament grandfathering
    * rule — it no longer clamps local level progress (auto-levels). */
   function gateLevel() { return serverLevel; }
-  /* v20 tournament gate: a 7-day daily-bonus streak (ever), or
+  /* v20 tournament gate: a 4-day daily-bonus streak (ever), or
    * grandfathered level 12. False until the server bonus state has
    * loaded — a slow network never wrongly unlocks anything (the
    * server enforces the same gate on submit and spin anyway). */
@@ -2638,15 +2732,15 @@ window.PUZZLEPOP_CONFIG = {
   function bonusLockMessage() {
     if (bonusPending) return "Locked — tournament streaks need a quick Supabase update.";
     if (!bonusStateLoaded) return "Locked — loading your tournament streak…";
-    return "Locked — the tournament unlocks after a 7-day daily-bonus streak. " +
+    return "Locked — the tournament unlocks after a 4-day daily-bonus streak. " +
       "Your streak is " + bonusStreak + " day" + (bonusStreak === 1 ? "" : "s") +
       " (" + bonusDaysToUnlock + " more to go).";
   }
   /* Journey-bar fill for the streak gate: full once unlocked, else
-   * streak/7. Exported for tests. */
+   * streak/4. Exported for tests. */
   function streakUnlockPct(streak, unlocked) {
     if (unlocked) return 100;
-    return Math.min(streak || 0, 7) / 7 * 100;
+    return Math.min(streak || 0, 4) / 4 * 100;
   }
   function bonusMigrationMissing(err) {
     var m = (err && err.message) || "";
@@ -2660,7 +2754,7 @@ window.PUZZLEPOP_CONFIG = {
     if (!session || !session.user || !myProfile) {
       bonusStreak = 0; bonusUnlocked = false; bonusClaimedToday = false;
       bonusLadderDay = 1; bonusNextCoins = 0; bonusCollectedInCycle = 0;
-      bonusCoinsToday = 0; bonusDaysToUnlock = 7;
+      bonusCoinsToday = 0; bonusDaysToUnlock = 4;
       bonusStateLoaded = true; bonusPending = false;
       refreshStreakCard(); renderProgress();
       return Promise.resolve(null);
@@ -2673,7 +2767,7 @@ window.PUZZLEPOP_CONFIG = {
       bonusNextCoins = (res && typeof res.next_coins === "number") ? res.next_coins : 0;
       bonusCollectedInCycle = (res && typeof res.collected_in_cycle === "number") ? res.collected_in_cycle : 0;
       bonusCoinsToday = (res && typeof res.coins_today === "number") ? res.coins_today : 0;
-      bonusDaysToUnlock = (res && typeof res.days_to_unlock === "number") ? res.days_to_unlock : 7;
+      bonusDaysToUnlock = (res && typeof res.days_to_unlock === "number") ? res.days_to_unlock : 4;
       bonusStateLoaded = true; bonusPending = false;
       /* v41: an unlocked report (streak-ever OR grandfathered level>=12,
        * both come through here as unlocked=true) fires the referral
@@ -2876,7 +2970,7 @@ window.PUZZLEPOP_CONFIG = {
         btn.addEventListener("click", function () {
           if (!tournamentUnlocked()) {
             var sb = window.PuzzlePopShowBanner;
-            if (sb) { try { sb("Locked \u2014 the tournament unlocks after a 7-day daily-bonus streak.", "great"); } catch (e) {} }
+            if (sb) { try { sb("Locked \u2014 the tournament unlocks after a 4-day daily-bonus streak.", "great"); } catch (e) {} }
             return;
           }
           setRanked(true);
@@ -2973,7 +3067,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* --- Daily Spin: leaderboard prizes, server-drawn (v12, v20 prizes) ---
    * One FREE spin per UTC day for tournament-unlocked players
-   * (7-day daily-bonus streak, or grandfathered level 12).
+   * (4-day daily-bonus streak, or grandfathered level 12).
    * Prizes go DIRECTLY to the day's ranked_scores.total_score, so the
    * weekly board (sum(total)) moves with every win. The draw is made
    * SERVER-SIDE by claim_free_spin() from the fixed table in
@@ -3000,8 +3094,8 @@ window.PUZZLEPOP_CONFIG = {
       setText("spinPageNote", "One free spin per day \u2014 prizes go straight to your leaderboard total.");
       setText("spinWheelExplainer", "One free spin per day. Prizes go DIRECTLY to your leaderboard total \u2014 a 75,000 win adds exactly 75,000 to your board score.");
     } else {
-      setText("spinPageNote", "One free spin per day \u2014 coin prizes count on your leaderboard total once you unlock the tournament on day 7.");
-      setText("spinWheelExplainer", "One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 7 \u2014 a 75,000 win adds exactly 75,000 to your board score after unlock.");
+      setText("spinPageNote", "One free spin per day \u2014 coin prizes count on your leaderboard total once you unlock the tournament on day 4.");
+      setText("spinWheelExplainer", "One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 4 \u2014 a 75,000 win adds exactly 75,000 to your board score after unlock.");
     }
   }
   function spinMigrationMissing(err) {
@@ -3041,7 +3135,7 @@ window.PUZZLEPOP_CONFIG = {
             btn.disabled = true;
             if (rows[0].coins_applied === false) {
               setText("spinResult", "You already spun today and won " + rows[0].prize.toLocaleString() +
-                " \u2014 coins count on the leaderboard once you unlock the tournament on day 7. Next free spin tomorrow.");
+                " \u2014 coins count on the leaderboard once you unlock the tournament on day 4. Next free spin tomorrow.");
             } else {
               setText("spinResult", "You already spun today and won " + rows[0].prize.toLocaleString() +
                 " \u2014 added to your leaderboard total. Next free spin tomorrow.");
@@ -3093,7 +3187,7 @@ window.PUZZLEPOP_CONFIG = {
            * honestly. coins_applied === false only after the v28
            * migration; older responses (field absent) stay applied. */
           var heldNote = (res && res.coins_applied === false)
-            ? " \u2014 coins count on the leaderboard once you unlock the tournament on day 7."
+            ? " \u2014 coins count on the leaderboard once you unlock the tournament on day 4."
             : " \u2014 added to your leaderboard total.";
           if (res && res.already) {
             setText("spinResult", "You already spun today and won " + prizeTxt + heldNote + " Next free spin tomorrow.");
@@ -3597,7 +3691,7 @@ window.PUZZLEPOP_CONFIG = {
       /* v39: the 2h wheel timer starts now (permission-gated, app only). */
       scheduleNotifyTimer("wheel");
       if (applied) setText("adSpinStatus", "\uD83C\uDF89 You won " + coins.toLocaleString("en-US") + " \u2014 added to your leaderboard total!");
-      else setText("adSpinStatus", "You won " + coins.toLocaleString("en-US") + "! Coins count on the leaderboard once you unlock the tournament on day 7.");
+      else setText("adSpinStatus", "You won " + coins.toLocaleString("en-US") + "! Coins count on the leaderboard once you unlock the tournament on day 4.");
       refreshAdSpinSection();
     }).catch(function (err) {
       adSpinClaimInFlight = false;
@@ -3660,7 +3754,7 @@ window.PUZZLEPOP_CONFIG = {
    * Ladder (CFG.BONUS.LADDER): 7500/15000/25000/37500/50000/75000/
    * 100000, cycling after day 7 while the streak count keeps
    * growing. Ladder coins add to today's ranked_scores.total_score
-   * ONLY once tournament-unlocked (7-day streak ever, or
+   * ONLY once tournament-unlocked (4-day streak ever, or
    * grandfathered level 12); pre-entry claims record the streak day
    * + power-ups only, and the UI says so plainly.
    * AD GATE HOOK (v29 LIVE): CFG.BONUS.AD_GATE_ENABLED is true —
@@ -3784,8 +3878,8 @@ window.PUZZLEPOP_CONFIG = {
     renderStreakLadder();
     if (!session || !session.user) {
       setStreakText("streak-dayline", "Log in to start your streak.");
-      setStreakText("streak-status", "Log in to claim your daily bonus \u2014 open daily, collect, 7 days in a row.");
-      setStreakText("streak-unlock-line", "Sign in to start your 7-day streak.");
+      setStreakText("streak-status", "Log in to claim your daily bonus \u2014 open daily, collect, 4 days in a row.");
+      setStreakText("streak-unlock-line", "Sign in to start your 4-day streak.");
       if (dot) dot.hidden = true;
       return;
     }
@@ -3799,7 +3893,7 @@ window.PUZZLEPOP_CONFIG = {
     if (bonusPending) {
       setStreakText("streak-dayline", "Daily bonus streaks coming soon.");
       setStreakText("streak-status", "Daily bonus streaks need a quick Supabase update \u2014 the owner runs it once, then streaks go live here.");
-      setStreakText("streak-unlock-line", "Tournament unlocks after a 7-day daily-bonus streak.");
+      setStreakText("streak-unlock-line", "Tournament unlocks after a 4-day daily-bonus streak.");
       if (dot) dot.hidden = true;
       return;
     }
@@ -3820,7 +3914,7 @@ window.PUZZLEPOP_CONFIG = {
     }
     var pointsNote = bonusUnlocked
       ? " Coins count on your leaderboard total."
-      : " Coins count on the leaderboard once you unlock the tournament on day 7.";
+      : " Coins count on the leaderboard once you unlock the tournament on day 4.";
     if (bonusClaimedToday) {
       setStreakText("streak-status", "Already claimed today \u2014 Day " + cycleDay + " collected: " +
         bonusCoinsToday.toLocaleString() + " coins + " + hammers + " hammers + " + bombs + " bombs." +
@@ -3894,7 +3988,7 @@ window.PUZZLEPOP_CONFIG = {
             ": " + ((res && res.coins) || 0).toLocaleString() +
             " coins + 2 hammers + 2 bombs for your next game." +
             ((res && res.points_added) ? " Added to your leaderboard total." :
-              " Coins count on the leaderboard once you unlock the tournament on day 7."));
+              " Coins count on the leaderboard once you unlock the tournament on day 4."));
         });
       }).catch(function (err) {
         if (bonusMigrationMissing(err)) {
@@ -4108,21 +4202,21 @@ window.PUZZLEPOP_CONFIG = {
     var prize = scratchFreePrize;
     if (prize && prize.type === "bundle") {
       if (scratchFreeApplied) return "Already scratched today \u2014 you won " + scratchPrizeText(prize) + ". Coins added to your leaderboard total; hammers and bombs added to your next game.";
-      return "Already scratched today \u2014 you won " + scratchPrizeText(prize) + ". Coins count on the leaderboard once you unlock the tournament on day 7; hammers and bombs added to your next game.";
+      return "Already scratched today \u2014 you won " + scratchPrizeText(prize) + ". Coins count on the leaderboard once you unlock the tournament on day 4; hammers and bombs added to your next game.";
     }
     if (prize && prize.type === "powerup") return "Already scratched today \u2014 you won " + scratchPrizeText(prize) + ", added to your next game.";
     if (scratchFreeApplied) return "Already scratched today \u2014 you won " + scratchCoinText(scratchFreeCoins) + " on the leaderboard.";
-    return "Already scratched today \u2014 you won " + scratchCoinText(scratchFreeCoins) + ". Coins count on the leaderboard once you unlock the tournament on day 7.";
+    return "Already scratched today \u2014 you won " + scratchCoinText(scratchFreeCoins) + ". Coins count on the leaderboard once you unlock the tournament on day 4.";
   }
   function scratchWinText(prize) {
     if (!prize) return "You won a prize!";
     if (prize.type === "bundle") {
       if (prize.coinsApplied) return "You won " + scratchPrizeText(prize) + "! Coins added to your leaderboard total; hammers and bombs added to your next game!";
-      return "You won " + scratchPrizeText(prize) + "! Coins count on the leaderboard once you unlock the tournament on day 7; hammers and bombs added to your next game!";
+      return "You won " + scratchPrizeText(prize) + "! Coins count on the leaderboard once you unlock the tournament on day 4; hammers and bombs added to your next game!";
     }
     if (prize.type === "powerup") return "You won " + scratchPrizeText(prize) + " \u2014 added to your next game!";
     if (prize.coinsApplied) return "You won " + scratchCoinText(prize.coins) + " on the leaderboard!";
-    return "You won " + scratchCoinText(prize.coins) + "! Coins count on the leaderboard once you unlock the tournament on day 7.";
+    return "You won " + scratchCoinText(prize.coins) + "! Coins count on the leaderboard once you unlock the tournament on day 4.";
   }
   function scratchMigrationMissing(err) {
     var m = (err && err.message) || "";
@@ -4639,7 +4733,7 @@ window.PUZZLEPOP_CONFIG = {
       }
       if (kind === "win" && mode === "level" && typeof levelIdx === "number") {
         reportLevelComplete(levelIdx + 1, score).then(function () {
-          if (serverCompleted >= serverLevel && serverLevel < 18) {
+          if (serverCompleted >= serverLevel && serverLevel < 40) {
             overlayNote("Level " + serverLevel + " complete! Level " +
               (serverLevel + 1) + " unlocked — your next level game starts there.");
           }
@@ -4881,7 +4975,7 @@ window.PUZZLEPOP_CONFIG = {
         var li = document.createElement("li");
         var streak = (typeof r.streak === "number") ? r.streak : 0;
         li.textContent = (r.username || "Player") + " — " + streak + "-day streak — " +
-          (r.unlocked ? "Unlocked ✓" : "Day " + streak + " (unlocks on day 7)");
+          (r.unlocked ? "Unlocked ✓" : "Day " + streak + " (unlocks on day 4)");
         list.appendChild(li);
       });
     }).catch(function (err) {
@@ -7103,7 +7197,7 @@ window.PUZZLEPOP_CONFIG = {
    * also shown on the game page as a banner. */
   /* Game-page Ranked button (v30): the ONLY ranked control now that
      the Profile toggle is gone. Same gates as the old toggle (login,
-     profile, 7-day streak unlock) with the reason shown as a game-page
+     profile, 4-day streak unlock) with the reason shown as a game-page
      banner; turning ON switches to Classic so the fresh game counts. */
   function wireRankedBtn() {
     var b = $("rankedBtn");
