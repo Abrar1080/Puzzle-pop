@@ -2062,7 +2062,7 @@ window.PUZZLEPOP_CONFIG = {
     HAMMERS: 2,
     BOMBS: 2,
     AD_GATE_ENABLED: true,
-    LADDER: [15000, 30000, 50000, 75000, 100000, 150000, 200000]
+    LADDER: [15000, 30000, 50000, 75000]
   },
 
   /* Underdog pack: weekly biggest climber's power-up prize (in-game
@@ -2673,7 +2673,7 @@ window.PUZZLEPOP_CONFIG = {
   var bonusStreak = 0;
   var bonusUnlocked = false;
   var bonusClaimedToday = false;
-  var bonusLadderDay = 1; // ladder day of the NEXT claim (1..7)
+  var bonusLadderDay = 1; // ladder day of the NEXT claim (1..4)
   var bonusNextCoins = 0;
   var bonusCollectedInCycle = 0;
   var bonusCoinsToday = 0;
@@ -3753,8 +3753,8 @@ window.PUZZLEPOP_CONFIG = {
    * same day returns already-claimed and grants NOTHING twice),
    * each claim awards that ladder day's coins PLUS 2 hammers and
    * 2 bombs recorded as server pending bonuses (next game, v37).
-   * Ladder (CFG.BONUS.LADDER): 15000/30000/50000/75000/100000/150000/
-   * 200000, cycling after day 7 while the streak count keeps
+   * Ladder (CFG.BONUS.LADDER): 15000/30000/50000/75000,
+   * cycling after day 4 while the streak count keeps
    * growing. Ladder coins add to today's ranked_scores.total_score
    * ONLY once tournament-unlocked (4-day streak ever, or
    * grandfathered level 12); pre-entry claims record the streak day
@@ -3847,16 +3847,16 @@ window.PUZZLEPOP_CONFIG = {
   function renderStreakLadder() {
     var lists = document.querySelectorAll("[data-streak-card] .streak-ladder");
     if (!lists.length) return;
-    var ladder = (CFG.BONUS && CFG.BONUS.LADDER) || [15000, 30000, 50000, 75000, 100000, 150000, 200000];
+    var ladder = (CFG.BONUS && CFG.BONUS.LADDER) || [15000, 30000, 50000, 75000];
     var hammers = (CFG.BONUS && CFG.BONUS.HAMMERS) || 2;
     var bombs = (CFG.BONUS && CFG.BONUS.BOMBS) || 2;
     /* Display day: the ladder slot today fills. If claimed today it
      * is the claimed slot; otherwise it is the next slot to collect. */
     var todaySlot = bonusClaimedToday
-      ? ((bonusStreak - 1) % 7) + 1
+      ? ((bonusStreak - 1) % 4) + 1
       : bonusLadderDay;
     var html = "";
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 4; i++) {
       var day = i + 1;
       var cls = "";
       /* v28 belt-and-braces: done marks only for a signed-in player
@@ -3908,11 +3908,11 @@ window.PUZZLEPOP_CONFIG = {
     }
     var hammers = (CFG.BONUS && CFG.BONUS.HAMMERS) || 2;
     var bombs = (CFG.BONUS && CFG.BONUS.BOMBS) || 2;
-    var cycleDay = bonusClaimedToday ? ((bonusStreak - 1) % 7) + 1 : bonusLadderDay;
+    var cycleDay = bonusClaimedToday ? ((bonusStreak - 1) % 4) + 1 : bonusLadderDay;
     if (bonusStreak > 0) {
-      setStreakText("streak-dayline", "\uD83D\uDD25 " + bonusStreak + "-day streak \u00B7 Day " + cycleDay + " of 7");
+      setStreakText("streak-dayline", "\uD83D\uDD25 " + bonusStreak + "-day streak \u00B7 Day " + cycleDay + " of 4");
     } else {
-      setStreakText("streak-dayline", "No streak yet \u2014 Day 1 of 7 starts with today's claim!");
+      setStreakText("streak-dayline", "No streak yet \u2014 Day 1 of 4 starts with today's claim!");
     }
     var pointsNote = bonusUnlocked
       ? " Coins count on your leaderboard total."
