@@ -418,12 +418,15 @@
 /* Unread-announcements dot on the Contact button: static red dot, no
    animation, so reduced-motion needs no special handling. */
 .bnav-dot{position:absolute;top:3px;right:7px;width:9px;height:9px;border-radius:50%;background:#ef4444;border:2px solid var(--panel);z-index:2;}
-/* v42: 7-button bar fit — longest label "Leaderboard" measures 55.3px in
-   Nunito 900 at 9px but ~43.1px at 7px; the 7-button slot at a 360px
-   viewport is ~46.3px, so narrow screens use 7px labels (icons still
-   carry recognition). Above 480px the slot is 63px+, so 9px labels fit
-   unchanged. */
-@media (max-width:480px){.bnav-lb{font-size:7px;}}
+/* v52: 8-button bar fit — longest label "Leaderboard" measures 55.3px in
+   Nunito 900 at 9px, ~43.1px at 7px, ~36.9px at 6px. Button slots lose
+   2px to button padding, so the label must fit slot-2px: at 360px the
+   tight-chrome slot is ~41.1px (label space ~39.1px) so narrow screens
+   use 6px labels + tighter bar chrome; 481–560px uses 7px labels
+   (slot ~55.1px at 481px, label space ~53.1px); above 560px the slot
+   is ~65.1px (label space ~63.1px) so 9px labels fit unchanged. */
+@media (max-width:480px){.bnav-lb{font-size:6px;}.bottom-nav{gap:1px;padding:2px;}}
+@media (min-width:481px) and (max-width:560px){.bnav-lb{font-size:7px;}}
 .back-row{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;}
 .back-row[hidden]{display:none;}
 .play-back-btn{border:none;border-radius:999px;padding:13px 22px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:16px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
@@ -475,6 +478,37 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   :root[data-theme="dark"] #page-referrals .referral-section{background:linear-gradient(135deg,#2A2140,#3A2B4A 45%,#123B3A);border-color:rgba(232,199,102,.5);color:#FFFFFF;}
   :root[data-theme="dark"] #page-referrals .referral-section .muted{color:rgba(255,255,255,.75);}
   @media (prefers-reduced-motion:reduce){#page-referrals::before,#page-referrals .btn::after,#page-referrals.referrals-enter .referral-section{animation:none!important;}}
+  /* ===== v52: Earnings page (scoped to #page-earnings ONLY) ===== */
+  #page-earnings{overflow-y:auto;position:relative;}
+  #page-earnings > :not(.lb-bg){position:relative;z-index:1;}
+  #page-earnings::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(240px 240px at 10% 6%,rgba(255,213,79,.55),transparent 70%),radial-gradient(260px 260px at 90% 20%,rgba(52,211,153,.40),transparent 70%),radial-gradient(240px 240px at 50% 96%,rgba(245,158,11,.35),transparent 70%);animation:earningsGlowDrift 15s ease-in-out infinite alternate;}
+  @keyframes earningsGlowDrift{from{transform:translateY(0) scale(1);}to{transform:translateY(-14px) scale(1.04);}}
+  #page-earnings .earnings-section{background:linear-gradient(135deg,#FFF9E6,#EAFBF1 45%,#FFF3D6);border:1.5px solid rgba(232,199,102,.7);border-radius:20px;padding:16px;box-shadow:0 10px 24px rgba(15,36,64,.12);margin:0 0 14px;}
+  #page-earnings .earnings-section h3{margin:0 0 6px;font-family:"Baloo 2",cursive;font-size:19px;}
+  #page-earnings .earnings-section h3::after{content:"";display:block;height:3px;width:56px;margin-top:6px;border-radius:99px;background:linear-gradient(90deg,#F59E0B,#22C55E,#F59E0B);}
+  #page-earnings .earnings-section p{margin:6px 0;line-height:1.5;}
+  #page-earnings ul{padding-left:0;}
+  #page-earnings li:not(.empty-state):not(.error-state){background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:11px 13px;box-shadow:var(--shadow-sm);margin:0 0 8px;list-style:none;font-weight:800;font-size:13.5px;}
+  #page-earnings li.empty-state,#page-earnings li.error-state{text-align:center;font-weight:800;list-style:none;}
+  #page-earnings .earnings-hero{background:linear-gradient(135deg,#FFFBEB,#FEF3C7 40%,#D1FAE5);border:1.5px solid #F59E0B;box-shadow:0 14px 30px rgba(245,158,11,.30);}
+  #page-earnings .earnings-big{font-family:"Baloo 2",cursive;font-size:34px;font-weight:900;line-height:1.1;margin:8px 0 2px;letter-spacing:.01em;}
+  #page-earnings .earnings-balance{font-family:"Baloo 2",cursive;font-size:30px;font-weight:900;line-height:1.1;margin:8px 0 2px;color:#047857;}
+  #page-earnings .earnings-track{height:16px;border-radius:999px;background:rgba(15,36,64,.12);border:1px solid rgba(232,199,102,.8);overflow:hidden;margin:10px 0 6px;}
+  #page-earnings .earnings-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#22C55E);transition:width .6s ease;}
+  #page-earnings .btn{border:none;border-radius:14px;padding:13px 18px;font-weight:900;width:100%;box-sizing:border-box;background:linear-gradient(135deg,#F59E0B,#22C55E 60%,#0EA5E9);color:#fff;box-shadow:0 8px 18px rgba(34,197,94,.35);position:relative;overflow:hidden;transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;}
+  #page-earnings .btn:active{transform:scale(.95);}
+  #page-earnings .btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);pointer-events:none;animation:earningsBtnShine 3.2s ease-in-out infinite;}
+  @keyframes earningsBtnShine{0%,55%{left:-80%;}85%,100%{left:130%;}}
+  #page-earnings .btn:disabled{filter:grayscale(.4);opacity:.6;box-shadow:none;}
+  #page-earnings.earnings-enter #earningsHeroSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.02s;}
+  #page-earnings.earnings-enter #earningsPayoutSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.10s;}
+  #page-earnings.earnings-enter #earningsPendingSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.18s;}
+  #page-earnings.earnings-enter #earningsCompletedSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.26s;}
+  @keyframes earningsIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+  :root[data-theme="dark"] #page-earnings .earnings-section{background:linear-gradient(135deg,#2A2140,#123B2A 45%,#3A2B10);border-color:rgba(232,199,102,.5);color:#FFFFFF;}
+  :root[data-theme="dark"] #page-earnings .earnings-section .muted{color:rgba(255,255,255,.75);}
+  :root[data-theme="dark"] #page-earnings .earnings-balance{color:#6EE7B7;}
+  @media (prefers-reduced-motion:reduce){#page-earnings::before,#page-earnings .btn::after,#page-earnings.earnings-enter .earnings-section{animation:none!important;}}
   /* ===== v18: live badge ===== */
   .lb-live-badge{display:inline-block;padding:3px 10px;border-radius:999px;background:#16A34A;color:#FFFFFF;font-size:12px;font-weight:900;letter-spacing:.02em;}
   /* ===== v32: Prizes page — exactly 3 sections; Winner Paid Proof is premium ===== */
@@ -829,6 +863,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
   <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span><span class="bnav-dot" id="contactNewDot" hidden aria-label="New announcements"></span></button>
   <button type="button" class="bnav-btn" id="bnav-referrals" data-view="referrals"><span class="bnav-ic">🎁</span><span class="bnav-lb">Referrals</span></button>
+  <button type="button" class="bnav-btn" id="bnav-earnings" data-view="earnings"><span class="bnav-ic">💵</span><span class="bnav-lb">Earnings</span></button>
 </nav>
 
 <div class="overlay ad-overlay" id="adOverlay" role="dialog" aria-modal="true" aria-label="Ad break">
@@ -933,6 +968,11 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralListSection"><h3>👥 Friends you referred</h3><ul id="referralList"></ul><p class="muted" id="referralListNote"></p></div>
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
+</section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (10,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
+<div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
+<div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
+<div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
 </section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Questions, prize help, or feedback? Email us directly.</p></div>
 <a class="btn btn-primary contact-email-btn" id="contactEmailBtn" href="mailto:support@puzzleearn.online">📧 support@puzzleearn.online</a>
 <h3>📣 Announcements</h3>
@@ -5335,10 +5375,180 @@ window.PUZZLEPOP_CONFIG = {
     });
   }
 
+  /* ================= v52: Earnings page =================
+   * The game's most important page. All totals come from the server
+   * (rpc/get_earnings_overview) — the client never sums scores
+   * itself, never guesses a balance, and never mints a payout.
+   * Conversion: 10,000,000 score = $1; one cent = 100,000 score.
+   * Payouts are USDT crypto ONLY, paid manually by the owner; there
+   * is NO mark-paid button in the game (owner marks paid in the
+   * Supabase Table Editor, like weekly claims).
+   * DEGRADATION: until migration-earnings-v52.sql runs, every
+   * Earnings fetch fails with a not-found / does-not-exist error and
+   * degrades to the friendly setup note inside its own section —
+   * never a crash, never an error banner, other pages unaffected. */
+  var EARNINGS_SETUP_NOTE = "Earnings are being set up — check back soon.";
+  function isEarningsMissingError(err) {
+    var m = (err && err.message) || "";
+    return /PGRST202|PGRST205|does not exist|could not find|schema cache/i.test(m);
+  }
+  var EARNINGS_SCORE_PER_USD = 10000000;
+  var EARNINGS_SCORE_PER_CENT = 100000;
+  var EARNINGS_THRESHOLD_USD = 20;
+  function earningsFmt(n) {
+    var s = String(Math.max(0, Math.floor(n || 0)));
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  /* Full available balance to the cent: floor to whole cents, so
+   * sub-cent dust (< 100,000 score) is never paid as a fraction. */
+  function earningsUsdtFromScore(score) {
+    var cents = Math.floor(Math.max(0, score || 0) / EARNINGS_SCORE_PER_CENT);
+    return cents / 100;
+  }
+  function earningsProgressPct(availableUsdt) {
+    return Math.min(100, Math.max(0, (availableUsdt || 0) / EARNINGS_THRESHOLD_USD * 100));
+  }
+  function earningsCanRequest(availableUsdt) {
+    return (availableUsdt || 0) >= EARNINGS_THRESHOLD_USD;
+  }
+  function earningsUsdText(v) { return "$" + (Number(v) || 0).toFixed(2); }
+  function earningsDateText(iso) {
+    var s = String(iso || "");
+    return s.length >= 10 ? s.slice(0, 10) : s;
+  }
+  function refreshEarningsPage() {
+    var page = $("page-earnings");
+    if (!page) return;
+    var guestNote = $("earningsGuestNote"), authBtn = $("earningsAuthBtn");
+    var heroWrap = $("earningsHeroWrap"), payoutWrap = $("earningsPayoutWrap");
+    var pendingList = $("earningsPendingList"), completedList = $("earningsCompletedList");
+    if (!session || !session.user) {
+      if (guestNote) guestNote.hidden = false;
+      if (authBtn) authBtn.hidden = false;
+      if (heroWrap) heroWrap.hidden = true;
+      if (payoutWrap) payoutWrap.hidden = true;
+      if (pendingList) pendingList.innerHTML = "<li class=\"empty-state\">Log in to see your payout requests.</li>";
+      if (completedList) completedList.innerHTML = "<li class=\"empty-state\">Log in to see your payout requests.</li>";
+      return;
+    }
+    if (guestNote) guestNote.hidden = true;
+    if (authBtn) authBtn.hidden = true;
+    if (heroWrap) heroWrap.hidden = false;
+    if (payoutWrap) payoutWrap.hidden = false;
+    setText("earningsTotalScore", "Loading…");
+    setText("earningsBalance", "Loading…");
+    setText("earningsProgressText", "");
+    setText("earningsThresholdNote", "");
+    callRest("rpc/get_earnings_overview", "POST", {}).then(function (res) {
+      var total = (res && typeof res.total_score === "number") ? res.total_score : 0;
+      var avail = (res && typeof res.available_usdt === "number") ? res.available_usdt : 0;
+      var can = earningsCanRequest(avail);
+      var pct = earningsProgressPct(avail);
+      setText("earningsTotalScore", earningsFmt(total));
+      setText("earningsBalance", earningsUsdText(avail));
+      var fill = $("earningsProgressFill");
+      if (fill) fill.style.width = pct + "%";
+      setText("earningsProgressText", earningsUsdText(avail) + " of $20.00" +
+        (can ? " — ready to request!" : " — " + earningsUsdText(20 - avail) + " to go"));
+      setText("earningsThresholdNote", can ?
+        "You can request your full available balance below." :
+        "Payouts unlock at $20.00. Keep playing — every score counts.");
+      setText("earningsHeroNote", "");
+      var bd = (res && res.breakdown) || {};
+      var blist = $("earningsBreakdownList");
+      if (blist) {
+        var rows = [
+          ["Board total, all weeks (games + counted bonuses)", bd.board_total],
+          ["Spin wins not yet counted", bd.spin_unapplied],
+          ["Scratch wins not yet counted", bd.scratch_unapplied],
+          ["Daily bonuses not yet counted", bd.daily_unapplied],
+          ["Referral coins waiting to be claimed", bd.referral_banked],
+          ["Already requested or paid", bd.deducted_score]
+        ];
+        blist.innerHTML = "";
+        rows.forEach(function (r) {
+          var li = document.createElement("li");
+          li.textContent = r[0] + ": " + earningsFmt(r[1]);
+          blist.appendChild(li);
+        });
+      }
+      var reqBtn = $("earningsRequestBtn");
+      if (reqBtn) {
+        reqBtn.disabled = !can;
+        reqBtn.textContent = can ? "Request " + earningsUsdText(avail) + " payout" : "Reach $20.00 to request a payout";
+      }
+      if (pendingList) {
+        var pend = (res && res.pending) || [];
+        pendingList.innerHTML = "";
+        if (!pend.length) {
+          pendingList.innerHTML = "<li class=\"empty-state\">No pending payout requests.</li>";
+        } else {
+          pend.forEach(function (r) {
+            var li = document.createElement("li");
+            li.textContent = earningsUsdText(r.amount_usdt) + " — pending — " +
+              (r.wallet || "") + " (" + (r.network || "") + ") — " + earningsDateText(r.created_at);
+            pendingList.appendChild(li);
+          });
+        }
+      }
+      if (completedList) {
+        var comp = (res && res.completed) || [];
+        completedList.innerHTML = "";
+        if (!comp.length) {
+          completedList.innerHTML = "<li class=\"empty-state\">No completed payout requests yet.</li>";
+        } else {
+          comp.forEach(function (r) {
+            var li = document.createElement("li");
+            li.textContent = earningsUsdText(r.amount_usdt) + " — paid" +
+              (r.paid_at ? " on " + earningsDateText(r.paid_at) : "") +
+              " — " + (r.wallet || "") + " (" + (r.network || "") + ")";
+            completedList.appendChild(li);
+          });
+        }
+      }
+    }).catch(function (err) {
+      var setup = isEarningsMissingError(err);
+      setText("earningsTotalScore", "—");
+      setText("earningsBalance", "—");
+      setText("earningsHeroNote", setup ? EARNINGS_SETUP_NOTE : "Could not load your earnings — try again later.");
+      setText("earningsPayoutNote", setup ? EARNINGS_SETUP_NOTE : "");
+      if (pendingList) pendingList.innerHTML = "<li class=\"empty-state\">" +
+        (setup ? EARNINGS_SETUP_NOTE : "Could not load payout requests.") + "</li>";
+      if (completedList) completedList.innerHTML = "<li class=\"empty-state\">" +
+        (setup ? EARNINGS_SETUP_NOTE : "Could not load payout requests.") + "</li>";
+      var reqBtn = $("earningsRequestBtn");
+      if (reqBtn) reqBtn.disabled = true;
+    });
+  }
+  function submitEarningsPayout() {
+    var wallet = $("earningsWalletInput"), network = $("earningsNetworkSelect");
+    var btn = $("earningsRequestBtn");
+    if (!wallet || !network || !btn) return;
+    var w = wallet.value.trim();
+    if (!w) { alert("Enter your crypto wallet address first."); return; }
+    btn.disabled = true;
+    setText("earningsPayoutNote", "Sending your request…");
+    callRest("rpc/request_earnings_payout", "POST", { p_wallet: w, p_network: network.value }).then(function (res) {
+      setText("earningsPayoutNote", "Request sent: " + earningsUsdText(res && res.amount_usdt) + " — the owner pays manually in USDT.");
+      wallet.value = "";
+      refreshEarningsPage();
+    }).catch(function (err) {
+      setText("earningsPayoutNote", isEarningsMissingError(err) ? EARNINGS_SETUP_NOTE :
+        "Request failed: " + err.message);
+      btn.disabled = false;
+    });
+  }
+  function wireEarningsPage() {
+    var authBtn = $("earningsAuthBtn");
+    if (authBtn) authBtn.addEventListener("click", function () { closePanel(); showWelcome(); });
+    var reqBtn = $("earningsRequestBtn");
+    if (reqBtn) reqBtn.addEventListener("click", submitEarningsPayout);
+  }
+
   /* ================= multi-page panel (no scrolling) ================= */
   /* The bottom bar IS the navigation now: Game = the board, the rest open
      the full-screen tournament view on that page. */
-  var PAGES = ["board", "prizes", "spin", "profile", "contact", "referrals"];
+  var PAGES = ["board", "prizes", "spin", "profile", "contact", "referrals", "earnings"];
   /* Bottom-bar play state: hidden while a game is in motion, back on Back. */
   var barPlaying = false;
   var barPinned = false;
@@ -5351,7 +5561,7 @@ window.PUZZLEPOP_CONFIG = {
   var barPadOn = false;
   var currentPageName = "profile";
   function setBarActive(view) {
-    ["game", "board", "prizes", "spin", "profile", "contact", "referrals"].forEach(function (v) {
+    ["game", "board", "prizes", "spin", "profile", "contact", "referrals", "earnings"].forEach(function (v) {
       var btn = $("bnav-" + v);
       if (btn) btn.classList.toggle("active", v === view);
     });
@@ -5375,6 +5585,12 @@ window.PUZZLEPOP_CONFIG = {
       refreshReferralsPage();
       var rp = $("page-referrals");
       if (rp) { rp.classList.remove("referrals-enter"); void rp.offsetWidth; rp.classList.add("referrals-enter"); }
+    }
+    // Earnings refreshes on every open: totals, balance, requests.
+    if (name === "earnings") {
+      refreshEarningsPage();
+      var ep = $("page-earnings");
+      if (ep) { ep.classList.remove("earnings-enter"); void ep.offsetWidth; ep.classList.add("earnings-enter"); }
     }
     // Live leaderboard: subscribe on board open, unsubscribe on leave.
     updateLiveSubscription();
@@ -7280,6 +7496,13 @@ window.PUZZLEPOP_CONFIG = {
     refreshProofOwnerForm: refreshProofOwnerForm,
     refreshClaimWinnersList: refreshClaimWinnersList,
     updateProofSubscription: updateProofSubscription,
+    /* v52 earnings seams (tests + APK builder verification). */
+    refreshEarningsPage: refreshEarningsPage,
+    earningsFmt: earningsFmt,
+    earningsUsdtFromScore: earningsUsdtFromScore,
+    earningsProgressPct: earningsProgressPct,
+    earningsCanRequest: earningsCanRequest,
+    earningsUsdText: earningsUsdText,
     /* v41 referral seams (tests + APK builder verification). */
     refreshReferralsPage: refreshReferralsPage,
     updateReferralTierHighlight: updateReferralTierHighlight,
@@ -7409,6 +7632,7 @@ window.PUZZLEPOP_CONFIG = {
     wireNotifyTestBtn(); // v47: owner-only immediate test notification
     wireBottomNav();
     wireReferralsPage();
+    wireEarningsPage();
     wireLeaderboardPaging();
     wireSpinTabs();
     startSpinTickTimer();
