@@ -652,6 +652,32 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #spinResult{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow-sm);font-weight:800;}
 #spinResult:empty{display:none;}
 #spinBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
+/* v54 spin-ready celebration: pulsing glow on the spin buttons
+ * while a spin is ready, plus the animated overlay (confetti +
+ * bouncing gold coins) shown when the Spin page opens ready.
+ * The Android shade itself cannot animate — this in-app animation
+ * is the animated half of the upgrade. */
+#spinBtn.spin-ready-pulse,#adSpinBtn.spin-ready-pulse{animation:spinReadyPulse 1.6s ease-in-out infinite;border-color:#FFB020 !important;}
+@keyframes spinReadyPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,176,32,.45),0 0 10px rgba(255,176,32,.45);}50%{box-shadow:0 0 0 6px rgba(255,176,32,.25),0 0 26px rgba(255,176,32,.9);}}
+#spinReadyCelebration{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(20,8,40,.55);overflow:hidden;}
+#spinReadyCelebration.show{display:flex;}
+#spinReadyCelebration .src-card{position:relative;z-index:2;text-align:center;background:linear-gradient(160deg,#FFF9E6,#FFE9B0);border:3px solid #FFB020;border-radius:24px;padding:26px 22px;max-width:min(320px,86vw);box-shadow:0 18px 50px rgba(0,0,0,.45);animation:srcCardIn .5s ease-out;}
+@keyframes srcCardIn{from{transform:scale(.7) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+#spinReadyCelebration .src-title{font-family:"Baloo 2",cursive;font-size:26px;font-weight:900;color:#7A4A00;margin:0 0 6px;}
+#spinReadyCelebration .src-sub{font-weight:700;font-size:14px;color:#5B3A00;margin:0 0 16px;}
+#spinReadyCelebration .src-dismiss{width:100%;padding:13px;font-size:16px;}
+#spinReadyCelebration .src-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+#spinReadyCelebration .src-confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:srcFall 3.2s linear infinite;}
+@keyframes srcFall{to{transform:translateY(110vh) rotate(720deg);}}
+#spinReadyCelebration .src-coins{position:absolute;inset:0;pointer-events:none;}
+#spinReadyCelebration .src-coins b{position:absolute;bottom:12%;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF7CC,#FFD166 45%,#E8A800 80%);box-shadow:0 4px 10px rgba(0,0,0,.35);animation:srcBounce 1.4s ease-in-out infinite;}
+#spinReadyCelebration .src-coins b:nth-child(1){left:8%;animation-delay:0s;}
+#spinReadyCelebration .src-coins b:nth-child(2){left:26%;animation-delay:.25s;}
+#spinReadyCelebration .src-coins b:nth-child(3){left:46%;animation-delay:.5s;}
+#spinReadyCelebration .src-coins b:nth-child(4){left:66%;animation-delay:.15s;}
+#spinReadyCelebration .src-coins b:nth-child(5){left:84%;animation-delay:.4s;}
+@keyframes srcBounce{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-46px) scale(1.06);}}
+@media (prefers-reduced-motion:reduce){#spinBtn.spin-ready-pulse,#adSpinBtn.spin-ready-pulse{animation:none !important;}#spinReadyCelebration .src-confetti i,#spinReadyCelebration .src-coins b,#spinReadyCelebration .src-card{animation:none !important;}}
 #spinRetryBtn:not([hidden]){display:block;width:100%;margin-top:8px;}
 #saveProfileBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #panelAuthBtn{display:block;width:100%;padding:12px;}
@@ -3152,6 +3178,7 @@ window.PUZZLEPOP_CONFIG = {
     if (!session || !session.user) {
       btn.disabled = true;
       setText("spinResult", "Log in to spin.");
+      setFreeSpinReady(false);
       return;
     }
     // The streak gate needs server truth; fetch it first when it is
@@ -3165,6 +3192,7 @@ window.PUZZLEPOP_CONFIG = {
       if (bonusPending) {
         btn.disabled = true;
         setText("spinResult", "Spins need a quick Supabase update \u2014 the owner runs it once, then free spins go live here.");
+        setFreeSpinReady(false);
         return;
       }
       /* v28: spins are open to every registered user \u2014 no unlock
@@ -3176,6 +3204,7 @@ window.PUZZLEPOP_CONFIG = {
         .then(function (rows) {
           if (rows && rows.length) {
             btn.disabled = true;
+            setFreeSpinReady(false);
             if (rows[0].coins_applied === false) {
               setText("spinResult", "You already spun today and won " + rows[0].prize.toLocaleString() +
                 " \u2014 coins count on the leaderboard once you unlock the tournament on day 4. Next free spin tomorrow.");
@@ -3186,14 +3215,17 @@ window.PUZZLEPOP_CONFIG = {
           } else {
             btn.disabled = false;
             setText("spinResult", "Your free spin for today is ready \u2014 good luck!");
+            setFreeSpinReady(true);
           }
         }).catch(function (err) {
           if (spinMigrationMissing(err)) {
             btn.disabled = true;
             setText("spinResult", "Spins need a quick Supabase update \u2014 the owner runs it once, then free spins go live here.");
+            setFreeSpinReady(false);
           } else {
             btn.disabled = false;
             setText("spinResult", "Spin status could not load \u2014 tap to spin and the server will confirm.");
+            setFreeSpinReady(false);
           }
         });
     }
@@ -3250,6 +3282,10 @@ window.PUZZLEPOP_CONFIG = {
           freeSpinLastClaimAt = serverNowMs();
           scheduleNotifyTimer("wheel");
           try { fetchAdSpinState(); } catch (e) {}
+          /* v54: a completed free spin means no free spin is ready
+           * anymore — clear the ready flag (and the celebration /
+           * pulse with it) instead of leaving a stale glow. */
+          setFreeSpinReady(false);
         }, 5200);
       }).catch(function (err) {
         btn.disabled = false;
@@ -3293,6 +3329,67 @@ window.PUZZLEPOP_CONFIG = {
   var adSpinFetching = false;
   var adSpinLastClaimAt = 0; // ms epoch of the player's latest ad-spin claim, 0 = none
   var freeSpinLastClaimAt = 0; // ms epoch of the player's latest FREE-spin claim (spin_ledger), 0 = none
+  /* v54 spin-ready celebration: live readiness flags, kept in sync
+   * by refreshSpinSection / refreshAdSpinSection. The celebration
+   * overlay shows whenever the Spin page is open while either flag
+   * is true (covers notification taps — the native side lands on
+   * this page — and plain opens while ready, plus the 30s tick
+   * flipping an ad spin ready). spinCelebrationOpenId increments
+   * on every Spin-page open so the overlay shows at most once per
+   * open (dismissing it keeps it hidden until the next open). */
+  var freeSpinReadyNow = false;
+  var adSpinReadyNow = false;
+  var spinCelebrationOpenId = 0;
+  var spinCelebrationShownForOpen = -1;
+  function spinReadyNow() { return freeSpinReadyNow || adSpinReadyNow; }
+  function hideSpinReadyCelebrationIfNoneReady() {
+    if (spinReadyNow()) return;
+    var ov = $("spinReadyCelebration");
+    if (ov) ov.classList.remove("show");
+  }
+  function maybeShowSpinReadyCelebration() {
+    if (currentPageName !== "spin" || !spinReadyNow()) return;
+    if (spinCelebrationShownForOpen === spinCelebrationOpenId) return;
+    spinCelebrationShownForOpen = spinCelebrationOpenId;
+    var ov = $("spinReadyCelebration");
+    if (!ov) ov = buildSpinReadyCelebration();
+    if (!ov) return;
+    ov.classList.add("show");
+  }
+  function buildSpinReadyCelebration() {
+    var colors = ["#FF5A5F", "#FFB020", "#2E9E5B", "#3B82F6", "#A855F7", "#EC4899", "#FFD166"];
+    var ov = document.createElement("div");
+    ov.id = "spinReadyCelebration";
+    var html = '<div class="src-confetti">';
+    for (var i = 0; i < 14; i++) {
+      html += '<i style="left:' + ((3 + i * 7) % 96) + '%;animation-delay:' + ((i % 7) * 0.22) +
+        's;animation-duration:' + (2.6 + (i % 5) * 0.3) + 's;background:' + colors[i % colors.length] + '"></i>';
+    }
+    html += '</div><div class="src-coins"><b></b><b></b><b></b><b></b><b></b></div>' +
+      '<div class="src-card"><div class="src-title">Your spin is ready!</div>' +
+      '<div class="src-sub">A spin is waiting — tap the glowing SPIN button to claim your prize.</div>' +
+      '<button type="button" class="btn src-dismiss" id="spinReadyDismissBtn">Got it!</button></div>';
+    ov.innerHTML = html;
+    document.body.appendChild(ov);
+    var d = $("spinReadyDismissBtn");
+    if (d) d.addEventListener("click", function () { ov.classList.remove("show"); });
+    ov.addEventListener("click", function (e) { if (e.target === ov) ov.classList.remove("show"); });
+    return ov;
+  }
+  function setFreeSpinReady(ready) {
+    freeSpinReadyNow = !!ready;
+    var b = $("spinBtn");
+    if (b) b.classList.toggle("spin-ready-pulse", freeSpinReadyNow);
+    if (freeSpinReadyNow) maybeShowSpinReadyCelebration();
+    else hideSpinReadyCelebrationIfNoneReady();
+  }
+  function setAdSpinReady(ready) {
+    adSpinReadyNow = !!ready;
+    var b = $("adSpinBtn");
+    if (b) b.classList.toggle("spin-ready-pulse", adSpinReadyNow);
+    if (adSpinReadyNow) maybeShowSpinReadyCelebration();
+    else hideSpinReadyCelebrationIfNoneReady();
+  }
   /* v27 ad-spin countdown anchor — ONE variable controls what the
    * 2h countdown counts from. DECIDED (owner, 2026-10-30):
    * "last-spin-any-kind" — 2h from the latest spin of ANY kind
@@ -3648,6 +3745,9 @@ window.PUZZLEPOP_CONFIG = {
     if (!status) return;
     if (retry) retry.hidden = true;
     if (btn) btn.hidden = true;
+    /* v54: re-derive from scratch every refresh (tick, open, claim):
+     * not ready until the ready branch below proves otherwise. */
+    setAdSpinReady(false);
     if (!session || !session.user) {
       status.textContent = "Log in to use ad spins.";
       return;
@@ -3694,6 +3794,7 @@ window.PUZZLEPOP_CONFIG = {
     }
     status.textContent = "Watch a short ad for an extra spin \u2014 win 30,000 to 75,000 board coins.";
     if (btn) btn.hidden = false;
+    setAdSpinReady(true);
   }
   function doAdSpinClaim() {
     if (!session || !session.user) { setText("adSpinStatus", "Log in first to use ad spins."); return; }
@@ -5607,7 +5708,12 @@ window.PUZZLEPOP_CONFIG = {
     });
     setBarActive(name);
     // Spin status must never go stale: refresh it every time the tab opens.
-    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); rescheduleLiveNotifyTimers(); refreshNotifyTestBtn(); }
+    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); rescheduleLiveNotifyTimers(); refreshNotifyTestBtn();
+      /* v54: one celebration per Spin-page open while a spin is
+       * ready (flags may already be known from the last open, or
+       * flip true when the refreshes above resolve). */
+      spinCelebrationOpenId++;
+      maybeShowSpinReadyCelebration(); }
     // Daily login bonus state must never go stale either.
     if (name === "profile") refreshStreakCard();
     // Contact Us refreshes on every open: Discord link + announcements.
