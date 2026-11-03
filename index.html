@@ -46,12 +46,19 @@
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
+  /* v55 full-bleed: html + body BOTH paint the app gradient, and the
+   * fixed attachment is gone — it mispaints on mobile WebViews and
+   * leaves white corners/edges on scrolling pages (the game page
+   * never scrolled, so it looked fine). Solid fallback colors mean
+   * no white canvas can ever show through, on web or in the app. */
+  html{background-color:#FFC9A3;background-image:var(--bgimg);}
+  :root[data-theme="dark"]{background-color:#131E38;}
   body{
     font-family:"Nunito",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    background:var(--bgimg);
-    background-attachment:fixed;
+    background-color:#FFC9A3;background-image:var(--bgimg);
     color:var(--ink); height:100dvh; overflow:hidden;
   }
+  :root[data-theme="dark"] body{background-color:#131E38;}
   .wrap{max-width:720px;margin:0 auto;padding:6px 6px 8px;position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;}
   .wrap>*{flex:0 0 auto;}
   .wrap>.board-flex{flex:1 1 auto;}
@@ -236,7 +243,6 @@
 </style>
 
 <style>
-  .ranked-badge{background:linear-gradient(90deg,#FF6B35,#FFB020);color:#fff;font-weight:800;font-size:13px;text-align:center;padding:6px 10px;border-radius:10px;margin:6px 0;}
   .tournament-modal{height:min(94dvh,700px);max-height:94dvh;overflow:hidden;text-align:left;width:min(680px,94vw);display:flex;flex-direction:column;padding:18px 20px;}
   .tournament-modal h2{margin:0 0 4px;font-size:22px;}
   .tournament-modal h3{margin:10px 0 4px;font-size:15px;}
@@ -431,6 +437,8 @@
 .back-row[hidden]{display:none;}
 .play-back-btn{border:none;border-radius:999px;padding:13px 22px;background:var(--grad);color:#fff;font-family:inherit;font-weight:900;font-size:16px;box-shadow:0 10px 24px rgba(255,80,50,.45);cursor:pointer;transition:transform .15s ease;}
 .play-back-btn:active{transform:scale(.93);}
+  .best-score-chip{background:linear-gradient(135deg,#FFB020,#FF6B35);color:#fff;font-weight:900;font-size:19px;padding:12px 20px;border-radius:999px;box-shadow:0 10px 24px rgba(255,107,53,.45);white-space:nowrap;line-height:1;}
+  .best-score-chip span{font-family:"Baloo 2",cursive;}
 body.nav-on-board .wrap{padding-bottom:92px;}
 .wrap.view-in{animation:viewFade .3s ease both;}
 @keyframes viewFade{from{opacity:0;}to{opacity:1;}}
@@ -838,14 +846,12 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <button class="mode-btn" data-mode="daily">📅 Daily</button>
   </div>
 
-  <div class="ranked-badge" id="rankedBadge" hidden>🏆 RANKED — this Classic game counts toward the weekly tournament</div>
-
   <div class="goalbar" id="goalBar" hidden>
     <div class="goal-top"><span id="goalLabel"></span><span id="goalNums"></span></div>
     <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
   </div>
 
-  <div class="back-row" id="backRow" hidden><button type="button" class="play-back-btn" id="rankedBtn">Ranked: OFF</button><button type="button" class="play-back-btn" id="playBackBtn">← Back</button></div>
+  <div class="back-row" id="backRow" hidden><div class="best-score-chip" id="bestScoreChip">🏆 Best: <span id="bestScoreChipVal">0</span></div><button type="button" class="play-back-btn" id="playBackBtn">← Back</button></div>
   <div class="board-flex" id="boardFlex">
     <div class="board-shell" id="boardShell">
       <div class="board" id="board" aria-label="8 by 8 puzzle board"></div>
@@ -930,12 +936,12 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
 <div class="overlay" id="tournamentOverlay" role="dialog" aria-modal="true" aria-label="Weekly tournament">
   <div class="modal tournament-modal">
-    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total ranked score.</p></div><h3>⏱️ This week</h3>
+    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total board score.</p></div><h3>⏱️ This week</h3>
     <p class="week-card"><b id="weekRange"></b><br /><span id="countdown"></span></p>
 
     <h3>Live leaderboard — top 300</h3>
     <p><span id="lbLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="lbLiveNote" class="muted"></span></p>
-    <p class="muted">Weekly = total of all ranked games. Ranked Classic games only.</p>
+    <p class="muted">Weekly = total of all your games this week after tournament unlock. Every game counts.</p>
     <p id="weeklyFormulaNote" class="muted"></p>
     <p id="myRank"></p>
     <p id="neighborRows" class="muted"></p>
@@ -947,7 +953,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <p class="muted">Per player; the owner may change amounts before a week starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
 </section>
     <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
-    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 4 — a 75,000 win adds exactly 75,000 to your board score after unlock.</p>
+    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 75,000 win adds exactly 75,000 to your board score too.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
     <p class="spin-legend">🟡 30k — 30% &nbsp; 🟠 39k — 25% &nbsp; 🔵 48k — 20% &nbsp; 🟣 60k — 15% &nbsp; 🔴 75k — 10%</p>
@@ -963,9 +969,9 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
 <div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-email" id="profileHeroEmail"></p></div></div>
-<p id="guestNotice" class="guest-banner" hidden>Playing as guest — casual games only. Sign in or sign up to unlock ranked games and the weekly tournament.</p>
+<p id="guestNotice" class="guest-banner" hidden>Playing as guest — sign in or sign up so your scores count toward Earnings and the weekly tournament.</p>
     <div id="panelAuthHint" hidden>
-      <p class="muted">Sign in to unlock ranked games and the weekly tournament.</p>
+      <p class="muted">Sign in so your scores count toward Earnings and the weekly tournament.</p>
       <button class="btn btn-primary" id="panelAuthBtn">Go to sign-in screen</button>
     </div>
     <div id="profileSection" hidden>
@@ -1066,7 +1072,7 @@ function mulberry32(seed){ var a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79
 
 /* ---------- State ---------- */
 var board, pieces, score, best, lines, combo, bestCombo, shuffleUsed, gameOver, soundOn, selectedSlot, undoStack, busy;
-/* ---------- v48 level twists (LEVEL mode only; Classic/Ranked/Daily never) ----------
+/* ---------- v48 level twists (LEVEL mode only; Classic/Daily never) ----------
  * Twist ladder keyed by level NUMBER (levelIdx+1): 1-10 classic;
  * 11-20 GOLD cells (+150 per gold cell cleared in a line); 21-30 HOLE cells
  * (permanent, unfillable; a line clears once all its non-hole cells are
@@ -1074,8 +1080,8 @@ var board, pieces, score, best, lines, combo, bestCombo, shuffleUsed, gameOver, 
  * line-clear through them and break on the second). Gold bonus applies on
  * line clears only; hammer/bomb smash through tough blocks and clear gold
  * flags without bonus. Twist grids ride the undo snapshot; holeGrid is
- * static per level (set at level start). Ranked games run Classic mode,
- * so no twist can ever touch the money board. */
+ * static per level (set at level start). Classic/Daily games run
+ * without twists, so no twist can ever touch the money board. */
 var GOLD_BONUS=150, GOLD_COUNT=6, HOLE_COUNT=5, TOUGH_COUNT=6;
 function emptyGrid(){ var gr=[]; for(var i=0;i<SIZE;i++){ var row=[]; for(var j=0;j<SIZE;j++) row.push(false); gr.push(row);} return gr; }
 var goldGrid=emptyGrid(), holeGrid=emptyGrid(), toughGrid=emptyGrid(), crackedGrid=emptyGrid();
@@ -1131,8 +1137,8 @@ var mode="classic", levelIdx=0, levelStars={}, unlockedCount=1, hammers=2, bombs
      logged in:  pp_progress_<user id>
    v30 AUTO-LEVELS: level progression is automatic and LOCAL — completing
    a level's target unlocks the next level and moves the player to it.
-   The server level (serverLevel / max_level_completed) still feeds the
-   v20 tournament grandfathering rule only; it NEVER clamps local levels.
+   The server level (serverLevel / max_level_completed) is display-only
+   now; it NEVER clamps local levels and no longer gates anything.
    v16 guest carry-over (see migrateGuestProgress in tournament.js):
    on first login/signup on this device, the guest blob is COPIED to
    pp_progress_<user id> — only when the account has no real progress
@@ -1179,6 +1185,7 @@ function loadProgress(){
   try{ p = sanitizeProgress(JSON.parse(localStorage.getItem(levelProgressKey()) || "null")); }catch(e){}
   levelStars = p.stars; unlockedCount = p.unlocked; levelIdx = p.level; best = p.best;
   if(typeof bestEl !== "undefined" && bestEl) bestEl.textContent = best;
+  var _bcLoad=document.getElementById("bestScoreChipVal"); if(_bcLoad) _bcLoad.textContent=best;
   renderLevelPanel();
 }
 function setLevelOwner(id){
@@ -1599,7 +1606,7 @@ function placePiece(idx, br, bc){
   score+=gained;
   if(window.PuzzlePopTournament)window.PuzzlePopTournament.onMove();
   if(score>best){ best=score; saveProgress(); }
-  animateScore(score); bestEl.textContent=best; linesEl.textContent=lines;
+  animateScore(score); bestEl.textContent=best; var _bcScore=document.getElementById("bestScoreChipVal"); if(_bcScore) _bcScore.textContent=best; linesEl.textContent=lines;
   updateComboBadge();
   renderTray();
   updateGoalBar();
@@ -2017,8 +2024,8 @@ window.PuzzlePopGrantReward=function(pts){score+=pts; if(score>best){best=score;
 /* Tournament edition helpers (tournament.js calls these). */
 /* v30 AUTO-LEVELS: local progress is the authority for levels, so the
    old server-clamp sync is now a documented no-op (kept so tournament.js
-   syncGameGate() keeps working). The server level still feeds only the
-   v20 tournament grandfathering rule. */
+   syncGameGate() keeps working). The server level no longer gates
+   anything. */
 window.PuzzlePopSyncGate=function(){ /* no-op: local levels are never clamped */ };
 window.PuzzlePopGrantPowerups=function(h,b){ hammers+=h; bombs+=b; updatePowerBtns(); };
 /* Login mascot: a rigged SVG blue monster drawn to match the user's
@@ -2095,8 +2102,8 @@ window.PUZZLEPOP_CONFIG = {
    * v20: the tournament unlocks after a 4-day daily-bonus streak
    * (see BONUS below), NOT by reaching a level. Levels, stars, and
    * daily coins still work exactly as before for game progression —
-   * they just no longer gate the tournament. Grandfathering: players
-   * who reached level 12 under the old rule stay unlocked. */
+   * they just no longer gate the tournament. No level shortcut exists:
+   * only the 4-day streak unlocks, even for high-level players. */
   GATING: {
     MAX_LEVEL: 18,
     LEVEL_UP_COST: 1,
@@ -2113,7 +2120,7 @@ window.PUZZLEPOP_CONFIG = {
    * CYCLES after day 7 (day 8 pays the day-1 amount) while the streak
    * count itself keeps growing. Ladder coins add to the weekly
    * leaderboard total ONLY once the tournament is unlocked (4-day
-   * streak ever, or grandfathered level 12); pre-entry claims award
+   * streak ever); pre-entry claims award
    * the streak day + power-ups only, no points.
    * AD_GATE_ENABLED is the single ad-gate hook: ON since v29 — the
    * owner wired Google AdMob (rewarded unit). In the ANDROID APPS
@@ -2139,8 +2146,8 @@ window.PUZZLEPOP_CONFIG = {
     UNDERDOG_PACK: { hammers: 1, bombs: 1 }
   },
 
-  // SPIN: one FREE spin per UTC day for tournament-unlocked players
-  // (4-day daily-bonus streak, or grandfathered level 12), drawn
+  // SPIN: one FREE spin per UTC day for every registered user,
+  // drawn
   // SERVER-SIDE by claim_free_spin() from this fixed table. Prizes go
   // DIRECTLY to the day's ranked_scores.total_score, so the weekly
   // board (sum(total)) moves with every win. v20 prizes are the v12
@@ -2212,7 +2219,7 @@ window.PUZZLEPOP_CONFIG = {
 /* PuzzlePop Tournament Edition — Phase 1 client logic.
  *
  * What this file does (and does NOT do):
- *  - DOES: Supabase Auth (email/password + Google), ranked-mode tracking,
+ *  - DOES: Supabase Auth (email/password + Google),
  *    score submission via the server function submit_ranked_game(),
  *    weekly leaderboard, winner paid proof, and winner claims.
  *  - DOES NOT: move real money, send crypto, or automate any payout.
@@ -2230,7 +2237,6 @@ window.PUZZLEPOP_CONFIG = {
 
   var CFG = window.PuzzlePopTournamentConfig || window.PUZZLEPOP_CONFIG || null;
   var SESSION_KEY = "pp_tournament_session";
-  var RANKED_KEY = "pp_tournament_ranked";
 
   function $(id) { return document.getElementById(id); }
   function show(el) { if (el) el.hidden = false; }
@@ -2280,24 +2286,30 @@ window.PUZZLEPOP_CONFIG = {
     }
     return null;
   }
-  /* Rows from ranked_scores -> ranked weekly values, best first.
-   * RANKING = SCORE, NOT XP. Weekly value = (sum of ALL ranked games'
-   * scores in the week): each day's total_score summed over the
-   * week, with NO division. A player with many medium games outranks
-   * a player with few brilliant games: that IS the rule. Rank by the
-   * EXACT value; display rounds to the nearest whole number.
-   * FALLBACK (weekly-total migration not run yet): rows carry no
-   * total_score, so the old sum-of-daily-bests is used and the
-   * leaderboard shows a plain note about it. Same order as the SQL
-   * freeze in schema.sql.
+  /* Rows from ranked_scores -> weekly board values, best first.
+   * RANKING = SCORE, NOT XP. Weekly value = (sum of board_score for
+   * board-eligible games in the week): each day's board_score summed
+   * over the week, with NO division. A player with many medium games
+   * outranks a player with few brilliant games: that IS the rule.
+   * Rank by the EXACT value; display rounds to the nearest whole
+   * number.
+   * FALLBACKS: rows without board_score (v55 migration not run yet)
+   * fall back to total_score — exact, because pre-v55 rows are all
+   * board-eligible; rows without total_score fall back to the old
+   * sum-of-daily-bests and the leaderboard shows a plain note about
+   * it. Same order as the SQL freeze in schema.sql.
    * TIE-BREAKERS: higher weekly value first, then higher single-day
-   * best, then whoever's final total was set first (earliest last
-   * update). */
+   * board best, then whoever's final total was set first (earliest
+   * last update). */
   function weeklyUsesTotal(rows) {
     return (rows || []).some(function (r) { return typeof r.total_score === "number"; });
   }
+  function weeklyUsesBoard(rows) {
+    return (rows || []).some(function (r) { return typeof r.board_score === "number"; });
+  }
   function aggregateWeekly(rows) {
     var useTotal = weeklyUsesTotal(rows);
+    var useBoard = weeklyUsesBoard(rows);
     var map = {};
     rows.forEach(function (r) {
       var u = r.user_id;
@@ -2308,8 +2320,9 @@ window.PUZZLEPOP_CONFIG = {
                    total: 0, maxDay: 0, lastUpdate: 0 };
       }
       var s = r.best_score || 0;
-      map[u].total += useTotal ? (r.total_score || 0) : s;
-      if (s > map[u].maxDay) map[u].maxDay = s;
+      var bs = (typeof r.board_best_score === "number") ? r.board_best_score : s;
+      map[u].total += useBoard ? (r.board_score || 0) : (useTotal ? (r.total_score || 0) : s);
+      if ((useBoard ? bs : s) > map[u].maxDay) map[u].maxDay = useBoard ? bs : s;
       var t = r.updated_at ? Date.parse(r.updated_at) : 0;
       if (t > map[u].lastUpdate) map[u].lastUpdate = t;
     });
@@ -2340,7 +2353,7 @@ window.PUZZLEPOP_CONFIG = {
   function feedbackFor(board, userId, todayBest) {
     var n = neighborsFor(board, userId);
     var line = "Your best today: " + todayBest.toLocaleString() + " pts.";
-    if (!n) return line + " Play a ranked game to join this week's board.";
+    if (!n) return line + " Not on this week's board yet \u2014 your scores still count toward Earnings.";
     line += " Weekly total: " + Math.round(n.me.total).toLocaleString() + " pts (#" + n.me.rank + ").";
     if (n.above) {
       line += " " + Math.round(n.gapAbove).toLocaleString() + " points behind #" + n.above.rank +
@@ -2600,14 +2613,12 @@ window.PUZZLEPOP_CONFIG = {
       if (!res.ok) throw new Error("session expired");
       return res.json();
     }).catch(function () {
-      // Stored session is dead: log out quietly, ranked mode off.
+      // Stored session is dead: log out quietly.
       session = null;
       saveSession(null);
-      setRanked(false);
       resetBonusState(); // v28: dead session must not keep the old streak display
       cancelNotifyTimers(); // v39: dead session is a logout — cancel its timers
       renderAuth();
-      updateBadge();
     });
   }
   function handleAuthRedirect() {
@@ -2710,7 +2721,7 @@ window.PUZZLEPOP_CONFIG = {
   var lastProfileFormId = null;
 
   /* ============ tournament progression (level gate) ============ */
-  /* Server truth for the level-12 tournament lock + daily coins.
+  /* Server truth for the tournament streak lock + daily coins.
    * progressLoaded stays false until the server answers; the game
    * gate stays inactive until then, so a slow network never wrongly
    * locks or unlocks levels (the server enforces everything anyway). */
@@ -2731,8 +2742,7 @@ window.PUZZLEPOP_CONFIG = {
   /* v20 daily-bonus streak: the TOURNAMENT gate. Server truth only,
    * from rpc/get_bonus_status — never localStorage, never guessed.
    * bonusUnlocked is true once the player has EVER finished a 4-day
-   * bonus streak OR was grandfathered (player_progress level >= 12
-   * under the old rule); it stays true even if the streak later
+   * bonus streak; it stays true even if the streak later
    * breaks. bonusPending means the streak migration has not run yet:
    * the card shows an honest pending state and claiming is disabled.
    * Old v16 local markers (pp_login_bonus_*) are ignored, not read. */
@@ -2784,17 +2794,14 @@ window.PUZZLEPOP_CONFIG = {
     }
   };
   function gateActive() { return !!(session && myProfile && progressLoaded); }
-  /* v30: server level feeds ONLY the v20 tournament grandfathering
-   * rule — it no longer clamps local level progress (auto-levels). */
-  function gateLevel() { return serverLevel; }
-  /* v20 tournament gate: a 4-day daily-bonus streak (ever), or
-   * grandfathered level 12. False until the server bonus state has
-   * loaded — a slow network never wrongly unlocks anything (the
-   * server enforces the same gate on submit and spin anyway). */
+  /* v55 tournament gate: a 4-day daily-bonus streak (ever). False
+   * until the server bonus state has loaded — a slow network never
+   * wrongly unlocks anything (the server enforces the same gate on
+   * the board and on spin anyway). */
   function tournamentUnlocked() {
     return gateActive() && bonusStateLoaded && bonusUnlocked;
   }
-  /* Human-readable reason for a locked ranked control. */
+  /* Human-readable reason for a locked tournament control. */
   function bonusLockMessage() {
     if (bonusPending) return "Locked — tournament streaks need a quick Supabase update.";
     if (!bonusStateLoaded) return "Locked — loading your tournament streak…";
@@ -3042,7 +3049,6 @@ window.PUZZLEPOP_CONFIG = {
             if (sb) { try { sb("Locked \u2014 the tournament unlocks after a 4-day daily-bonus streak.", "great"); } catch (e) {} }
             return;
           }
-          setRanked(true);
           var classicBtn = document.querySelector('[data-mode="classic"]');
           if (classicBtn) classicBtn.click();
           closePanel();
@@ -3136,7 +3142,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* --- Daily Spin: leaderboard prizes, server-drawn (v12, v20 prizes) ---
    * One FREE spin per UTC day for tournament-unlocked players
-   * (4-day daily-bonus streak, or grandfathered level 12).
+   * (4-day daily-bonus streak).
    * Prizes go DIRECTLY to the day's ranked_scores.total_score, so the
    * weekly board (sum(total)) moves with every win. The draw is made
    * SERVER-SIDE by claim_free_spin() from the fixed table in
@@ -3163,8 +3169,8 @@ window.PUZZLEPOP_CONFIG = {
       setText("spinPageNote", "One free spin per day \u2014 prizes go straight to your leaderboard total.");
       setText("spinWheelExplainer", "One free spin per day. Prizes go DIRECTLY to your leaderboard total \u2014 a 75,000 win adds exactly 75,000 to your board score.");
     } else {
-      setText("spinPageNote", "One free spin per day \u2014 coin prizes count on your leaderboard total once you unlock the tournament on day 4.");
-      setText("spinWheelExplainer", "One free spin per day. Coin prizes count on your leaderboard total once you unlock the tournament on day 4 \u2014 a 75,000 win adds exactly 75,000 to your board score after unlock.");
+      setText("spinPageNote", "One free spin per day \u2014 coin prizes count toward your Earnings; after you unlock the tournament on day 4, new prizes count on your leaderboard total too.");
+      setText("spinWheelExplainer", "One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 75,000 win adds exactly 75,000 to your board score too.");
     }
   }
   function spinMigrationMissing(err) {
@@ -3903,9 +3909,9 @@ window.PUZZLEPOP_CONFIG = {
    * 2 bombs recorded as server pending bonuses (next game, v37).
    * Ladder (CFG.BONUS.LADDER): 15000/30000/50000/75000,
    * cycling after day 4 while the streak count keeps
-   * growing. Ladder coins add to today's ranked_scores.total_score
-   * ONLY once tournament-unlocked (4-day streak ever, or
-   * grandfathered level 12); pre-entry claims record the streak day
+   * growing. Ladder coins add to today's ranked_scores totals
+   * ONLY once tournament-unlocked (4-day streak ever);
+   * pre-entry claims record the streak day
    * + power-ups only, and the UI says so plainly.
    * AD GATE HOOK (v29 LIVE): CFG.BONUS.AD_GATE_ENABLED is true —
    * in the Android apps the claim requires a full rewarded view
@@ -3929,8 +3935,8 @@ window.PUZZLEPOP_CONFIG = {
    * through the native bridge (maybeShowAd below); early close or
    * load failure means NO claim. On the web (no bridge) claiming
    * stays FREE, exactly as in v28. */
-  /* v28: break ad after every 5 finished games (ALL modes, ranked
-   * or not, guests included). RULE + HOOK ONLY: maybeShowGameAd()
+  /* v28: break ad after every 5 finished games (ALL modes,
+   * guests included). RULE + HOOK ONLY: maybeShowGameAd()
    * resolves immediately today; the real AdMob interstitial call
    * goes inside it when units arrive (Android apps only \u2014 the
    * web game cannot run AdMob). A break ad, never a reward, never
@@ -4082,7 +4088,7 @@ window.PUZZLEPOP_CONFIG = {
         bonusNextCoins.toLocaleString() + " coins + " + hammers + " hammers + " + bombs + " bombs for your next game." + pointsNote);
     }
     if (bonusUnlocked) {
-      setStreakText("streak-unlock-line", "\u2705 Tournament unlocked! Turn Ranked ON and play Classic games to climb the weekly board.");
+      setStreakText("streak-unlock-line", "\u2705 Tournament unlocked! Play games to climb the weekly board.");
     } else {
       setStreakText("streak-unlock-line", bonusDaysToUnlock + " more day" + (bonusDaysToUnlock === 1 ? "" : "s") +
         " to unlock the tournament \u2014 come back daily, miss a day and your streak restarts.");
@@ -4751,33 +4757,11 @@ window.PUZZLEPOP_CONFIG = {
       rbtn.addEventListener("click", function () { doScratchClaim("repeat"); });
     }
   }
-  /* ================= ranked state ================= */
-  var rankedOn = false;
-  try { rankedOn = localStorage.getItem(RANKED_KEY) === "1"; } catch (e) { rankedOn = false; }
-  var rankedAtStart = false;
+  /* ================= game-submit state ================= */
   var moveCount = 0;
   var gameStartMs = 0;
   var submittedThisGame = false;
 
-  function activeModeIsClassic() {
-    var b = document.querySelector(".mode-btn.active");
-    return !!b && b.dataset.mode === "classic";
-  }
-  function syncRankedBtn() {
-    var b = $("rankedBtn");
-    if (b) b.textContent = rankedOn ? "Ranked: ON" : "Ranked: OFF";
-  }
-  function setRanked(on) {
-    rankedOn = !!on;
-    try { localStorage.setItem(RANKED_KEY, rankedOn ? "1" : "0"); } catch (e) { /* ignore */ }
-    syncRankedBtn();
-    updateBadge();
-  }
-  function updateBadge() {
-    var badge = $("rankedBadge");
-    if (!badge) return;
-    badge.hidden = !(rankedOn && session);
-  }
   function onNewGame() {
     moveCount = 0;
     barPlaying = false;
@@ -4787,9 +4771,6 @@ window.PUZZLEPOP_CONFIG = {
     syncBarVisibility();
     gameStartMs = Date.now();
     submittedThisGame = false;
-    // Only a Classic game started while Ranked is ON and logged in counts.
-    rankedAtStart = rankedOn && !!session && activeModeIsClassic();
-    updateBadge();
     // Fresh overlay notes each game.
     var box = $("tournamentSubmitStatus");
     if (box) box.innerHTML = "";
@@ -4866,8 +4847,7 @@ window.PUZZLEPOP_CONFIG = {
     gameActive = false;
     syncBarVisibility();
     /* v28: every finished game counts toward the 5-game break ad,
-     * whatever the mode (Classic ranked/casual, Levels, Daily) or
-     * ranked state. Trigger at 5/10/15...: the counter resets after
+     * whatever the mode (Classic, Levels, Daily). Trigger at 5/10/15...: the counter resets after
      * each trigger, so breaks never pile up. User-scoped, so an
      * account switch starts a fresh count. */
     var adCount = gameAdCount() + 1;
@@ -4900,9 +4880,12 @@ window.PUZZLEPOP_CONFIG = {
         });
       }
     }
-    // Ranked submission: Classic games started with Ranked ON only.
-    // Casual, Levels and Daily games never count toward the board.
-    if (!rankedAtStart || !session || submittedThisGame) return;
+    // v55: EVERY finished game submits — Classic, Levels, Daily,
+    // locked or unlocked. The server always adds the score to the
+    // Earnings total; it adds it to the weekly board only when the
+    // player was tournament-unlocked at submit time (4-day streak).
+    // Guests cannot submit (no profile): they play locally only.
+    if (!session || submittedThisGame) return;
     submittedThisGame = true;
     var durationSec = Math.max(0, Math.round((Date.now() - gameStartMs) / 1000));
     // Friendly client-side sanity check (server enforces the real caps).
@@ -4911,16 +4894,19 @@ window.PUZZLEPOP_CONFIG = {
       overlayNote("This result could not be submitted (it failed a sanity check). Play again — your next game will count.");
       return;
     }
-    overlayNote("Submitting your ranked result…");
+    overlayNote("Submitting your result…");
     callRest("rpc/submit_ranked_game", "POST", {
       p_score: score, p_moves: Math.max(1, moveCount),
       p_lines: lines, p_duration_sec: durationSec
     }).then(function (res) {
       var todayBest = (res && res.best_score !== undefined) ? res.best_score : score;
-      overlayNote("Ranked result submitted! Today's best: " +
-        todayBest.toLocaleString() + " pts.");
+      var onBoard = !res || res.board_eligible !== false;
+      overlayNote("Score submitted! Today's best: " +
+        todayBest.toLocaleString() + " pts." +
+        (onBoard ? " It counts on this week's board too."
+          : " It counts toward your Earnings \u2014 unlock the tournament (4-day streak) to join the weekly board."));
       refreshTournamentData();
-      /* v53: a ranked game can move the lifetime total across 5M,
+      /* v55: EVERY game can move the lifetime total across 5M,
        * completing the second half of the referral gate. Forced:
        * the server checks both halves and its already-check makes
        * repeat calls safe. */
@@ -5827,8 +5813,6 @@ window.PUZZLEPOP_CONFIG = {
     // a playing state with neither the bar nor Back visible.
     var backVisible = inGameView && gameActive && !barPinned && !welcomeShowing;
     if (back) back.hidden = !backVisible;
-    var rb = $("rankedBtn");
-    if (rb) rb.hidden = !backVisible;
     var backRow = $("backRow");
     if (backRow) backRow.hidden = !backVisible;
     var padOn = showBar && inGameView;
@@ -6056,19 +6040,37 @@ window.PUZZLEPOP_CONFIG = {
     updateLiveSubscription();
     updateProofSubscription();
   }
+  /* True while the live weekly board is computed from total_score
+   * because the v55 board_score columns are missing (migration not
+   * run yet). Pre-v55 rows are ALL board-eligible (old server gate),
+   * so the fallback is exact, not approximate. */
+  var weeklyBoardFallback = false;
+  function isBoardColumnError(err) {
+    var m = (err && err.message) || "";
+    return /board_score|board_best_score/i.test(m) && (/does not exist/i.test(m) || /could not find/i.test(m) || /schema cache/i.test(m));
+  }
+  function stripBoardColumns(path) {
+    var p2 = path.replace(",board_score,board_best_score", "");
+    return p2 !== path ? p2 : null;
+  }
   function fetchWeekRows() {
     var w = currentWeek();
-    var full = "ranked_scores?select=user_id,best_score,total_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
+    var full = "ranked_scores?select=user_id,best_score,board_score,board_best_score,total_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
       "&game_date=gte." + w.startStr + "&game_date=lte." + w.endStr +
       "&limit=1000";
     weeklyFormulaFallback = false;
+    weeklyBoardFallback = false;
     return attemptFetch(full);
-    /* Retry chain: strip whichever column the error names (total_score
-     * and/or avatar, in either order) and try again, so the board
-     * loads under every migration state. Each retry removes at least
-     * one field, so the chain always terminates. */
+    /* Retry chain: strip whichever column the error names (board,
+     * total_score and/or avatar, in any order) and try again, so the
+     * board loads under every migration state. Each retry removes at
+     * least one field, so the chain always terminates. */
     function attemptFetch(path) {
       return callRest(path).catch(function (err) {
+        if (isBoardColumnError(err)) {
+          var b = stripBoardColumns(path);
+          if (b) { weeklyBoardFallback = true; return attemptFetch(b); }
+        }
         if (isTotalScoreColumnError(err)) {
           var s = stripTotalScore(path);
           if (s) { weeklyFormulaFallback = true; return attemptFetch(s); }
@@ -6430,7 +6432,7 @@ window.PUZZLEPOP_CONFIG = {
       if (!board.length) {
         lbBoard = [];
         renderLeaderboardPage();
-        setText("leaderboardEmpty", "No ranked games yet this week. Be the first on the board!"); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
+        setText("leaderboardEmpty", "No board scores yet this week. Be the first on the board!"); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
         lbStopManualSpin();
         return;
       }
@@ -6458,7 +6460,7 @@ window.PUZZLEPOP_CONFIG = {
               " points behind #" + n.above.rank + " (" + n.above.username + ") — beat it!");
           }
         } else {
-          setText("myRank", "You have no ranked score this week yet — switch Ranked on and play a Classic game.");
+          setText("myRank", "You have no board score this week yet — play a game; scores join the board once you unlock the tournament.");
         }
       }
       refreshPassFeed(board);
@@ -7218,7 +7220,6 @@ window.PUZZLEPOP_CONFIG = {
     var gn = $("guestNotice");
     if (gn) gn.hidden = !( !loggedIn && isGuestMode() );
     clearAuthError();
-    updateBadge();
     renderAvatarSection();
     // v30: Profile progress bars are gone with progressFold; the hero
     // below is the only Profile display renderAuth refreshes.
@@ -7429,7 +7430,6 @@ window.PUZZLEPOP_CONFIG = {
           saveSession(null);
           setGuestMode(false);
           myProfile = null;
-          setRanked(false);
           resetBonusState(); // v28: password-reset drop is an auth transition too
           cancelNotifyTimers(); // v39: session dropped — cancel its timers
           pendingPasswordReset = false;
@@ -7460,7 +7460,6 @@ window.PUZZLEPOP_CONFIG = {
       setGuestMode(false);
       myProfile = null;
       saveSession(null);
-      setRanked(false);
       progressLoaded = false;
       serverLevel = 1; serverBalance = 0; serverCompleted = 0;
       bankedCount = null; bankedFailed = false;
@@ -7470,7 +7469,7 @@ window.PUZZLEPOP_CONFIG = {
       referralUnlockHookFired = false; // v41: the next account gets its own unlock hook
       cancelNotifyTimers(); // v39: timers belong to the account — logout cancels them
       renderProgress();
-      setText("authNotice", "Logged out. Casual play still works — log in again for ranked games.");
+      setText("authNotice", "Logged out. You can still play — log in again so your scores count.");
       renderAuth();
       closePanel();
       showWelcome();
@@ -7509,7 +7508,7 @@ window.PUZZLEPOP_CONFIG = {
           });
       }
       var okNote = hadProfile ? "Profile updated."
-        : ("Welcome, " + name + "! You can now play ranked games.");
+        : ("Welcome, " + name + "! Your scores now count toward Earnings.");
       saveStep.then(function () {
           // Step 2: only if the user actually chose a picture.
           if (!selectedAvatar) {
@@ -7550,59 +7549,6 @@ window.PUZZLEPOP_CONFIG = {
         });
     });
   }
-  /* Game-page Ranked button: the SAME control as the ranked toggle, not
-   * a second state. It drives the toggle's change handler, so gates,
-   * messages, mode-switch and state stay identical by construction:
-   * the flag is set before the mode-switch game starts, so tapping ON
-   * from Daily/Levels drops the player straight into a ranked Classic
-   * game (switching mode first would have made that game casual).
-   * A blocked tap changes nothing; the toggle handler's reason is
-   * also shown on the game page as a banner. */
-  /* Game-page Ranked button (v30): the ONLY ranked control now that
-     the Profile toggle is gone. Same gates as the old toggle (login,
-     profile, 4-day streak unlock) with the reason shown as a game-page
-     banner; turning ON switches to Classic so the fresh game counts. */
-  function wireRankedBtn() {
-    var b = $("rankedBtn");
-    if (!b) return;
-    syncRankedBtn();
-    function reasonBanner(msg) {
-      var sb = window.PuzzlePopShowBanner;
-      if (msg && sb) { try { sb(msg, "great"); } catch (e) { /* noop */ } }
-    }
-    function tryTurnOn() {
-      if (tournamentUnlocked()) {
-        setRanked(true);
-        var classicBtn = document.querySelector('[data-mode="classic"]');
-        if (classicBtn) classicBtn.click();
-      } else {
-        setRanked(false);
-        reasonBanner(bonusLockMessage());
-      }
-    }
-    b.addEventListener("click", function () {
-      if (!session) {
-        reasonBanner(isGuestMode() ?
-          "Playing as guest — sign in or sign up to play ranked games." :
-          "Log in first to play ranked games.");
-        return;
-      }
-      if (!myProfile) {
-        reasonBanner("Choose your tournament username first.");
-        return;
-      }
-      if (!bonusStateLoaded) {
-        ensureGateState().then(function () {
-          renderProgress(); refreshStreakCard();
-          tryTurnOn();
-        });
-        return;
-      }
-      if (rankedOn) { setRanked(false); return; }
-      tryTurnOn();
-    });
-  }
-
   /* ================= public hooks for the game ================= */
   window.PuzzlePopTournament = {
     onNewGame: onNewGame,
@@ -7620,7 +7566,6 @@ window.PUZZLEPOP_CONFIG = {
     neighborsFor: neighborsFor,
     feedbackFor: feedbackFor,
     gateActive: gateActive,
-    gateLevel: gateLevel,
     pacing: pacing,
     showPostGameFeedback: showPostGameFeedback,
     isConfigured: function () { return !!CFG; },
@@ -7761,7 +7706,6 @@ window.PUZZLEPOP_CONFIG = {
     var refreshBtn = $("leaderboardRefreshBtn");
     if (refreshBtn) refreshBtn.addEventListener("click", function () { lbStartManualSpin(); refreshTournamentData(); });
     wireAuth();
-    wireRankedBtn();
     wireSpin();
     wireStreakClaim();
     wireScratchCard();
@@ -7801,7 +7745,7 @@ window.PUZZLEPOP_CONFIG = {
         .catch(function () { renderAuth(); });
     }
     renderAuth();
-    // Sync ranked tracking with the game that already started on load.
+    // Reset submit tracking for the game that already started on load.
     onNewGame();
     if (session) validateSessionInBackground();
     syncBarVisibility();
