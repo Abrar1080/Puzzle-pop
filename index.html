@@ -596,8 +596,8 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 .pass-feed.pass-hold{border-color:var(--line);}
 #panelAuthHint{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow-sm);}
 .t-check{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow-sm);}
-.week-card{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
-#weekRange{font-family:"Baloo 2",cursive;font-size:17px;}
+.month-card{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-sm);}
+#monthRange{font-family:"Baloo 2",cursive;font-size:17px;}
 #countdown{color:var(--muted);font-weight:800;font-size:13px;}
 #myRank{background:rgba(255,176,32,.18);border:1px solid rgba(255,176,32,.55);border-radius:14px;padding:11px 14px;font-weight:800;}
 #myRank:empty,#neighborRows:empty{display:none;}
@@ -934,23 +934,23 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   </div>
 </div>
 
-<div class="overlay" id="tournamentOverlay" role="dialog" aria-modal="true" aria-label="Weekly tournament">
+<div class="overlay" id="tournamentOverlay" role="dialog" aria-modal="true" aria-label="Monthly tournament">
   <div class="modal tournament-modal">
-    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Weekly rank is your total board score.</p></div><h3>⏱️ This week</h3>
-    <p class="week-card"><b id="weekRange"></b><br /><span id="countdown"></span></p>
+    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Monthly rank is your total board score.</p></div><h3>⏱️ This month</h3>
+    <p class="month-card"><b id="monthRange"></b><br /><span id="countdown"></span></p>
 
     <h3>Live leaderboard — top 300</h3>
     <p><span id="lbLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="lbLiveNote" class="muted"></span></p>
-    <p class="muted">Weekly = total of all your games this week after tournament unlock. Every game counts.</p>
+    <p class="muted">Monthly = total of all your games this month after tournament unlock. Every game counts.</p>
     <p id="weeklyFormulaNote" class="muted"></p>
     <p id="myRank"></p>
     <p id="neighborRows" class="muted"></p>
     <table class="t-table">
-      <thead><tr><th>#</th><th>Player</th><th>Weekly pts</th><th>Prize</th></tr></thead>
+      <thead><tr><th>#</th><th>Player</th><th>Monthly pts</th><th>Prize</th></tr></thead>
       <tbody id="leaderboardBody"></tbody>
-    </table><div class="t-pager"><button class="btn btn-ghost" id="lbPrevBtn">◀ Prev</button><span id="lbPageInfo"></span><button class="btn btn-ghost" id="lbNextBtn">Next ▶</button><button class="btn btn-ghost" id="leaderboardRefreshBtn"><span class="lb-spin-glyph">↻</span></button></div><p id="leaderboardEmpty" class="muted"></p><button type="button" class="btn btn-ghost" id="leaderboardRetryBtn" hidden>\u21bb Retry loading the leaderboard</button><div id="passFeed"></div></section><section class="tpage" id="page-prizes"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💰 Prizes</h2><p class="page-sub">Top 300 players win real money, paid manually in crypto after claiming.</p></div><div class="prize-section" id="claimSection"><h3>🏆 Claim your prize</h3><p class="muted">Claims open only after the week ends and winners are announced. Finish in the weekly top 300 and, after the freeze, send your USDT network and wallet address here — the owner pays your prize manually in crypto.</p><ul id="claimsList"></ul></div><div class="prize-section proof-premium" id="paidProofSection"><h3>✅ Winner paid proof</h3><p class="muted">All past paid winners — username and score only. Wallet addresses are never shown here. A winner's payment proof appears here as soon as the owner pays.</p><p><span id="proofLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="proofLiveNote" class="muted"></span></p><ul id="proofList"></ul><div id="proofOwnerForm" hidden></div></div><div class="prize-section" id="lastWinnersSection"><h3>🏆 Last week's winners</h3><p class="muted" id="claimWinnersWeek">Top 300 winners — latest frozen week</p><ul id="claimWinnersList"></ul></div><div class="prize-section" id="tiersSection"><h3>Prize tiers</h3>
+    </table><div class="t-pager"><button class="btn btn-ghost" id="lbPrevBtn">◀ Prev</button><span id="lbPageInfo"></span><button class="btn btn-ghost" id="lbNextBtn">Next ▶</button><button class="btn btn-ghost" id="leaderboardRefreshBtn"><span class="lb-spin-glyph">↻</span></button></div><p id="leaderboardEmpty" class="muted"></p><button type="button" class="btn btn-ghost" id="leaderboardRetryBtn" hidden>\u21bb Retry loading the leaderboard</button><div id="passFeed"></div></section><section class="tpage" id="page-prizes"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💰 Prizes</h2><p class="page-sub">Top 300 players win real money, paid manually in crypto after claiming.</p></div><div class="prize-section" id="claimSection"><h3>🏆 Claim your prize</h3><p class="muted">Claims open only after the month ends and winners are announced. Finish in the monthly top 300 and, after the freeze, send your USDT network and wallet address here — the owner pays your prize manually in crypto.</p><ul id="claimsList"></ul></div><div class="prize-section proof-premium" id="paidProofSection"><h3>✅ Winner paid proof</h3><p class="muted">All past paid winners — username and score only. Wallet addresses are never shown here. A winner's payment proof appears here as soon as the owner pays.</p><p><span id="proofLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="proofLiveNote" class="muted"></span></p><ul id="proofList"></ul><div id="proofOwnerForm" hidden></div></div><div class="prize-section" id="lastWinnersSection"><h3>🏆 Last month's winners</h3><p class="muted" id="claimWinnersWeek">Top 300 winners — latest frozen month</p><ul id="claimWinnersList"></ul></div><div class="prize-section" id="tiersSection"><h3>Prize tiers</h3>
     <ul id="prizeTiers"></ul>
-    <p class="muted">Per player; the owner may change amounts before a week starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
+    <p class="muted">Per player; the owner may change amounts before a month starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
 </section>
     <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
     <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 75,000 win adds exactly 75,000 to your board score too.</p>
@@ -969,9 +969,9 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
 <div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-email" id="profileHeroEmail"></p></div></div>
-<p id="guestNotice" class="guest-banner" hidden>Playing as guest — sign in or sign up so your scores count toward Earnings and the weekly tournament.</p>
+<p id="guestNotice" class="guest-banner" hidden>Playing as guest — sign in or sign up so your scores count toward Earnings and the monthly tournament.</p>
     <div id="panelAuthHint" hidden>
-      <p class="muted">Sign in so your scores count toward Earnings and the weekly tournament.</p>
+      <p class="muted">Sign in so your scores count toward Earnings and the monthly tournament.</p>
       <button class="btn btn-primary" id="panelAuthBtn">Go to sign-in screen</button>
     </div>
     <div id="profileSection" hidden>
@@ -1001,7 +1001,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
-<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (10,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
 <div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
@@ -2188,7 +2188,7 @@ window.PUZZLEPOP_CONFIG = {
     REPEAT_ENABLED: true,
     COIN_MIN: 40000,
     COIN_MAX: 80000,
-    COOLDOWN_HOURS: 3
+    COOLDOWN_HOURS: 1
   },
 
   /* Ad spin (v24): extra wheel spins for watching a rewarded ad.
@@ -2201,7 +2201,7 @@ window.PUZZLEPOP_CONFIG = {
    * is the rolling gap between ad spins. */
   AD_SPIN: {
     ENABLED: true,
-    COOLDOWN_HOURS: 2
+    COOLDOWN_HOURS: 1
   },
 
   /* Anti-cheat caps, mirrored from schema.sql. These are enforced on the
@@ -2243,38 +2243,29 @@ window.PUZZLEPOP_CONFIG = {
   function hide(el) { if (el) el.hidden = true; }
   function setText(id, text) { var el = $(id); if (el) el.textContent = text; }
 
-  /* ================= week math (UTC, Monday start) ================= */
-  function mondayOfUTC(d) {
-    var x = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-    var day = x.getUTCDay(); // 0 = Sunday
-    var diff = (day + 6) % 7; // days since Monday
-    x.setUTCDate(x.getUTCDate() - diff);
-    return x;
+  /* ================= month math (UTC calendar month, v57) ==============
+   * v57 replaces the weekly tournament board with a MONTHLY one. The
+   * board sums board_score for games in the CURRENT UTC calendar
+   * month; it resets on the 1st of each month at 00:00 UTC (05:00 PKT)
+   * automatically: the fetch window moves to the new month, no rows
+   * are deleted and no owner action is needed. */
+  function monthStartOfUTC(d) {
+    return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
   }
   function fmtDateUTC(d) {
     return d.toISOString().slice(0, 10);
   }
-  function fmtWeekLabel(mon) {
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var sun = new Date(mon.getTime() + 6 * 86400000);
-    return "Mon " + mon.getUTCDate() + " " + months[mon.getUTCMonth()] +
-           " – Sun " + sun.getUTCDate() + " " + months[sun.getUTCMonth()] +
-           " " + sun.getUTCFullYear() + " (UTC)";
+  function fmtMonthLabel(mon) {
+    return mon.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
   }
-  function currentWeek() {
-    var mon = mondayOfUTC(new Date());
-    return { start: mon, startStr: fmtDateUTC(mon),
-             endStr: fmtDateUTC(new Date(mon.getTime() + 6 * 86400000)) };
+  function currentMonth() {
+    var start = monthStartOfUTC(new Date());
+    var next = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1));
+    return { start: start, next: next,
+             startStr: fmtDateUTC(start), nextStr: fmtDateUTC(next) };
   }
-  function prevWeek() {
-    var mon = mondayOfUTC(new Date());
-    mon.setUTCDate(mon.getUTCDate() - 7);
-    return { start: mon, startStr: fmtDateUTC(mon) };
-  }
-  function nextMondayUTC() {
-    var mon = mondayOfUTC(new Date());
-    return new Date(mon.getTime() + 7 * 86400000);
+  function nextMonthStart() {
+    return currentMonth().next;
   }
   function prizeForRank(rank) {
     if (!CFG) return null;
@@ -2286,10 +2277,12 @@ window.PUZZLEPOP_CONFIG = {
     }
     return null;
   }
-  /* Rows from ranked_scores -> weekly board values, best first.
-   * RANKING = SCORE, NOT XP. Weekly value = (sum of board_score for
-   * board-eligible games in the week): each day's board_score summed
-   * over the week, with NO division. A player with many medium games
+  /* Rows from ranked_scores -> monthly board values, best first.
+   * v57 note: the function name is historical (the board was weekly
+   * before v57); it now aggregates the CURRENT MONTH's rows.
+   * RANKING = SCORE, NOT XP. Monthly value = (sum of board_score for
+   * board-eligible games in the month): each day's board_score summed
+   * over the month, with NO division. A player with many medium games
    * outranks a player with few brilliant games: that IS the rule.
    * Rank by the EXACT value; display rounds to the nearest whole
    * number.
@@ -2298,7 +2291,7 @@ window.PUZZLEPOP_CONFIG = {
    * board-eligible; rows without total_score fall back to the old
    * sum-of-daily-bests and the leaderboard shows a plain note about
    * it. Same order as the SQL freeze in schema.sql.
-   * TIE-BREAKERS: higher weekly value first, then higher single-day
+   * TIE-BREAKERS: higher monthly value first, then higher single-day
    * board best, then whoever's final total was set first (earliest
    * last update). */
   function weeklyUsesTotal(rows) {
@@ -2353,13 +2346,13 @@ window.PUZZLEPOP_CONFIG = {
   function feedbackFor(board, userId, todayBest) {
     var n = neighborsFor(board, userId);
     var line = "Your best today: " + todayBest.toLocaleString() + " pts.";
-    if (!n) return line + " Not on this week's board yet \u2014 your scores still count toward Earnings.";
-    line += " Weekly total: " + Math.round(n.me.total).toLocaleString() + " pts (#" + n.me.rank + ").";
+    if (!n) return line + " Not on this month's board yet \u2014 your scores still count toward Earnings.";
+    line += " Monthly total: " + Math.round(n.me.total).toLocaleString() + " pts (#" + n.me.rank + ").";
     if (n.above) {
       line += " " + Math.round(n.gapAbove).toLocaleString() + " points behind #" + n.above.rank +
         " (" + n.above.username + ") — beat it!";
     } else {
-      line += " You lead the week!";
+      line += " You lead the month!";
     }
     return line;
   }
@@ -2450,7 +2443,7 @@ window.PUZZLEPOP_CONFIG = {
     return refreshPromise;
   }
   /* v31 SERVER TIME: device clocks lie (owner's phone ran ~6.5h behind
-   * twice, inflating the 2h/3h countdown displays to 8h/9h). Supabase
+   * twice, inflating the 1h countdown displays to 2h). Supabase
    * REST responses carry a Date header, and Date is a CORS-safelisted
    * response header, so it is readable cross-origin. Every successful
    * callRest response re-bases this offset; countdowns use
@@ -2550,7 +2543,7 @@ window.PUZZLEPOP_CONFIG = {
       throw err;
     });
   }
-  /* Weekly-formula migration gating: total_score (sum of ALL ranked
+  /* Monthly-formula migration gating: total_score (sum of ALL ranked
    * games in a day) exists only after schema-weekly-total-migration.sql
    * runs. Same two PostgREST wordings as the avatar columns. */
   function isTotalScoreColumnError(err) {
@@ -2570,11 +2563,11 @@ window.PUZZLEPOP_CONFIG = {
     var p2 = path.replace(",total_score", "");
     return p2 !== path ? p2 : null;
   }
-  /* True while the live weekly board is computed with the old
+  /* True while the live monthly board is computed with the old
    * sum-of-daily-bests formula because total_score is missing. The
    * board still loads; the leaderboard shows a plain note about it. */
   var weeklyFormulaFallback = false;
-  var WEEKLY_FORMULA_MIGRATION_NOTE = "Weekly totals still use the old daily-best sum \u2014 run the weekly-total migration in Supabase once to switch to total scores.";
+  var WEEKLY_FORMULA_MIGRATION_NOTE = "Monthly totals still use the old daily-best sum \u2014 run the weekly-total migration in Supabase once to switch to total scores.";
 
   /* ================= auth flows ================= */
   function storeSessionFromAuth(data) {
@@ -3015,7 +3008,11 @@ window.PUZZLEPOP_CONFIG = {
     var me = null;
     board.forEach(function (r) { if (r.user_id === session.user.id) me = r; });
     if (!me) return; // not on the board yet: nothing to compare
-    var w = currentWeek();
+    /* v57: rank snapshots now key by the MONTH start (stored in the
+     * week_start column, which holds a plain date): the board is
+     * monthly, so a weekly snapshot would reset every Monday and the
+     * feed would misfire. */
+    var w = currentMonth();
     var filter = "user_id=eq." + session.user.id + "&week_start=eq." + w.startStr;
     callRest("rank_snapshots?select=last_rank,last_total&" + filter).then(function (rows) {
       var prev = (rows && rows.length) ? rows[0] : null;
@@ -3039,7 +3036,7 @@ window.PUZZLEPOP_CONFIG = {
         var msg = document.createElement("span");
         msg.textContent = passer ?
           ("\u26A1 " + passer.username + " just passed you! #" + prev.last_rank + " \u2192 #" + me.rank) :
-          ("\u26A1 You dropped from #" + prev.last_rank + " to #" + me.rank + " this week.");
+          ("\u26A1 You dropped from #" + prev.last_rank + " to #" + me.rank + " this month.");
         var btn = document.createElement("button");
         btn.className = "btn btn-primary";
         btn.textContent = "Rematch";
@@ -3062,7 +3059,7 @@ window.PUZZLEPOP_CONFIG = {
         var hold = document.createElement("div");
         hold.className = "pass-feed pass-hold";
         var holdMsg = document.createElement("span");
-        holdMsg.textContent = "✅ No one passed you this week — you're holding your rank.";
+        holdMsg.textContent = "✅ No one passed you this month — you're holding your rank.";
         hold.appendChild(holdMsg);
         feed.appendChild(hold);
       }
@@ -3397,7 +3394,7 @@ window.PUZZLEPOP_CONFIG = {
     else hideSpinReadyCelebrationIfNoneReady();
   }
   /* v27 ad-spin countdown anchor — ONE variable controls what the
-   * 2h countdown counts from. DECIDED (owner, 2026-10-30):
+   * 1h countdown counts from. DECIDED (owner, 2026-10-30):
    * "last-spin-any-kind" — 2h from the latest spin of ANY kind
    * (free spin from spin_ledger OR ad spin from ad_spin_ledger),
    * whichever is later. The server enforces the same anchor
@@ -3413,7 +3410,7 @@ window.PUZZLEPOP_CONFIG = {
   var adSpinClaimInFlight = false;
   function adSpinCfg() { return (CFG.AD_SPIN || {}); }
   function adSpinEnabled() { return adSpinCfg().ENABLED === true; }
-  function adSpinCooldownHours() { return adSpinCfg().COOLDOWN_HOURS || 2; }
+  function adSpinCooldownHours() { return adSpinCfg().COOLDOWN_HOURS || 1; }
   function adSpinCooldownRemainingMs(nowMs) {
     var anchor = adSpinAnchorMs();
     if (!anchor) return 0;
@@ -3781,7 +3778,7 @@ window.PUZZLEPOP_CONFIG = {
       if (remLocked > 0) {
         status.textContent = adSpinLiveText(remLocked) + " Ad spins are coming soon \u2014 the watch-ad button appears here once AdMob is live.";
       } else {
-        status.textContent = "Ad spins are coming soon \u2014 watch an ad for an extra spin once AdMob is set up. Once live: watch an ad for an extra spin, then again every 2h.";
+        status.textContent = "Ad spins are coming soon \u2014 watch an ad for an extra spin once AdMob is set up. Once live: watch an ad for an extra spin, then again every 1h.";
       }
       return;
     }
@@ -3795,7 +3792,7 @@ window.PUZZLEPOP_CONFIG = {
      * locked-style note and no button — the server cannot tell
      * web from app, so not offering the button is the control. */
     if (!hasAdBridge()) {
-      status.textContent = "Ad spins work in the Android app — open the app to watch an ad for an extra spin, then again every 2h.";
+      status.textContent = "Ad spins work in the Android app — open the app to watch an ad for an extra spin, then again every 1h.";
       return;
     }
     status.textContent = "Watch a short ad for an extra spin \u2014 win 30,000 to 75,000 board coins.";
@@ -4190,11 +4187,11 @@ window.PUZZLEPOP_CONFIG = {
    * pending bonuses (next game, v37) on claim success — pre-entry
    * included, never gated.
    * CADENCE: 1 FREE card per UTC day. After the free card, repeats
-   * are every 3h (rolling, server-enforced) and each requires a
+   * are every 1h (rolling, server-enforced, v57: was 3h) and each requires a
    * rewarded ad — but repeats are LOCKED until AdMob is wired
    * (SCRATCH.REPEAT_ENABLED=false). v26 (owner decision: timers now,
    * buttons with AdMob): while locked the repeat line shows the LIVE
-   * 3h countdown from the last claim PLUS the honest locked note,
+   * 1h countdown from the last claim PLUS the honest locked note,
    * and at zero while locked the locked note only — never a button,
    * never a frozen 00:00:00. The server still rejects repeat claims
    * with repeat_locked. NEVER a fake ad, NEVER a free bypass.
@@ -4234,7 +4231,7 @@ window.PUZZLEPOP_CONFIG = {
   function scratchRepeatEnabled() { return scratchCfg().REPEAT_ENABLED === true; }
   function scratchCoinMin() { return scratchCfg().COIN_MIN || 40000; }
   function scratchCoinMax() { return scratchCfg().COIN_MAX || 80000; }
-  function scratchCooldownHours() { return scratchCfg().COOLDOWN_HOURS || 3; }
+  function scratchCooldownHours() { return scratchCfg().COOLDOWN_HOURS || 1; }
   function scratchCoinText(coins) {
     var n = Number(coins) || 0;
     return n.toLocaleString("en-US") + " coins";
@@ -4511,7 +4508,7 @@ window.PUZZLEPOP_CONFIG = {
     if (!session || !session.user || !myProfile || !scratchStateLoaded || scratchPending || !scratchFreeClaimed) return;
     note.hidden = false;
     if (!scratchRepeatEnabled()) {
-      /* v26 (timers now, buttons with AdMob): the 3h countdown is
+      /* v26 (timers now, buttons with AdMob): the 1h countdown is
        * VISIBLE while locked. The countdown is real — anchored to
        * the last scratch claim server timestamp — and the locked
        * note rides with it. At zero while still locked: locked note
@@ -4903,8 +4900,8 @@ window.PUZZLEPOP_CONFIG = {
       var onBoard = !res || res.board_eligible !== false;
       overlayNote("Score submitted! Today's best: " +
         todayBest.toLocaleString() + " pts." +
-        (onBoard ? " It counts on this week's board too."
-          : " It counts toward your Earnings \u2014 unlock the tournament (4-day streak) to join the weekly board."));
+        (onBoard ? " It counts on this month's board too."
+          : " It counts toward your Earnings \u2014 unlock the tournament (4-day streak) to join the monthly board."));
       refreshTournamentData();
       /* v55: EVERY game can move the lifetime total across 5M,
        * completing the second half of the referral gate. Forced:
@@ -5511,8 +5508,8 @@ window.PUZZLEPOP_CONFIG = {
     var m = (err && err.message) || "";
     return /PGRST202|PGRST205|does not exist|could not find|schema cache/i.test(m);
   }
-  var EARNINGS_SCORE_PER_USD = 10000000;
-  var EARNINGS_SCORE_PER_CENT = 100000;
+  var EARNINGS_SCORE_PER_USD = 3000000;
+  var EARNINGS_SCORE_PER_CENT = 30000;
   var EARNINGS_THRESHOLD_USD = 20;
   function earningsFmt(n) {
     var s = String(Math.max(0, Math.floor(n || 0)));
@@ -5648,7 +5645,7 @@ window.PUZZLEPOP_CONFIG = {
     btn.disabled = true;
     setText("earningsPayoutNote", "Sending your request…");
     callRest("rpc/request_earnings_payout", "POST", { p_wallet: w, p_network: network.value }).then(function (res) {
-      setText("earningsPayoutNote", "Request sent: " + earningsUsdText(res && res.amount_usdt) + " — the owner pays manually in USDT.");
+      setText("earningsPayoutNote", "Request sent: " + earningsUsdText(res && res.amount_usdt) + " — the owner pays manually in USDT. Your lifetime Earnings score reset to $0.00 and builds fresh from here.");
       wallet.value = "";
       refreshEarningsPage();
     }).catch(function (err) {
@@ -5984,7 +5981,7 @@ window.PUZZLEPOP_CONFIG = {
     if (ov) ov.classList.add("show");
     renderAuth();
     renderTiers();
-    renderWeekInfo();
+    renderMonthInfo();
     refreshTournamentData();
     showPage(page || (session ? "board" : "profile"));
     /* Badge check on every hub open (except Contact itself, which marks
@@ -6009,15 +6006,15 @@ window.PUZZLEPOP_CONFIG = {
       list.appendChild(li);
     });
   }
-  function renderWeekInfo() {
-    var w = currentWeek();
-    setText("weekRange", fmtWeekLabel(w.start));
+  function renderMonthInfo() {
+    var m = currentMonth();
+    setText("monthRange", fmtMonthLabel(m.start));
     tickCountdown();
   }
   function tickCountdown() {
     var el = $("countdown");
     if (!el) return;
-    var ms = nextMondayUTC().getTime() - Date.now();
+    var ms = nextMonthStart().getTime() - Date.now();
     if (ms < 0) ms = 0;
     var s = Math.floor(ms / 1000);
     var d = Math.floor(s / 86400); s -= d * 86400;
@@ -6040,7 +6037,7 @@ window.PUZZLEPOP_CONFIG = {
     updateLiveSubscription();
     updateProofSubscription();
   }
-  /* True while the live weekly board is computed from total_score
+  /* True while the live monthly board is computed from total_score
    * because the v55 board_score columns are missing (migration not
    * run yet). Pre-v55 rows are ALL board-eligible (old server gate),
    * so the fallback is exact, not approximate. */
@@ -6053,10 +6050,10 @@ window.PUZZLEPOP_CONFIG = {
     var p2 = path.replace(",board_score,board_best_score", "");
     return p2 !== path ? p2 : null;
   }
-  function fetchWeekRows() {
-    var w = currentWeek();
+  function fetchMonthRows() {
+    var m = currentMonth();
     var full = "ranked_scores?select=user_id,best_score,board_score,board_best_score,total_score,game_date,updated_at,profiles(username,avatar,avatar_url)" +
-      "&game_date=gte." + w.startStr + "&game_date=lte." + w.endStr +
+      "&game_date=gte." + m.startStr + "&game_date=lt." + m.nextStr +
       "&limit=1000";
     weeklyFormulaFallback = false;
     weeklyBoardFallback = false;
@@ -6083,8 +6080,8 @@ window.PUZZLEPOP_CONFIG = {
       });
     }
   }
-  function fetchWeekBoard() {
-    return fetchWeekRows().then(function (rows) { return aggregateWeekly(rows || []); });
+  function fetchMonthBoard() {
+    return fetchMonthRows().then(function (rows) { return aggregateWeekly(rows || []); });
   }
   /* Leaderboard paging: 10 rows per page, never a long scroll. */
   var lbBoard = [];
@@ -6334,12 +6331,20 @@ window.PUZZLEPOP_CONFIG = {
     try { ws = new WebSocket(lbRealtimeUrl()); } catch (e) { pfScheduleReconnect(); pfStartPolling(); return; }
     pfSocket = ws;
     var joinRef = String(++pfJoinRef);
+    var joinRef2 = String(++pfJoinRef);
     pfJoinTimer = setTimeout(function () {
       if (pfSocket === ws && pfSocketState === "connecting") { try { ws.close(); } catch (e) {} }
     }, 10000);
     ws.onopen = function () {
       ws.send(JSON.stringify([joinRef, joinRef, "realtime:public:weekly_results", "phx_join", {
         config: { postgres_changes: [{ event: "*", schema: "public", table: "weekly_results" }] },
+        access_token: token
+      }]));
+      /* v57: the monthly results table gets its own join so a monthly
+       * freeze/claim/pay event refreshes the proof list live too. The
+       * weekly join stays for the frozen-week history. */
+      ws.send(JSON.stringify([joinRef2, joinRef2, "realtime:public:monthly_results", "phx_join", {
+        config: { postgres_changes: [{ event: "*", schema: "public", table: "monthly_results" }] },
         access_token: token
       }]));
       pfHeartbeatTimer = setInterval(function () {
@@ -6351,7 +6356,7 @@ window.PUZZLEPOP_CONFIG = {
       try { msg = JSON.parse(ev.data); } catch (e) { return; }
       if (!msg || msg.length < 4) return;
       var event = msg[3];
-      if (event === "phx_reply" && msg[1] === joinRef) {
+      if (event === "phx_reply" && (msg[1] === joinRef || msg[1] === joinRef2)) {
         var payload = msg[4] || {};
         if (payload.status === "ok") {
           if (pfJoinTimer) { clearTimeout(pfJoinTimer); pfJoinTimer = null; }
@@ -6427,12 +6432,12 @@ window.PUZZLEPOP_CONFIG = {
     setText("myRank", "");
     setText("neighborRows", "");
     if ($("leaderboardRetryBtn")) $("leaderboardRetryBtn").hidden = true;
-    fetchWeekBoard().then(function (board) {
+    fetchMonthBoard().then(function (board) {
       setText("weeklyFormulaNote", weeklyFormulaFallback ? WEEKLY_FORMULA_MIGRATION_NOTE : "");
       if (!board.length) {
         lbBoard = [];
         renderLeaderboardPage();
-        setText("leaderboardEmpty", "No board scores yet this week. Be the first on the board!"); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
+        setText("leaderboardEmpty", "No board scores yet this month. Be the first on the board!"); if ($("leaderboardEmpty")) $("leaderboardEmpty").classList.remove("is-loading");
         lbStopManualSpin();
         return;
       }
@@ -6446,7 +6451,7 @@ window.PUZZLEPOP_CONFIG = {
         if (n) {
           var myEl = $("myRank");
           if (myEl) myEl.innerHTML = avatarCellHtml(n.me) + " You: #" + n.me.rank + " — " +
-            Math.round(n.me.total).toLocaleString() + " pts this week.";
+            Math.round(n.me.total).toLocaleString() + " pts this month.";
           if (n.me.rank > 100) {
             var nb = "";
             if (n.above) nb += n.above.total - n.me.total > 0 ?
@@ -6460,7 +6465,7 @@ window.PUZZLEPOP_CONFIG = {
               " points behind #" + n.above.rank + " (" + n.above.username + ") — beat it!");
           }
         } else {
-          setText("myRank", "You have no board score this week yet — play a game; scores join the board once you unlock the tournament.");
+          setText("myRank", "You have no board score this month yet — play a game; scores join the board once you unlock the tournament.");
         }
       }
       refreshPassFeed(board);
@@ -6473,7 +6478,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   function showPostGameFeedback(todayBest) {
     if (!session || !session.user) return;
-    fetchWeekBoard().then(function (board) {
+    fetchMonthBoard().then(function (board) {
       var line = feedbackFor(board, session.user.id, todayBest);
       overlayNote(line);
       var nb = neighborsFor(board, session.user.id);
@@ -6505,6 +6510,13 @@ window.PUZZLEPOP_CONFIG = {
    * database untouched, they are simply never displayed. Privacy rule
    * unchanged: week + rank + username + score ONLY — never wallet,
    * coin, network, or prize amounts. */
+  /* ============ v57: winner paid proof = monthly + weekly history ===
+   * Monthly paid rows (the current cycle) first, then the frozen
+   * weekly history (final week 2026-10-26 and earlier), each period
+   * desc + rank asc, capped at 1000 total. Wallet fields are NEVER
+   * selected: winners' addresses must not leak into this list. A
+   * missing monthly table (migration not run yet) degrades to the
+   * weekly history; only a failure of BOTH queries shows an error. */
   function refreshWinnerPaidProof() {
     var list = $("proofList");
     if (!list) return;
@@ -6513,34 +6525,47 @@ window.PUZZLEPOP_CONFIG = {
       return;
     }
     list.innerHTML = "<li class=\"loading-state\">Loading…</li>";
-    callRest("weekly_results?select=week_start,rank,total_score,payment_proof,profiles(username)" +
-      "&claim_status=eq.paid&order=week_start.desc&order=rank.asc&limit=1000")
-      .then(function (rows) {
-        list.innerHTML = "";
-        if (!rows || !rows.length) {
-          list.innerHTML = "<li class=\"empty-state\">No paid winners yet — payment proof appears here as soon as the owner pays a winner.</li>";
-          return;
+    var renderRows = function (rows) {
+      list.innerHTML = "";
+      if (!rows || !rows.length) {
+        list.innerHTML = "<li class=\"empty-state\">No paid winners yet — payment proof appears here as soon as the owner pays a winner.</li>";
+        return;
+      }
+      rows.forEach(function (r) {
+        var li = document.createElement("li");
+        li.textContent = r.periodLabel + " — #" + r.rank + " " +
+          ((r.profiles && r.profiles.username) || "Player") + " — " +
+          r.total_score.toLocaleString() + " pts";
+        if (r.payment_proof) {
+          li.appendChild(document.createTextNode(" "));
+          li.appendChild(proofLinkNode(r.payment_proof));
+        } else {
+          var mark = document.createElement("span");
+          mark.className = "proof-paid-mark";
+          mark.textContent = "Paid ✓";
+          li.appendChild(mark);
         }
-        rows.forEach(function (r) {
-          var li = document.createElement("li");
-          li.textContent = "Week of " + r.week_start + " — #" + r.rank + " " +
-            ((r.profiles && r.profiles.username) || "Player") + " — " +
-            r.total_score.toLocaleString() + " pts";
-          if (r.payment_proof) {
-            li.appendChild(document.createTextNode(" "));
-            li.appendChild(proofLinkNode(r.payment_proof));
-          } else {
-            var mark = document.createElement("span");
-            mark.className = "proof-paid-mark";
-            mark.textContent = "Paid ✓";
-            li.appendChild(mark);
-          }
-          list.appendChild(li);
-        });
-      })
-      .catch(function (err) {
-        list.innerHTML = "<li class=\"error-state\">Could not load winner paid proof: " + escapeHtml(err.message) + "</li>";
+        list.appendChild(li);
       });
+    };
+    var monthlyQ = callRest("monthly_results?select=month_start,rank,total_score,payment_proof,profiles(username)" +
+      "&claim_status=eq.paid&order=month_start.desc&order=rank.asc&limit=1000")
+      .then(function (rows) { return { ok: true, rows: rows || [] }; })
+      .catch(function () { return { ok: false, rows: [] }; });
+    var weeklyQ = callRest("weekly_results?select=week_start,rank,total_score,payment_proof,profiles(username)" +
+      "&claim_status=eq.paid&order=week_start.desc&order=rank.asc&limit=1000")
+      .then(function (rows) { return { ok: true, rows: rows || [] }; })
+      .catch(function () { return { ok: false, rows: [] }; });
+    Promise.all([monthlyQ, weeklyQ]).then(function (pair) {
+      if (!pair[0].ok && !pair[1].ok) {
+        list.innerHTML = "<li class=\"error-state\">Could not load winner paid proof.</li>";
+        return;
+      }
+      var rows = [];
+      pair[0].rows.forEach(function (r) { r.periodLabel = "Month of " + r.month_start; rows.push(r); });
+      pair[1].rows.forEach(function (r) { r.periodLabel = "Week of " + r.week_start; rows.push(r); });
+      renderRows(rows.slice(0, 1000));
+    });
   }
   /* ============ v32: Claim section state (Prizes page, section 1) ======
    * The section itself is always visible; only the LIST content changes
@@ -6548,10 +6573,11 @@ window.PUZZLEPOP_CONFIG = {
    * a stale list from a previous account); logged-in players with a
    * profile are served by refreshMyClaims. The claim FORM renders for
    * a user with an unclaimed frozen row (real submit) and, since v35,
-   * also generically for non-winners of the latest frozen week — the
+   * also generically for non-winners of the latest frozen period — the
    * generic form's Claim tap shows the not-in-top-300 notice and
    * writes nothing, which is what enforces "claims open only after
-   * the week ends and winners are announced". */
+   * the month ends and winners are announced" (v57: monthly cycle). */
+
   function refreshClaimSection() {
     var list = $("claimsList");
     if (!list) return;
@@ -6565,16 +6591,23 @@ window.PUZZLEPOP_CONFIG = {
     }
   }
   /* ============ v33: claim-section winners list ======================
-   * Everyone logged in can SEE the latest frozen week's full top 300
+   * Everyone logged in can SEE the latest frozen month's full top 300
    * (rank + username + score ONLY — same privacy rule as the proof
    * list: no wallets, coin, network, or amounts). Seeing the list is
    * NOT claiming: the real submit form still renders only for a user
    * with an unclaimed frozen row (refreshMyClaims); since v35,
-   * non-winners of the latest week see a generic form whose Claim tap
+   * non-winners of the latest period see a generic form whose Claim tap
    * shows the not-in-top-300 notice and writes nothing. Two queries:
-   * latest week_start first (a limit=300 grab
-   * would spill into older weeks when the latest week is short), then
-   * that week's rows. Guests keep the log-in note. */
+   * latest month_start first (a limit=300 grab
+   * would spill into older months when the latest month is short), then
+   * that month's rows (else the latest frozen week's rows). Guests keep the log-in note. */
+  /* ============ v57: winners list = latest frozen MONTH ==============
+   * Everyone logged in can SEE the latest frozen month's full top 300
+   * (rank + username + score ONLY — same privacy rule as the proof
+   * list: no wallets, coin, network, or amounts). Until the first
+   * monthly freeze exists, the list falls back to the latest frozen
+   * week (the final weekly tournament, week 2026-10-26) so its
+   * winners stay visible. Seeing the list is NOT claiming. */
   function refreshClaimWinnersList() {
     var list = $("claimWinnersList");
     if (!list) return;
@@ -6583,30 +6616,35 @@ window.PUZZLEPOP_CONFIG = {
       return;
     }
     list.innerHTML = "<li class=\"loading-state\">Loading…</li>";
-    callRest("weekly_results?select=week_start&order=week_start.desc&limit=1")
-      .then(function (weeks) {
-        if (!weeks || !weeks.length) {
-          list.innerHTML = "<li class=\"empty-state\">No winners announced yet — winners appear here after the week ends and results are frozen.</li>";
-          return null;
+    var noWinners = "<li class=\"empty-state\">No winners announced yet — winners appear here after the month ends and results are frozen.</li>";
+    var renderRows = function (rows) {
+      list.innerHTML = "";
+      if (!rows || !rows.length) { list.innerHTML = noWinners; return; }
+      rows.forEach(function (r) {
+        var li = document.createElement("li");
+        li.textContent = "#" + r.rank + " " +
+          ((r.profiles && r.profiles.username) || "Player") + " — " +
+          r.total_score.toLocaleString() + " pts";
+        list.appendChild(li);
+      });
+    };
+    callRest("monthly_results?select=month_start&order=month_start.desc&limit=1")
+      .then(function (months) {
+        if (months && months.length) {
+          var ms = months[0].month_start;
+          var monthEl = $("claimWinnersWeek");
+          if (monthEl) monthEl.textContent = "Month of " + ms + " — top 300 winners";
+          return callRest("monthly_results?select=rank,total_score,profiles(username)" +
+            "&month_start=eq." + ms + "&order=rank.asc&limit=300").then(renderRows);
         }
-        var ws = weeks[0].week_start;
-        var weekEl = $("claimWinnersWeek");
-        if (weekEl) weekEl.textContent = "Week of " + ws + " — top 300 winners";
-        return callRest("weekly_results?select=rank,total_score,profiles(username)" +
-          "&week_start=eq." + ws + "&order=rank.asc&limit=300")
-          .then(function (rows) {
-            list.innerHTML = "";
-            if (!rows || !rows.length) {
-              list.innerHTML = "<li class=\"empty-state\">No winners announced yet — winners appear here after the week ends and results are frozen.</li>";
-              return;
-            }
-            rows.forEach(function (r) {
-              var li = document.createElement("li");
-              li.textContent = "#" + r.rank + " " +
-                ((r.profiles && r.profiles.username) || "Player") + " — " +
-                r.total_score.toLocaleString() + " pts";
-              list.appendChild(li);
-            });
+        return callRest("weekly_results?select=week_start&order=week_start.desc&limit=1")
+          .then(function (weeks) {
+            if (!weeks || !weeks.length) { list.innerHTML = noWinners; return null; }
+            var ws = weeks[0].week_start;
+            var weekEl = $("claimWinnersWeek");
+            if (weekEl) weekEl.textContent = "Week of " + ws + " — top 300 winners";
+            return callRest("weekly_results?select=rank,total_score,profiles(username)" +
+              "&week_start=eq." + ws + "&order=rank.asc&limit=300").then(renderRows);
           });
       })
       .catch(function (err) {
@@ -6615,20 +6653,23 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* ============ v35: claim-for-all (generic claim form) ==========
    * Every logged-in user with a profile sees a claim form for the
-   * latest frozen week. Winners keep their own row form (rendered by
-   * refreshMyClaims); this generic row is appended ONLY when the user
-   * holds no row at all for the latest week — claimed/paid winners
-   * therefore never see it, so the popup below can never misfire on
-   * a real winner. The row carries NO rank/prize line (a non-winner
-   * has none — never invent one). Tapping Claim prize writes NOTHING:
-   * it shows a dismissible red notice in the claims list stating the
-   * user is not in the top 300. No PATCH, no POST, no storage write
-   * on this path, so a non-winner's address can never be stored. */
-  function nonWinnerClaimRow(list, weekStart, noFrozenWeek) {
+   * latest frozen period (v57: month, else final week). Winners keep
+   * their own row form (rendered by refreshMyClaims); this generic row
+   * is appended ONLY when the user holds no row at all for the latest
+   * period — claimed/paid winners therefore never see it, so the popup
+   * below can never misfire on a real winner. The row carries NO
+   * rank/prize line (a non-winner has none — never invent one).
+   * Tapping Claim prize writes NOTHING: it shows a dismissible red
+   * notice in the claims list stating the user is not in the top 300.
+   * No PATCH, no POST, no storage write on this path, so a
+   * non-winner's address can never be stored. */
+
+  function nonWinnerClaimRow(list, periodStart, noFrozenPeriod, isMonth) {
     var li = document.createElement("li");
     li.className = "claim-row claim-row-general";
     var head = document.createElement("b");
-    head.textContent = noFrozenWeek ? "Claim your prize" : "Week of " + weekStart;
+    head.textContent = noFrozenPeriod ? "Claim your prize" :
+      (isMonth ? "Month of " + periodStart : "Week of " + periodStart);
     li.appendChild(head);
     li.appendChild(document.createElement("br"));
     var note = document.createElement("span");
@@ -6656,13 +6697,16 @@ window.PUZZLEPOP_CONFIG = {
       var prevOpen = list.querySelector(".claim-not-open-note");
       if (prevOpen) prevOpen.remove();
       var noteEl = document.createElement("li");
-      if (noFrozenWeek) {
-        /* v46: no frozen week exists yet — claims are not open. This
-           writes NOTHING (same as the frozen-week generic row) and
+      if (noFrozenPeriod) {
+        /* v46: no frozen period exists yet — claims are not open. This
+           writes NOTHING (same as the frozen-period generic row) and
            never shows the not-in-top-300 text, which applies only
-           once a frozen week exists. */
+           once a frozen period exists. */
         noteEl.className = "error-state claim-not-open-note";
-        noteEl.textContent = "Claims open only after the week ends and winners are announced. ";
+        noteEl.textContent = "Claims open only after the month ends and winners are announced. ";
+      } else if (isMonth) {
+        noteEl.className = "error-state claim-not-winner-note";
+        noteEl.textContent = "You are not in the top 300 for this month — finish in the monthly top 300 to claim a prize. ";
       } else {
         noteEl.className = "error-state claim-not-winner-note";
         noteEl.textContent = "You are not in the top 300 for this week — finish in the weekly top 300 to claim a prize. ";
@@ -6680,16 +6724,37 @@ window.PUZZLEPOP_CONFIG = {
     li.appendChild(btn);
     return li;
   }
+
   function refreshMyClaims() {
     var list = $("claimsList");
     if (!list || !session || !session.user) return;
     list.innerHTML = "<li class=\"loading-state\">Loading…</li>";
     /* v18: claim_network is selected only while the payment-proof
-       migration has run; a missing-column error retries without it. */
+       migration has run; a missing-column error retries without it.
+       v57: the user's rows come from BOTH tables — monthly_results
+       (current cycle) first, then weekly_results (frozen-week
+       history). A missing monthly table (migration not run yet)
+       degrades to weekly rows only; the weekly query still drives
+       the retry/error path exactly as before. */
     function loadClaims(withNetwork) {
       var sel = "id,week_start,rank,total_score,prize_tier,prize_amount,claim_status,claim_wallet,claim_coin" + (withNetwork ? ",claim_network" : "");
-      return callRest("weekly_results?select=" + sel +
+      var msel = "id,month_start,rank,total_score,prize_tier,prize_amount,claim_status,claim_wallet,claim_coin" + (withNetwork ? ",claim_network" : "");
+      var mq = callRest("monthly_results?select=" + msel +
+        "&user_id=eq." + session.user.id + "&order=month_start.desc").catch(function () { return []; });
+      var wq = callRest("weekly_results?select=" + sel +
         "&user_id=eq." + session.user.id + "&order=week_start.desc");
+      return Promise.all([mq, wq]).then(function (pair) {
+        var rows = [];
+        (pair[0] || []).forEach(function (r) {
+          r._table = "monthly_results"; r._periodLabel = "Month of " + r.month_start; r._periodKey = r.month_start;
+          rows.push(r);
+        });
+        (pair[1] || []).forEach(function (r) {
+          r._table = "weekly_results"; r._periodLabel = "Week of " + r.week_start; r._periodKey = r.week_start;
+          rows.push(r);
+        });
+        return rows;
+      });
     }
     loadClaims(claimNetworkSupported).catch(function (err) {
       if (claimNetworkSupported && isClaimNetworkColumnError(err)) {
@@ -6701,43 +6766,56 @@ window.PUZZLEPOP_CONFIG = {
         list.innerHTML = "";
         var ownRows = rows || [];
         /* v35: claim-for-all — the generic claim form for non-winners
-           of the latest frozen week. Fires on every claims render; it
-           appends ONLY when a frozen week exists AND the user holds no
-           row at all for that week (any status). A claimed/paid winner
+           of the latest frozen period. Fires on every claims render; it
+           appends ONLY when a frozen period exists AND the user holds no
+           row at all for that period (any status). A claimed/paid winner
            therefore never sees it, so the popup below can never
-           misfire on a real winner. A failed week lookup appends
+           misfire on a real winner. A failed period lookup appends
            nothing and never wipes the claims list.
-           v46: when NO frozen week exists, the generic form still
-           renders for row-less logged-in users (noFrozenWeek mode);
+           v46: when NO frozen period exists, the generic form still
+           renders for row-less logged-in users (noFrozenPeriod mode);
            its submit writes nothing and shows the claims-not-open
-           note instead of the not-in-top-300 note. */
-        callRest("weekly_results?select=week_start&order=week_start.desc&limit=1")
-          .then(function (weeks) {
-            if (!weeks || !weeks.length) {
-              /* v46: no frozen week exists yet — the claim section must
-                 still be visible to every logged-in user. Append the
-                 generic form below the empty-state text (only when the
-                 user holds no rows at all; a user with rows implies a
-                 frozen week exists, so this branch never fires for
-                 them). Its submit writes NOTHING and shows the
-                 claims-not-open note, never the not-in-top-300 text. */
-              if (ownRows.length === 0) {
-                var prevGeneral = list.querySelector(".claim-row-general");
-                if (prevGeneral) prevGeneral.remove();
-                list.appendChild(nonWinnerClaimRow(list, null, true));
-              }
+           note instead of the not-in-top-300 note.
+           v57: latest frozen period = latest monthly month if any,
+           else the latest frozen week (final weekly tournament). */
+        callRest("monthly_results?select=month_start&order=month_start.desc&limit=1")
+          .then(function (months) {
+            if (months && months.length) {
+              var ms = months[0].month_start;
+              if (ownRows.some(function (r) { return r._table === "monthly_results" && r._periodKey === ms; })) return;
+              var prevM = list.querySelector(".claim-row-general");
+              if (prevM) prevM.remove();
+              list.appendChild(nonWinnerClaimRow(list, ms, false, true));
               return;
             }
-            var ws = weeks[0].week_start;
-            var hasRowThisWeek = ownRows.some(function (r) { return r.week_start === ws; });
-            if (hasRowThisWeek) return;
-            var prev = list.querySelector(".claim-row-general");
-            if (prev) prev.remove();
-            list.appendChild(nonWinnerClaimRow(list, ws));
+            return callRest("weekly_results?select=week_start&order=week_start.desc&limit=1")
+              .then(function (weeks) {
+                if (!weeks || !weeks.length) {
+                  /* v46: no frozen period exists yet — the claim section must
+                     still be visible to every logged-in user. Append the
+                     generic form below the empty-state text (only when the
+                     user holds no rows at all; a user with rows implies a
+                     frozen period exists, so this branch never fires for
+                     them). Its submit writes NOTHING and shows the
+                     claims-not-open note, never the not-in-top-300 text. */
+                  if (ownRows.length === 0) {
+                    var prevGeneral = list.querySelector(".claim-row-general");
+                    if (prevGeneral) prevGeneral.remove();
+                    list.appendChild(nonWinnerClaimRow(list, null, true, true));
+                  }
+                  return;
+                }
+                var ws = weeks[0].week_start;
+                var hasRowThisWeek = ownRows.some(function (r) { return r._table === "weekly_results" && r._periodKey === ws; });
+                if (hasRowThisWeek) return;
+                var prev = list.querySelector(".claim-row-general");
+                if (prev) prev.remove();
+                list.appendChild(nonWinnerClaimRow(list, ws, false, false));
+              });
           })
           .catch(function () {});
         if (!rows || !rows.length) {
-          list.innerHTML = "<li class=\"empty-state\">No prize results for your account yet. Finish in the weekly top 300 and your result will appear here. Claims open only after the week ends and winners are announced.</li>";
+          list.innerHTML = "<li class=\"empty-state\">No prize results for your account yet. Finish in the monthly top 300 and your result will appear here. Claims open only after the month ends and winners are announced.</li>";
           return;
         }
         rows.forEach(function (r) {
@@ -6746,7 +6824,7 @@ window.PUZZLEPOP_CONFIG = {
           var statusText = r.claim_status === "paid" ? "Paid by the owner." :
             r.claim_status === "claimed" ? "Claim received — pending owner payment." :
             "You won! Claim below to send your USDT wallet address to the owner.";
-          li.innerHTML = "<b>Week of " + r.week_start + " — #" + r.rank + " — $" + r.prize_amount + "</b><br>" +
+          li.innerHTML = "<b>" + r._periodLabel + " — #" + r.rank + " — $" + r.prize_amount + "</b><br>" +
             "<span>" + statusText + "</span>";
           if (r.claim_status === "unclaimed") {
             var wallet = document.createElement("input");
@@ -6777,7 +6855,7 @@ window.PUZZLEPOP_CONFIG = {
                 claimed_at: new Date().toISOString()
               };
               if (claimNetworkSupported) patch.claim_network = network.value;
-              callRest("weekly_results?id=eq." + r.id, "PATCH", patch).then(function () { refreshMyClaims(); })
+              callRest(r._table + "?id=eq." + r.id, "PATCH", patch).then(function () { refreshMyClaims(); })
                 .catch(function (err) {
                   alert("Claim failed: " + err.message);
                   btn.disabled = false;
@@ -6810,6 +6888,7 @@ window.PUZZLEPOP_CONFIG = {
    * all rows, so the query itself excludes them). Proof rendering:
    * BscScan URL -> "View payment" link; bare 0x hash -> BscScan tx
    * link; anything else -> shown escaped as-is. */
+
   function proofLinkNode(proof) {
     var p = String(proof || "").trim();
     if (/^https?:\/\//i.test(p)) {
@@ -6844,62 +6923,72 @@ window.PUZZLEPOP_CONFIG = {
     if (!isOwner()) { box.hidden = true; box.innerHTML = ""; return; }
     box.hidden = false;
     box.innerHTML = "<p class=\"muted\">Owner: add payment proof for claimed winners (or paid rows missing proof).</p>";
-    callRest("weekly_results?select=id,week_start,rank,claim_status,payment_proof,profiles(username)" +
-      "&claim_status=in.(claimed,paid)&order=week_start.desc&order=rank.asc")
-      .then(function (rows) {
-        var todo = (rows || []).filter(function (r) {
-          return r.claim_status === "claimed" || !r.payment_proof;
-        });
-        if (!todo.length) {
-          var none = document.createElement("p");
-          none.className = "muted";
-          none.textContent = "Nothing needs proof right now.";
-          box.appendChild(none);
-          return;
-        }
-        todo.forEach(function (r) {
-          var row = document.createElement("p");
-          row.textContent = "Week of " + r.week_start + " — #" + r.rank + " " +
-            ((r.profiles && r.profiles.username) || "Player") + " (" + r.claim_status + "): ";
-          var input = document.createElement("input");
-          input.className = "t-input";
-          input.placeholder = "Payment proof: BscScan link or 0x transaction hash";
-          input.setAttribute("aria-label", "Payment proof");
-          if (r.payment_proof) input.value = r.payment_proof;
-          row.appendChild(input);
-          var btn = document.createElement("button");
-          btn.className = "btn btn-primary";
-          btn.textContent = "Save proof";
-          btn.addEventListener("click", function () {
-            var proof = input.value.trim();
-            if (!proof) { alert("Enter the payment proof first."); return; }
-            btn.disabled = true;
-            callRest("weekly_results?id=eq." + r.id, "PATCH", { payment_proof: proof })
-              .then(function (res) {
-                if (Array.isArray(res) && res.length === 0) {
-                  alert("Proof was not saved.");
-                  btn.disabled = false;
-                  return;
-                }
-                refreshWinnerPaidProof();
-                refreshProofOwnerForm();
-              })
-              .catch(function (err) {
-                alert("Proof save failed: " + err.message);
-                btn.disabled = false;
-              });
-          });
-          row.appendChild(btn);
-          box.appendChild(row);
-        });
-      })
-      .catch(function (err) {
-        var e = document.createElement("p");
-        e.className = "muted";
-        e.textContent = "Could not load rows needing proof: " + err.message;
-        box.appendChild(e);
+    var mq = callRest("monthly_results?select=id,month_start,rank,claim_status,payment_proof,profiles(username)" +
+      "&claim_status=in.(claimed,paid)&order=month_start.desc&order=rank.asc").catch(function () { return []; });
+    var wq = callRest("weekly_results?select=id,week_start,rank,claim_status,payment_proof,profiles(username)" +
+      "&claim_status=in.(claimed,paid)&order=week_start.desc&order=rank.asc");
+    Promise.all([mq, wq]).then(function (pair) {
+      var rows = [];
+      (pair[0] || []).forEach(function (r) {
+        r._table = "monthly_results"; r._periodLabel = "Month of " + r.month_start; rows.push(r);
       });
+      (pair[1] || []).forEach(function (r) {
+        r._table = "weekly_results"; r._periodLabel = "Week of " + r.week_start; rows.push(r);
+      });
+      var todo = rows.filter(function (r) {
+        return r.claim_status === "claimed" || !r.payment_proof;
+      });
+      if (!todo.length) {
+        var none = document.createElement("p");
+        none.className = "muted";
+        none.textContent = "Nothing needs proof right now.";
+        box.appendChild(none);
+        return;
+      }
+      todo.forEach(function (r) {
+        var row = document.createElement("p");
+        row.textContent = r._periodLabel + " — #" + r.rank + " " +
+          ((r.profiles && r.profiles.username) || "Player") + " (" + r.claim_status + "): ";
+        var input = document.createElement("input");
+        input.className = "t-input";
+        input.placeholder = "Payment proof: BscScan link or 0x transaction hash";
+        input.setAttribute("aria-label", "Payment proof");
+        if (r.payment_proof) input.value = r.payment_proof;
+        row.appendChild(input);
+        var btn = document.createElement("button");
+        btn.className = "btn btn-primary";
+        btn.textContent = "Save proof";
+        btn.addEventListener("click", function () {
+          var proof = input.value.trim();
+          if (!proof) { alert("Enter the payment proof first."); return; }
+          btn.disabled = true;
+          callRest(r._table + "?id=eq." + r.id, "PATCH", { payment_proof: proof })
+            .then(function (res) {
+              if (Array.isArray(res) && res.length === 0) {
+                alert("Proof was not saved.");
+                btn.disabled = false;
+                return;
+              }
+              refreshWinnerPaidProof();
+              refreshProofOwnerForm();
+            })
+            .catch(function (err) {
+              alert("Proof save failed: " + err.message);
+              btn.disabled = false;
+            });
+        });
+        row.appendChild(btn);
+        box.appendChild(row);
+      });
+    })
+    .catch(function (err) {
+      var e = document.createElement("p");
+      e.className = "muted";
+      e.textContent = "Could not load rows needing proof: " + err.message;
+      box.appendChild(e);
+    });
   }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -7557,7 +7646,7 @@ window.PUZZLEPOP_CONFIG = {
     maybeShowGameAd: maybeShowGameAd,
     gameAdCount: gameAdCount,
     openPanel: openPanel,
-    currentWeek: currentWeek,
+    currentMonth: currentMonth,
     prizeForRank: prizeForRank,
     aggregateWeekly: aggregateWeekly,
     computeClimbers: computeClimbers,
@@ -7724,7 +7813,7 @@ window.PUZZLEPOP_CONFIG = {
     wireEntryFlow();
     runEntryFlow();
     renderTiers();
-    renderWeekInfo();
+    renderMonthInfo();
     setInterval(tickCountdown, 1000);
     // Optimistic session from storage (validated quietly in background).
     if (session && session.user) {
