@@ -1005,9 +1005,9 @@ grant execute on function public.spend_spin_points(text, integer) to authenticat
 -- is deterministic. The ladder cap does NOT apply here: referrers
 -- past ladder position 100 still count, because their unlock events
 -- are still recorded.
--- PRIZES (cash, paid manually in crypto after claiming): 1st $100,
--- 2nd $90, 3rd $80, 4th $70, 5th $60, 6th $50, 7th $40, 8th $30,
--- 9th-100th $20 each ($2,360/month).
+-- PRIZES (cash, paid manually in crypto after claiming): 1st $50,
+-- 2nd $45, 3rd $40, 4th $35, 5th $30, 6th $25, 7th $20, 8th $15,
+-- 9th-100th $10 each ($1,180/month).
 -- 4. Winners then claim inside the game; you pay them manually in
 --    crypto and mark each row 'paid' in the Table Editor.
 -- =====================================================================
@@ -1033,15 +1033,15 @@ grant execute on function public.spend_spin_points(text, integer) to authenticat
 --   (month_start, user_id, rank, referral_count, prize_amount)
 -- select
 --   date 'YYYY-MM-01', r.referrer_id, r.rnk, r.cnt,
---   case when r.rnk = 1 then 100
---        when r.rnk = 2 then 90
---        when r.rnk = 3 then 80
---        when r.rnk = 4 then 70
---        when r.rnk = 5 then 60
---        when r.rnk = 6 then 50
---        when r.rnk = 7 then 40
---        when r.rnk = 8 then 30
---        else 20 end
+--   case when r.rnk = 1 then 50
+--        when r.rnk = 2 then 45
+--        when r.rnk = 3 then 40
+--        when r.rnk = 4 then 35
+--        when r.rnk = 5 then 30
+--        when r.rnk = 6 then 25
+--        when r.rnk = 7 then 20
+--        when r.rnk = 8 then 15
+--        else 10 end
 -- from ranked r
 -- where r.rnk <= 100;
 
