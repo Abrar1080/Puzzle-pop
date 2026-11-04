@@ -977,7 +977,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <button class="btn btn-ghost" id="referralsPageBtn">🎁 Referrals</button>
 </section><section class="tpage" id="page-referrals"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎁 Referrals</h2><p class="page-sub">Invite friends, climb the monthly board, win real prizes.</p></div>
 <div class="referral-section" id="referralLinkSection"><h3>🔗 Your referral link</h3><p class="muted" id="referralGuestNote" hidden>Log in to get your referral link.</p><button class="btn btn-primary" id="referralAuthBtn" hidden>Go to sign-in</button><div id="referralLinkWrap"><input class="t-input" id="referralLinkInput" type="text" readonly /><button class="btn btn-primary" id="referralCopyBtn">Copy link</button><button class="btn btn-ghost" id="referralShareBtn">Share</button></div><p class="muted" id="referralLinkNote"></p></div>
-<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who reaches a 5-day streak and 5,000,000 total score earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$50</b></li><li>2nd — <b>$45</b></li><li>3rd — <b>$40</b></li><li>4th — <b>$35</b></li><li>5th — <b>$30</b></li><li>6th — <b>$25</b></li><li>7th — <b>$20</b></li><li>8th — <b>$15</b></li><li>9th–100th — <b>$10 each</b></li></ul><p class="muted">Top 100 referrers of the month share $1,180. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th referral — <b>250,000 coins</b></li><li data-ladder-pos="8">8th referral — <b>280,000 coins</b></li><li data-ladder-pos="9">9th referral — <b>310,000 coins</b></li><li data-ladder-pos="10">10th referral — <b>350,000 coins</b></li><li data-ladder-pos="11">11th–100th referral — <b>400,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
+<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who reaches a 5-day streak and 5,000,000 total score earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$50</b></li><li>2nd — <b>$45</b></li><li>3rd — <b>$40</b></li><li>4th — <b>$35</b></li><li>5th — <b>$30</b></li><li>6th — <b>$25</b></li><li>7th — <b>$20</b></li><li>8th — <b>$15</b></li><li>9th–100th — <b>$10 each</b></li></ul><p class="muted">Top 100 referrers of the month share $1,180. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th–100th referral — <b>250,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
 <div class="referral-section" id="referralStatsSection"><h3>📊 Your referrals</h3><p id="referralStatsText" class="muted">Loading…</p><p class="muted" id="referralStatsNote"></p></div>
 <div class="referral-section" id="referralListSection"><h3>👥 Friends you referred</h3><ul id="referralList"></ul><p class="muted" id="referralListNote"></p></div>
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
@@ -5216,10 +5216,10 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* ---- Referral page: link + stats + list ---- */
   /* v42: prize-tiers next-reward highlight. Ladder mirrors the server
-   * ladder exactly; next = successful + 1 (11–100 share the 400k row);
+   * ladder exactly; next = successful + 1 (7–100 share the 250k row);
    * at 100 the ladder is complete and nothing is highlighted. */
-  var REFERRAL_LADDER = [100000, 130000, 150000, 170000, 190000, 220000, 250000, 280000, 310000, 350000];
-  function referralLadderAmount(pos) { return pos <= 10 ? REFERRAL_LADDER[pos - 1] : 400000; }
+  var REFERRAL_LADDER = [100000, 130000, 150000, 170000, 190000, 220000, 250000];
+  function referralLadderAmount(pos) { return pos <= 7 ? REFERRAL_LADDER[pos - 1] : 250000; }
   function referralOrdinal(n) { var s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
   function referralAmountText(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
   function updateReferralTierHighlight(successful) {
@@ -5236,7 +5236,7 @@ window.PUZZLEPOP_CONFIG = {
       return;
     }
     var next = successful + 1;
-    var key = next <= 10 ? String(next) : "11";
+    var key = next <= 6 ? String(next) : "7";
     for (var j = 0; j < rows.length; j++) {
       if (rows[j].getAttribute("data-ladder-pos") === key) rows[j].classList.add("next-tier");
     }
