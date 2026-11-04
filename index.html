@@ -952,11 +952,11 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
     <ul id="prizeTiers"></ul>
     <p class="muted">Per player; the owner may change amounts before a month starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
 </section>
-    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button></div><div id="spinWheelView">
-    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 75,000 win adds exactly 75,000 to your board score too.</p>
+    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button><button type="button" id="spinTabAdWatch">📺 Watch Ads</button></div><div id="spinWheelView">
+    <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 52,500 win adds exactly 52,500 to your board score too.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
-    <p class="spin-legend">🟡 30k — 30% &nbsp; 🟠 39k — 25% &nbsp; 🔵 48k — 20% &nbsp; 🟣 60k — 15% &nbsp; 🔴 75k — 10%</p>
+    <p class="spin-legend">🟡 21k — 30% &nbsp; 🟠 27.3k — 25% &nbsp; 🔵 33.6k — 20% &nbsp; 🟣 42k — 15% &nbsp; 🔴 52.5k — 10%</p>
     <button class="btn btn-primary" id="spinBtn" disabled>Spin the wheel</button>
     <button class="btn btn-ghost" id="spinRetryBtn" hidden>↻ Retry spin</button>
     <p id="spinResult" class="muted"></p>
@@ -967,7 +967,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     </div><div id="spinStreakView" hidden><div class="streak-card" data-streak-card><h3>🔥 Daily bonus streak</h3><p class="streak-dayline">Log in to start your streak.</p><ul class="streak-ladder"></ul><p class="muted streak-status">Log in to claim your daily bonus.</p><p class="muted streak-unlock-line"></p><button class="btn btn-primary streak-collect-btn" disabled>Collect daily bonus</button><button class="btn btn-ghost streak-retry-btn" hidden>↻ Retry</button></div></div>
 
-    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
+    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div><div id="spinAdWatchView" hidden><div class="streak-card" data-adwatch-card><h3>📺 Watch Ads</h3><p class="muted">Watch a short video ad to earn coins — 3 tasks every hour, 10,000 coins each. Finish all 3 for 30,000 coins an hour.</p><p class="muted" id="adWatchProgress"></p><p class="muted" id="adWatchStatus">Log in to watch ads.</p><div><h4>Task 1 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus1"></p><button class="btn btn-primary" id="adWatchBtn1" hidden>Watch ad</button></div><div><h4>Task 2 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus2"></p><button class="btn btn-primary" id="adWatchBtn2" hidden>Watch ad</button></div><div><h4>Task 3 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus3"></p><button class="btn btn-primary" id="adWatchBtn3" hidden>Watch ad</button></div><p class="muted" id="adWatchResult"></p></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
 <div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-email" id="profileHeroEmail"></p></div></div>
 <p id="guestNotice" class="guest-banner" hidden>Playing as guest — sign in or sign up so your scores count toward Earnings and the monthly tournament.</p>
     <div id="panelAuthHint" hidden>
@@ -1001,7 +1001,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
-<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (4,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
 <div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
@@ -2154,24 +2154,27 @@ window.PUZZLEPOP_CONFIG = {
   // prizes cut by 70% (weights unchanged). Expected value:
   // 30000*0.30 + 39000*0.25 + 48000*0.20 + 60000*0.15
   // + 75000*0.10 = 44,850 leaderboard points per free spin.
+  // v58: prizes cut 30% (x0.7), weights unchanged — new EV 31,395:
+  // 21000*0.30 + 27300*0.25 + 33600*0.20 + 42000*0.15
+  // + 52500*0.10 = 31,395.
   // AD spins: coming soon (real provider + watch verification first).
   // PAID spins: removed from the game UI in v27 (owner decision) --
   // no paid-spin claim path exists, and no paid-spin UI remains.
   SPIN: {
     PRIZES: [
-      { points: 30000, weight: 30 },
-      { points: 39000, weight: 25 },
-      { points: 48000, weight: 20 },
-      { points: 60000, weight: 15 },
-      { points: 75000, weight: 10 }
+      { points: 21000, weight: 30 },
+      { points: 27300, weight: 25 },
+      { points: 33600, weight: 20 },
+      { points: 42000, weight: 15 },
+      { points: 52500, weight: 10 }
     ]
   },
 
   /* Daily scratch card (v26): one FREE scratch per UTC day, then
    * repeats every 3h (rolling, server-enforced) each requiring a
    * rewarded ad. EVERY card wins a BUNDLE, drawn SERVER-SIDE by
-   * claim_scratch_card(): random board coins 40,000–80,000 +
-   * random hammers 1–5 + random bombs 1–5 — the client only
+   * claim_scratch_card(): random board coins 28,000–56,000 (v58: cut
+   * 30% from 40,000–80,000) + random hammers 1–5 + random bombs 1–5 — the client only
    * displays what the server granted, never rolls its own prize.
    * Coins add to the leaderboard total ONLY when
    * tournament-unlocked (v20 ladder rule); hammers + bombs grant
@@ -2186,8 +2189,8 @@ window.PUZZLEPOP_CONFIG = {
    * is the rolling repeat gap. */
   SCRATCH: {
     REPEAT_ENABLED: true,
-    COIN_MIN: 40000,
-    COIN_MAX: 80000,
+    COIN_MIN: 28000,
+    COIN_MAX: 56000,
     COOLDOWN_HOURS: 1
   },
 
@@ -2201,6 +2204,23 @@ window.PUZZLEPOP_CONFIG = {
    * is the rolling gap between ad spins. */
   AD_SPIN: {
     ENABLED: true,
+    COOLDOWN_HOURS: 1
+  },
+
+  /* Watch Ads tab (v58): 3 task slots per rolling hour on the Spin
+   * page. Each slot: one full rewarded VIDEO ad through the native
+   * bridge, then a server claim pays COINS (10,000) — never a
+   * client-side grant, never a fake ad. Each slot refills 1h after
+   * its own watch (rolling, server-enforced, like ad spins and
+   * scratch repeats). Board coins only when tournament-unlocked;
+   * pre-unlock wins are recorded and count toward Earnings like
+   * spin/scratch unapplied ledgers. On the WEB (no bridge) the tab
+   * shows an honest app-only note with disabled buttons — never a
+   * fake ad, never free coins. */
+  AD_WATCH: {
+    ENABLED: true,
+    SLOTS: 3,
+    COINS: 10000,
     COOLDOWN_HOURS: 1
   },
 
@@ -3150,12 +3170,12 @@ window.PUZZLEPOP_CONFIG = {
   function spinSegmentAngle(prize) {
     // Wheel segments (conic-gradient, clockwise from top), weights
     // UNCHANGED from v12 (30/25/20/15/10); only the prize values moved:
-    // 30k: 0-108 deg (center 54), 39k: 108-198 (153),
-    // 48k: 198-270 (234), 60k: 270-324 (297), 75k: 324-360 (342).
-    if (prize === 39000) return 153;
-    if (prize === 48000) return 234;
-    if (prize === 60000) return 297;
-    if (prize === 75000) return 342;
+    // 21k: 0-108 deg (center 54), 27.3k: 108-198 (153),
+    // 33.6k: 198-270 (234), 42k: 270-324 (297), 52.5k: 324-360 (342).
+    if (prize === 27300) return 153;
+    if (prize === 33600) return 234;
+    if (prize === 42000) return 297;
+    if (prize === 52500) return 342;
     return 54;
   }
   /* v28: the wheel notes are dynamic. Unlocked players keep the
@@ -3164,10 +3184,10 @@ window.PUZZLEPOP_CONFIG = {
   function refreshWheelNotes() {
     if (tournamentUnlocked()) {
       setText("spinPageNote", "One free spin per day \u2014 prizes go straight to your leaderboard total.");
-      setText("spinWheelExplainer", "One free spin per day. Prizes go DIRECTLY to your leaderboard total \u2014 a 75,000 win adds exactly 75,000 to your board score.");
+      setText("spinWheelExplainer", "One free spin per day. Prizes go DIRECTLY to your leaderboard total \u2014 a 52,500 win adds exactly 52,500 to your board score.");
     } else {
       setText("spinPageNote", "One free spin per day \u2014 coin prizes count toward your Earnings; after you unlock the tournament on day 4, new prizes count on your leaderboard total too.");
-      setText("spinWheelExplainer", "One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 75,000 win adds exactly 75,000 to your board score too.");
+      setText("spinWheelExplainer", "One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 52,500 win adds exactly 52,500 to your board score too.");
     }
   }
   function spinMigrationMissing(err) {
@@ -3795,7 +3815,7 @@ window.PUZZLEPOP_CONFIG = {
       status.textContent = "Ad spins work in the Android app — open the app to watch an ad for an extra spin, then again every 1h.";
       return;
     }
-    status.textContent = "Watch a short ad for an extra spin \u2014 win 30,000 to 75,000 board coins.";
+    status.textContent = "Watch a short ad for an extra spin \u2014 win 21,000 to 52,500 board coins.";
     if (btn) btn.hidden = false;
     setAdSpinReady(true);
   }
@@ -3873,6 +3893,161 @@ window.PUZZLEPOP_CONFIG = {
       retry.addEventListener("click", function () { doAdSpinClaim(); });
     }
   }
+  /* --- Watch Ads tab (v58): 3 task slots per rolling hour ---
+   * Each slot: one full rewarded VIDEO ad through the native bridge,
+   * then a server claim pays 10,000 coins. All 3 slots in an hour =
+   * 30,000 coins. Each slot refills 1h after its own watch (rolling,
+   * server-enforced, like ad spins and scratch repeats). Board coins
+   * only when tournament-unlocked; pre-unlock wins are recorded and
+   * count toward Earnings like spin/scratch unapplied ledgers.
+   * The client NEVER grants coins without server confirmation, and
+   * the ad must come from the native rewarded callback — no JS-only
+   * "watched" flag. On the web (no bridge) the tab shows an honest
+   * app-only note with disabled buttons — never a fake ad, never
+   * free coins. No notifications for ad-watch readiness. */
+  function adWatchCfg() { return (CFG && CFG.AD_WATCH) || {}; }
+  function adWatchCoins() { return adWatchCfg().COINS || 10000; }
+  function adWatchCooldownHours() { return adWatchCfg().COOLDOWN_HOURS || 1; }
+  function adWatchSlots() { return [1, 2, 3]; }
+  var adWatchStateLoaded = false, adWatchFetching = false, adWatchPending = false;
+  var adWatchLastBySlot = {};
+  var adWatchClaimSlot = 0;
+  function adWatchMigrationMissing(err) {
+    var m = (err && err.message) || "";
+    return /ad_watch_ledger|claim_ad_watch|does not exist|PGRST205|PGRST202|Could not find/i.test(m);
+  }
+  function adWatchSlotRemainingMs(slot, nowMs) {
+    var last = adWatchLastBySlot[slot];
+    if (!last) return 0;
+    var rem = last + adWatchCooldownHours() * 3600000 - nowMs;
+    return rem > 0 ? rem : 0;
+  }
+  function adWatchDoneCount(nowMs) {
+    var n = 0, slots = adWatchSlots(), i;
+    for (i = 0; i < slots.length; i++) {
+      var last = adWatchLastBySlot[slots[i]];
+      if (last && nowMs - last < adWatchCooldownHours() * 3600000) n++;
+    }
+    return n;
+  }
+  function adWatchLiveText(ms) {
+    var s = Math.ceil(ms / 1000);
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    if (h > 0) return "Ready in " + h + "h " + pad(m) + "m " + pad(sec) + "s.";
+    if (m > 0) return "Ready in " + m + "m " + pad(sec) + "s.";
+    return "Ready in " + sec + "s.";
+  }
+  function fetchAdWatchState() {
+    if (!session || !session.user || !myProfile) {
+      adWatchStateLoaded = true; adWatchPending = false; adWatchLastBySlot = {};
+      refreshAdWatchTab();
+      return Promise.resolve(null);
+    }
+    if (adWatchFetching) return Promise.resolve(null);
+    adWatchFetching = true;
+    var uid = session.user.id;
+    return callRest("ad_watch_ledger?select=slot,created_at&user_id=eq." + uid + "&order=created_at.desc&limit=50")
+      .then(function (rows) {
+        var map = {};
+        (rows || []).forEach(function (r) {
+          var sl = Number(r.slot);
+          if ((sl === 1 || sl === 2 || sl === 3) && !map[sl] && r.created_at) map[sl] = new Date(r.created_at).getTime();
+        });
+        adWatchLastBySlot = map;
+        adWatchFetching = false; adWatchStateLoaded = true; adWatchPending = false;
+        refreshAdWatchTab();
+      }).catch(function (err) {
+        adWatchFetching = false;
+        if (adWatchMigrationMissing(err)) { adWatchStateLoaded = true; adWatchPending = true; adWatchLastBySlot = {}; }
+        else { adWatchStateLoaded = false; adWatchPending = false; }
+        refreshAdWatchTab();
+      });
+  }
+  function refreshAdWatchTab() {
+    var status = $("adWatchStatus"), prog = $("adWatchProgress");
+    if (!status) return;
+    var i, slots = adWatchSlots();
+    function taskEls(sl) { return { st: $("adWatchTaskStatus" + sl), btn: $("adWatchBtn" + sl) }; }
+    for (var k = 0; k < slots.length; k++) {
+      var ek = taskEls(slots[k]);
+      if (ek.st) ek.st.textContent = "";
+      if (ek.btn) { ek.btn.hidden = true; ek.btn.disabled = false; }
+    }
+    if (prog) prog.textContent = "";
+    if (!session || !session.user) { status.textContent = "Log in to watch ads."; return; }
+    if (!myProfile) { status.textContent = "Choose your tournament username to watch ads."; return; }
+    if (adWatchPending) { status.textContent = "Watch Ads need a quick Supabase update \u2014 the owner runs it once, then tasks go live here."; return; }
+    if (!adWatchStateLoaded) { status.textContent = "Loading your tasks\u2026"; if (!adWatchFetching) fetchAdWatchState(); return; }
+    var now = serverNowMs();
+    var done = adWatchDoneCount(now);
+    if (prog) prog.textContent = done === 3 ? "All 3 done \u2014 30,000 coins earned this hour!" : done + " of 3 done \u2014 " + (done * adWatchCoins()).toLocaleString("en-US") + " coins earned this hour.";
+    if (!hasAdBridge()) {
+      status.textContent = "Video ads are available in the app \u2014 open the Android app to watch ads and earn coins.";
+      for (i = 0; i < slots.length; i++) {
+        var ew = taskEls(slots[i]);
+        var remw = adWatchSlotRemainingMs(slots[i], now);
+        if (ew.st) ew.st.textContent = remw > 0 ? adWatchLiveText(remw) : "Ready \u2014 watch in the app.";
+        if (ew.btn) { ew.btn.hidden = false; ew.btn.disabled = true; }
+      }
+      return;
+    }
+    status.textContent = "Watch a short video ad to earn " + adWatchCoins().toLocaleString("en-US") + " coins per task.";
+    for (i = 0; i < slots.length; i++) {
+      var ea = taskEls(slots[i]);
+      var rema = adWatchSlotRemainingMs(slots[i], now);
+      if (rema > 0) { if (ea.st) ea.st.textContent = adWatchLiveText(rema); if (ea.btn) ea.btn.hidden = true; }
+      else { if (ea.st) ea.st.textContent = "Ready \u2014 watch a video ad for " + adWatchCoins().toLocaleString("en-US") + " coins."; if (ea.btn) { ea.btn.hidden = false; ea.btn.disabled = false; } }
+    }
+  }
+  function doAdWatchClaim(slot) {
+    if (!session || !session.user) { setText("adWatchStatus", "Log in first to watch ads."); return; }
+    if (!myProfile) { setText("adWatchStatus", "Choose your tournament username first to watch ads."); return; }
+    if (adWatchPending) { refreshAdWatchTab(); return; }
+    if (adWatchClaimSlot) return;
+    if (!hasAdBridge()) { refreshAdWatchTab(); return; }
+    if (adWatchSlotRemainingMs(slot, serverNowMs()) > 0) { refreshAdWatchTab(); return; }
+    adWatchClaimSlot = slot;
+    setText("adWatchTaskStatus" + slot, "Loading your ad\u2026");
+    var btn = $("adWatchBtn" + slot); if (btn) btn.hidden = true;
+    setText("adWatchResult", "");
+    bridgeShowRewarded("adwatch").then(function () {
+      adWatchClaimSlot = 0;
+      adWatchClaimRpc(slot);
+    }).catch(function (err) {
+      adWatchClaimSlot = 0;
+      refreshAdWatchTab();
+      if (err && err.message === "ad_unavailable") setText("adWatchStatus", "No ad available right now \u2014 try again in a bit.");
+      else setText("adWatchStatus", "Watch the full ad to claim your coins.");
+    });
+  }
+  function adWatchClaimRpc(slot) {
+    setText("adWatchTaskStatus" + slot, "Claiming\u2026");
+    callRest("rpc/claim_ad_watch", "POST", { p_slot: slot }).then(function (res) {
+      maybeProcessReferralUnlock(true);
+      var coins = (res && res.coins) || 0, applied = res && res.coins_applied === true;
+      if (res && res.claimed_at) adWatchLastBySlot[slot] = new Date(res.claimed_at).getTime();
+      else adWatchLastBySlot[slot] = serverNowMs();
+      if (applied) setText("adWatchResult", "\uD83C\uDF89 You earned " + coins.toLocaleString("en-US") + " \u2014 added to your leaderboard total!");
+      else setText("adWatchResult", "You earned " + coins.toLocaleString("en-US") + "! Coins count on the leaderboard once you unlock the tournament on day 4.");
+      refreshAdWatchTab();
+    }).catch(function (err) {
+      var msg = (err && err.message) || "";
+      if (adWatchMigrationMissing(err)) { adWatchStateLoaded = true; adWatchPending = true; refreshAdWatchTab(); return; }
+      if (/ad_watch_cooldown/.test(msg)) { fetchAdWatchState(); return; }
+      setText("adWatchResult", "Could not claim \u2014 try again.");
+      refreshAdWatchTab();
+    });
+  }
+  function wireAdWatch() {
+    var i, slots = adWatchSlots();
+    for (i = 0; i < slots.length; i++) {
+      (function (sl) {
+        var btn = $("adWatchBtn" + sl);
+        if (btn && !btn.dataset.adWatchWired) { btn.dataset.adWatchWired = "1"; btn.addEventListener("click", function () { doAdWatchClaim(sl); }); }
+      })(slots[i]);
+    }
+  }
   /* Spin-page live tick timer (v24): every 30s while the Spin page
    * is open, refresh the two live countdowns (scratch repeat, ad
    * spin) so the player watches the wait shrink and the watch-ad
@@ -3885,6 +4060,7 @@ window.PUZZLEPOP_CONFIG = {
     if (!sec || !sec.classList.contains("active")) return;
     refreshScratchRepeat();
     refreshAdSpinSection();
+    refreshAdWatchTab();
   }
   function startSpinTickTimer() {
     if (spinTickTimer) return;
@@ -4176,7 +4352,7 @@ window.PUZZLEPOP_CONFIG = {
   }
   /* ================= daily scratch card (v24) ================= */
   /* BUNDLE prizes, server-drawn (v26). EVERY scratch wins ALL THREE:
-   * random board coins 40,000–80,000 (uniform) + random hammers 1–5
+   * random board coins 28,000–56,000 (uniform, v58: cut 30%) + random hammers 1–5
    * (uniform) + random bombs 1–5 (uniform). The v24 one-prize mixed
    * table is gone. The client NEVER draws a prize and NEVER mints:
    * the server draws with random() inside claim_scratch_card().
@@ -5495,7 +5671,7 @@ window.PUZZLEPOP_CONFIG = {
    * The game's most important page. All totals come from the server
    * (rpc/get_earnings_overview) — the client never sums scores
    * itself, never guesses a balance, and never mints a payout.
-   * Conversion: 10,000,000 score = $1; one cent = 100,000 score.
+   * Conversion: 4,000,000 score = $1; one cent = 40,000 score.
    * Payouts are USDT crypto ONLY, paid manually by the owner; there
    * is NO mark-paid button in the game (owner marks paid in the
    * Supabase Table Editor, like weekly claims).
@@ -5508,15 +5684,15 @@ window.PUZZLEPOP_CONFIG = {
     var m = (err && err.message) || "";
     return /PGRST202|PGRST205|does not exist|could not find|schema cache/i.test(m);
   }
-  var EARNINGS_SCORE_PER_USD = 3000000;
-  var EARNINGS_SCORE_PER_CENT = 30000;
+  var EARNINGS_SCORE_PER_USD = 4000000;
+  var EARNINGS_SCORE_PER_CENT = 40000;
   var EARNINGS_THRESHOLD_USD = 20;
   function earningsFmt(n) {
     var s = String(Math.max(0, Math.floor(n || 0)));
     return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   /* Full available balance to the cent: floor to whole cents, so
-   * sub-cent dust (< 100,000 score) is never paid as a fraction. */
+   * sub-cent dust (< 40,000 score) is never paid as a fraction. */
   function earningsUsdtFromScore(score) {
     var cents = Math.floor(Math.max(0, score || 0) / EARNINGS_SCORE_PER_CENT);
     return cents / 100;
@@ -5577,6 +5753,7 @@ window.PUZZLEPOP_CONFIG = {
           ["Board total, all weeks (games + counted bonuses)", bd.board_total],
           ["Spin wins not yet counted", bd.spin_unapplied],
           ["Scratch wins not yet counted", bd.scratch_unapplied],
+          ["Ad-watch coins not yet counted", bd.adwatch_unapplied],
           ["Daily bonuses not yet counted", bd.daily_unapplied],
           ["Referral coins waiting to be claimed", bd.referral_banked],
           ["Already requested or paid", bd.deducted_score]
@@ -5691,7 +5868,7 @@ window.PUZZLEPOP_CONFIG = {
     });
     setBarActive(name);
     // Spin status must never go stale: refresh it every time the tab opens.
-    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); rescheduleLiveNotifyTimers(); refreshNotifyTestBtn();
+    if (name === "spin") { refreshSpinSection(); refreshStreakCard(); refreshScratchCard(); refreshAdSpinSection(); refreshAdWatchTab(); rescheduleLiveNotifyTimers(); refreshNotifyTestBtn();
       /* v54: one celebration per Spin-page open while a spin is
        * ready (flags may already be known from the last open, or
        * flip true when the refreshes above resolve). */
@@ -5823,22 +6000,25 @@ window.PUZZLEPOP_CONFIG = {
     }
   }
   function showSpinSub(name) {
-    var w = $("spinWheelView"), s = $("spinStreakView"), c = $("spinScratchView");
-    var tw = $("spinTabWheel"), ts = $("spinTabStreak"), tc = $("spinTabScratch");
+    var w = $("spinWheelView"), s = $("spinStreakView"), c = $("spinScratchView"), a = $("spinAdWatchView");
+    var tw = $("spinTabWheel"), ts = $("spinTabStreak"), tc = $("spinTabScratch"), ta = $("spinTabAdWatch");
     if (w) w.hidden = name !== "wheel";
     if (s) s.hidden = name !== "streak";
     if (c) c.hidden = name !== "scratch";
+    if (a) a.hidden = name !== "adwatch";
     if (tw) tw.className = name === "wheel" ? "sub-active" : "";
     if (ts) ts.className = name === "streak" ? "sub-active" : "";
     if (tc) tc.className = name === "scratch" ? "sub-active" : "";
+    if (ta) ta.className = name === "adwatch" ? "sub-active" : "";
     if (name === "streak") refreshStreakCard();
     if (name === "scratch") refreshScratchCard();
+    if (name === "adwatch") { setText("adWatchResult", ""); refreshAdWatchTab(); }
     /* v24 robustness (empty-tab report): the newly shown view is
      * scrolled into view on every sub-tab switch, so its top is
      * visible without the user hunting for it. Guarded: jsdom has
      * no scrollIntoView, and a failure here must never break the
      * tab switch itself. */
-    var view = name === "wheel" ? w : name === "streak" ? s : c;
+    var view = name === "wheel" ? w : name === "streak" ? s : name === "adwatch" ? a : c;
     if (view && view.scrollIntoView) { try { view.scrollIntoView(); } catch (e) {} }
     /* Card entrance animation (v24): replay the pop/flip-in every
      * time the Scratch tab opens. */
@@ -5848,10 +6028,11 @@ window.PUZZLEPOP_CONFIG = {
     }
   }
   function wireSpinTabs() {
-    var tw = $("spinTabWheel"), ts = $("spinTabStreak"), tc = $("spinTabScratch");
+    var tw = $("spinTabWheel"), ts = $("spinTabStreak"), tc = $("spinTabScratch"), ta = $("spinTabAdWatch");
     if (tw) tw.addEventListener("click", function () { showSpinSub("wheel"); });
     if (ts) ts.addEventListener("click", function () { showSpinSub("streak"); });
     if (tc) tc.addEventListener("click", function () { showSpinSub("scratch"); });
+    if (ta) ta.addEventListener("click", function () { showSpinSub("adwatch"); });
   }
   /* ================= Contact Us: Discord + owner announcements ================= */
   /* Owner gate: the announce form shows ONLY for this user id, and the
@@ -7675,6 +7856,12 @@ window.PUZZLEPOP_CONFIG = {
     earningsProgressPct: earningsProgressPct,
     earningsCanRequest: earningsCanRequest,
     earningsUsdText: earningsUsdText,
+    /* v58 watch-ads seams (tests + APK builder verification). */
+    refreshAdWatchTab: refreshAdWatchTab,
+    adWatchSlotRemainingMs: adWatchSlotRemainingMs,
+    adWatchLiveText: adWatchLiveText,
+    adWatchDoneCount: adWatchDoneCount,
+    doAdWatchClaim: doAdWatchClaim,
     /* v41 referral seams (tests + APK builder verification). */
     refreshReferralsPage: refreshReferralsPage,
     updateReferralTierHighlight: updateReferralTierHighlight,
@@ -7799,6 +7986,7 @@ window.PUZZLEPOP_CONFIG = {
     wireStreakClaim();
     wireScratchCard();
     wireAdSpin();
+    wireAdWatch();
     wireNotifyPrompt(); // v39: notification permission prompt buttons
     wireNotifyTestBtn(); // v47: owner-only immediate test notification
     wireBottomNav();
@@ -7817,7 +8005,7 @@ window.PUZZLEPOP_CONFIG = {
     setInterval(tickCountdown, 1000);
     // Optimistic session from storage (validated quietly in background).
     if (session && session.user) {
-      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); refreshNotifyTestBtn(); } });
+      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } });
     } else if (session) {
       // Session exists but user id unknown (OAuth redirect): fetch it.
       fetch(CFG.SUPABASE_URL + "/auth/v1/user", { headers: authHeaders() })
@@ -7830,7 +8018,7 @@ window.PUZZLEPOP_CONFIG = {
           }
           return null;
         })
-        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); refreshNotifyTestBtn(); } })
+        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } })
         .catch(function () { renderAuth(); });
     }
     renderAuth();
