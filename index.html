@@ -424,7 +424,7 @@
 /* Unread-announcements dot on the Contact button: static red dot, no
    animation, so reduced-motion needs no special handling. */
 .bnav-dot{position:absolute;top:3px;right:7px;width:9px;height:9px;border-radius:50%;background:#ef4444;border:2px solid var(--panel);z-index:2;}
-/* v52: 8-button bar fit — longest label "Leaderboard" measures 55.3px in
+/* v59: 6-button bar fit (Leaderboard + Prizes removed) — longest label "Referrals" measures ~50px in
    Nunito 900 at 9px, ~43.1px at 7px, ~36.9px at 6px. Button slots lose
    2px to button padding, so the label must fit slot-2px: at 360px the
    tight-chrome slot is ~41.1px (label space ~39.1px) so narrow screens
@@ -889,8 +889,6 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div id="monetagSlot"></div>
 <nav class="bottom-nav" id="bottomNav" aria-label="Game sections">
   <button type="button" class="bnav-btn" id="bnav-game" data-view="game"><span class="bnav-ic">🎮</span><span class="bnav-lb">Game</span></button>
-  <button type="button" class="bnav-btn" id="bnav-board" data-view="board"><span class="bnav-ic">🏅</span><span class="bnav-lb">Leaderboard</span></button>
-  <button type="button" class="bnav-btn" id="bnav-prizes" data-view="prizes"><span class="bnav-ic">💰</span><span class="bnav-lb">Prizes</span></button>
   <button type="button" class="bnav-btn" id="bnav-spin" data-view="spin"><span class="bnav-ic">🎡</span><span class="bnav-lb">Spin</span><span class="bnav-dot" id="spinBonusDot" hidden aria-label="Daily login bonus ready"></span></button>
   <button type="button" class="bnav-btn" id="bnav-profile" data-view="profile"><span class="bnav-ic">👤</span><span class="bnav-lb">Profile</span></button>
   <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span><span class="bnav-dot" id="contactNewDot" hidden aria-label="New announcements"></span></button>
@@ -936,23 +934,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
 <div class="overlay" id="tournamentOverlay" role="dialog" aria-modal="true" aria-label="Monthly tournament">
   <div class="modal tournament-modal">
-    <div class="tpages"><section class="tpage" id="page-board"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🏅 Leaderboard</h2><p class="page-sub">One global board. Monthly rank is your total board score.</p></div><h3>⏱️ This month</h3>
-    <p class="month-card"><b id="monthRange"></b><br /><span id="countdown"></span></p>
-
-    <h3>Live leaderboard — top 300</h3>
-    <p><span id="lbLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="lbLiveNote" class="muted"></span></p>
-    <p class="muted">Monthly = total of all your games this month after tournament unlock. Every game counts.</p>
-    <p id="weeklyFormulaNote" class="muted"></p>
-    <p id="myRank"></p>
-    <p id="neighborRows" class="muted"></p>
-    <table class="t-table">
-      <thead><tr><th>#</th><th>Player</th><th>Monthly pts</th><th>Prize</th></tr></thead>
-      <tbody id="leaderboardBody"></tbody>
-    </table><div class="t-pager"><button class="btn btn-ghost" id="lbPrevBtn">◀ Prev</button><span id="lbPageInfo"></span><button class="btn btn-ghost" id="lbNextBtn">Next ▶</button><button class="btn btn-ghost" id="leaderboardRefreshBtn"><span class="lb-spin-glyph">↻</span></button></div><p id="leaderboardEmpty" class="muted"></p><button type="button" class="btn btn-ghost" id="leaderboardRetryBtn" hidden>\u21bb Retry loading the leaderboard</button><div id="passFeed"></div></section><section class="tpage" id="page-prizes"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💰 Prizes</h2><p class="page-sub">Top 300 players win real money, paid manually in crypto after claiming.</p></div><div class="prize-section" id="claimSection"><h3>🏆 Claim your prize</h3><p class="muted">Claims open only after the month ends and winners are announced. Finish in the monthly top 300 and, after the freeze, send your USDT network and wallet address here — the owner pays your prize manually in crypto.</p><ul id="claimsList"></ul></div><div class="prize-section proof-premium" id="paidProofSection"><h3>✅ Winner paid proof</h3><p class="muted">All past paid winners — username and score only. Wallet addresses are never shown here. A winner's payment proof appears here as soon as the owner pays.</p><p><span id="proofLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="proofLiveNote" class="muted"></span></p><ul id="proofList"></ul><div id="proofOwnerForm" hidden></div></div><div class="prize-section" id="lastWinnersSection"><h3>🏆 Last month's winners</h3><p class="muted" id="claimWinnersWeek">Top 300 winners — latest frozen month</p><ul id="claimWinnersList"></ul></div><div class="prize-section" id="tiersSection"><h3>Prize tiers</h3>
-    <ul id="prizeTiers"></ul>
-    <p class="muted">Per player; the owner may change amounts before a month starts. Winners claim with a USDT wallet address; the owner pays manually.</p></div>
-</section>
-    <section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button><button type="button" id="spinTabAdWatch">📺 Watch Ads</button></div><div id="spinWheelView">
+    <div class="tpages"><section class="tpage" id="page-spin"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎡 Daily Spin</h2><p class="page-sub" id="spinPageNote">One free spin per day — prizes go straight to your leaderboard total.</p></div><div class="notify-prompt" id="notifyPrompt" hidden><p>Want a reminder when your next scratch card or spin is ready?</p><button class="btn btn-primary" id="notifyAllowBtn" type="button">Allow reminders</button><button class="btn btn-ghost" id="notifyLaterBtn" type="button">Not now</button></div><div class="notify-prompt" id="notifyTestWrap" hidden><button class="btn btn-ghost" id="notifyTestBtn" type="button">🔔 Send test notification (owner only)</button></div><div class="t-subnav"><button type="button" id="spinTabWheel" class="sub-active">🎡 Wheel</button><button type="button" id="spinTabStreak">🔥 Streak</button><button type="button" id="spinTabScratch">🎫 Scratch</button><button type="button" id="spinTabAdWatch">📺 Watch & Win</button></div><div id="spinWheelView">
     <p class="muted" id="spinWheelExplainer">One free spin per day. Coin prizes count toward your Earnings; after you unlock the tournament on day 4, a 52,500 win adds exactly 52,500 to your board score too.</p>
     <div class="spin-pointer"></div>
     <div class="spin-wheel" id="spinWheel" aria-hidden="true"></div>
@@ -967,7 +949,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 
     </div><div id="spinStreakView" hidden><div class="streak-card" data-streak-card><h3>🔥 Daily bonus streak</h3><p class="streak-dayline">Log in to start your streak.</p><ul class="streak-ladder"></ul><p class="muted streak-status">Log in to claim your daily bonus.</p><p class="muted streak-unlock-line"></p><button class="btn btn-primary streak-collect-btn" disabled>Collect daily bonus</button><button class="btn btn-ghost streak-retry-btn" hidden>↻ Retry</button></div></div>
 
-    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div><div id="spinAdWatchView" hidden><div class="streak-card" data-adwatch-card><h3>📺 Watch Ads</h3><p class="muted">Watch a short video ad to earn coins — 3 tasks every hour, 10,000 coins each. Finish all 3 for 30,000 coins an hour.</p><p class="muted" id="adWatchProgress"></p><p class="muted" id="adWatchStatus">Log in to watch ads.</p><div><h4>Task 1 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus1"></p><button class="btn btn-primary" id="adWatchBtn1" hidden>Watch ad</button></div><div><h4>Task 2 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus2"></p><button class="btn btn-primary" id="adWatchBtn2" hidden>Watch ad</button></div><div><h4>Task 3 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus3"></p><button class="btn btn-primary" id="adWatchBtn3" hidden>Watch ad</button></div><p class="muted" id="adWatchResult"></p></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
+    <div id="spinScratchView" hidden><div class="scratch-card" data-scratch-card><h3>🎫 Daily scratch card</h3><p class="muted">One free card a day — win board coins, hammers, or bombs.</p><div class="scratch-area"><div class="scratch-prize" id="scratchPrize">?</div><canvas id="scratchCanvas" width="300" height="150" aria-label="Scratch card — drag to reveal"></canvas></div><p class="muted" id="scratchStatus">Log in to scratch your daily card.</p><button class="btn btn-primary" id="scratchRevealBtn" hidden>Reveal</button><button class="btn btn-ghost" id="scratchRetryBtn" hidden>↻ Retry</button><p class="muted timer-highlight" id="scratchRepeatStatus" hidden></p><button class="btn btn-primary" id="scratchRepeatBtn" hidden>Watch ad for another card</button></div></div><div id="spinAdWatchView" hidden><div class="streak-card" data-adwatch-card><h3>📺 Watch & Win</h3><p class="muted">Watch a short video ad to earn coins — 3 tasks every hour, 10,000 coins each. Finish all 3 for 30,000 coins an hour.</p><p class="muted" id="adWatchProgress"></p><p class="muted" id="adWatchStatus">Log in to watch ads.</p><div><h4>Task 1 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus1"></p><button class="btn btn-primary" id="adWatchBtn1" hidden>Watch ad</button></div><div><h4>Task 2 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus2"></p><button class="btn btn-primary" id="adWatchBtn2" hidden>Watch ad</button></div><div><h4>Task 3 — 10,000 coins</h4><p class="muted timer-highlight" id="adWatchTaskStatus3"></p><button class="btn btn-primary" id="adWatchBtn3" hidden>Watch ad</button></div><p class="muted" id="adWatchResult"></p></div></div></section><section class="tpage" id="page-profile"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>👤 Profile</h2><p class="page-sub">Your account.</p></div>
 <div class="profile-hero" id="profileHero"><div class="profile-monogram" id="profileMonogram" aria-hidden="true">🧩</div><div class="profile-hero-main"><p class="profile-hero-name" id="profileHeroName">Guest player</p><p class="profile-hero-email" id="profileHeroEmail"></p></div></div>
 <p id="guestNotice" class="guest-banner" hidden>Playing as guest — sign in or sign up so your scores count toward Earnings and the monthly tournament.</p>
     <div id="panelAuthHint" hidden>
@@ -995,13 +977,13 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <button class="btn btn-ghost" id="referralsPageBtn">🎁 Referrals</button>
 </section><section class="tpage" id="page-referrals"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>🎁 Referrals</h2><p class="page-sub">Invite friends, climb the monthly board, win real prizes.</p></div>
 <div class="referral-section" id="referralLinkSection"><h3>🔗 Your referral link</h3><p class="muted" id="referralGuestNote" hidden>Log in to get your referral link.</p><button class="btn btn-primary" id="referralAuthBtn" hidden>Go to sign-in</button><div id="referralLinkWrap"><input class="t-input" id="referralLinkInput" type="text" readonly /><button class="btn btn-primary" id="referralCopyBtn">Copy link</button><button class="btn btn-ghost" id="referralShareBtn">Share</button></div><p class="muted" id="referralLinkNote"></p></div>
-<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who reaches a 5-day streak and 5,000,000 total score earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$100</b></li><li>2nd — <b>$90</b></li><li>3rd — <b>$80</b></li><li>4th — <b>$70</b></li><li>5th — <b>$60</b></li><li>6th — <b>$50</b></li><li>7th — <b>$40</b></li><li>8th — <b>$30</b></li><li>9th–100th — <b>$20 each</b></li></ul><p class="muted">Top 100 referrers of the month share $2,360. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th referral — <b>250,000 coins</b></li><li data-ladder-pos="8">8th referral — <b>280,000 coins</b></li><li data-ladder-pos="9">9th referral — <b>310,000 coins</b></li><li data-ladder-pos="10">10th referral — <b>350,000 coins</b></li><li data-ladder-pos="11">11th–100th referral — <b>400,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
+<div class="referral-section" id="referralTiersSection"><h3>🏆 Prize tiers</h3><p class="muted">Every friend who reaches a 5-day streak and 5,000,000 total score earns you coins — and every month the top referrers win cash.</p><h4>💵 Monthly cash prizes</h4><ul id="referralCashList"><li>1st — <b>$50</b></li><li>2nd — <b>$45</b></li><li>3rd — <b>$40</b></li><li>4th — <b>$35</b></li><li>5th — <b>$30</b></li><li>6th — <b>$25</b></li><li>7th — <b>$20</b></li><li>8th — <b>$15</b></li><li>9th–100th — <b>$10 each</b></li></ul><p class="muted">Top 100 referrers of the month share $1,180. The monthly board resets on the 1st.</p><h4>🪙 Coins per referral</h4><ul id="referralLadderList"><li data-ladder-pos="1">1st referral — <b>100,000 coins</b></li><li data-ladder-pos="2">2nd referral — <b>130,000 coins</b></li><li data-ladder-pos="3">3rd referral — <b>150,000 coins</b></li><li data-ladder-pos="4">4th referral — <b>170,000 coins</b></li><li data-ladder-pos="5">5th referral — <b>190,000 coins</b></li><li data-ladder-pos="6">6th referral — <b>220,000 coins</b></li><li data-ladder-pos="7">7th referral — <b>250,000 coins</b></li><li data-ladder-pos="8">8th referral — <b>280,000 coins</b></li><li data-ladder-pos="9">9th referral — <b>310,000 coins</b></li><li data-ladder-pos="10">10th referral — <b>350,000 coins</b></li><li data-ladder-pos="11">11th–100th referral — <b>400,000 coins each</b></li></ul><p class="muted" id="referralNextTierNote"></p></div>
 <div class="referral-section" id="referralStatsSection"><h3>📊 Your referrals</h3><p id="referralStatsText" class="muted">Loading…</p><p class="muted" id="referralStatsNote"></p></div>
 <div class="referral-section" id="referralListSection"><h3>👥 Friends you referred</h3><ul id="referralList"></ul><p class="muted" id="referralListNote"></p></div>
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
-<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (4,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
 <div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
@@ -2127,15 +2109,15 @@ window.PUZZLEPOP_CONFIG = {
    * the claim requires a full rewarded view through the native
    * bridge (maybeShowAd() in tournament.js); early close or load
    * failure means NO claim, never a free bypass. On the WEB (no
-   * bridge) claiming stays FREE, exactly as in v28 — the web game
-   * cannot run AdMob, so the gate only bites where the bridge
-   * exists. */
+   * bridge) the claim is APP-ONLY since v59 — the web game cannot
+   * run AdMob, so instead of a free web grant the card shows an
+   * app-only note and the button stays disabled. */
   BONUS: {
     STREAK_DAYS: 4,
     HAMMERS: 2,
     BOMBS: 2,
     AD_GATE_ENABLED: true,
-    LADDER: [15000, 30000, 50000, 75000]
+    LADDER: [15000, 30000, 50000, 75000, 100000, 120000, 150000]
   },
 
   /* Underdog pack: weekly biggest climber's power-up prize (in-game
@@ -2762,7 +2744,7 @@ window.PUZZLEPOP_CONFIG = {
   var bonusStreak = 0;
   var bonusUnlocked = false;
   var bonusClaimedToday = false;
-  var bonusLadderDay = 1; // ladder day of the NEXT claim (1..4)
+  var bonusLadderDay = 1; // ladder day of the NEXT claim (1..7)
   var bonusNextCoins = 0;
   var bonusCollectedInCycle = 0;
   var bonusCoinsToday = 0;
@@ -3457,8 +3439,8 @@ window.PUZZLEPOP_CONFIG = {
    * window.AndroidAdBridge (a WebView JavascriptInterface) with
    * showRewarded(spot, callbackId) and showInterstitial(). The web
    * game has NO bridge — hasAdBridge() is false there, and every
-   * hook below falls back to exact v28 behavior (bonus free,
-   * repeats/ad-spins locked-style, 5th-game silent). The bridge is
+   * hook below gates on the bridge (v59: bonus app-only on web,
+   * repeats/ad-spins locked-style, 4th-game silent). The bridge is
    * checked at CALL time, never cached, so tests and the app can
    * stub or install it at any point. Reward outcomes arrive back
    * through window.__adRewardEarned / __adRewardSkipped /
@@ -3893,7 +3875,7 @@ window.PUZZLEPOP_CONFIG = {
       retry.addEventListener("click", function () { doAdSpinClaim(); });
     }
   }
-  /* --- Watch Ads tab (v58): 3 task slots per rolling hour ---
+  /* --- Watch & Win tab (v58 as Watch Ads, renamed v59): 3 task slots per rolling hour ---
    * Each slot: one full rewarded VIDEO ad through the native bridge,
    * then a server claim pays 10,000 coins. All 3 slots in an hour =
    * 30,000 coins. Each slot refills 1h after its own watch (rolling,
@@ -3977,7 +3959,7 @@ window.PUZZLEPOP_CONFIG = {
     if (prog) prog.textContent = "";
     if (!session || !session.user) { status.textContent = "Log in to watch ads."; return; }
     if (!myProfile) { status.textContent = "Choose your tournament username to watch ads."; return; }
-    if (adWatchPending) { status.textContent = "Watch Ads need a quick Supabase update \u2014 the owner runs it once, then tasks go live here."; return; }
+    if (adWatchPending) { status.textContent = "Watch & Win needs a quick Supabase update \u2014 the owner runs it once, then tasks go live here."; return; }
     if (!adWatchStateLoaded) { status.textContent = "Loading your tasks\u2026"; if (!adWatchFetching) fetchAdWatchState(); return; }
     var now = serverNowMs();
     var done = adWatchDoneCount(now);
@@ -4080,18 +4062,19 @@ window.PUZZLEPOP_CONFIG = {
    * same day returns already-claimed and grants NOTHING twice),
    * each claim awards that ladder day's coins PLUS 2 hammers and
    * 2 bombs recorded as server pending bonuses (next game, v37).
-   * Ladder (CFG.BONUS.LADDER): 15000/30000/50000/75000,
-   * cycling after day 4 while the streak count keeps
+   * Ladder (CFG.BONUS.LADDER): 15000/30000/50000/75000/100000/
+   * 120000/150000, cycling after day 7 while the streak count keeps
    * growing. Ladder coins add to today's ranked_scores totals
    * ONLY once tournament-unlocked (4-day streak ever);
    * pre-entry claims record the streak day
    * + power-ups only, and the UI says so plainly.
-   * AD GATE HOOK (v29 LIVE): CFG.BONUS.AD_GATE_ENABLED is true —
-   * in the Android apps the claim requires a full rewarded view
-   * through the native bridge (maybeShowAd below); early close or
-   * load failure means NO claim, never a free bypass. On the web
-   * (no bridge) claiming stays FREE, exactly as in v28, and there
-   * is never a fake ad.
+   * AD GATE HOOK (v29 LIVE, v59 web-tightened): CFG.BONUS.AD_GATE_ENABLED
+   * is true — in the Android apps the claim requires a full rewarded
+   * view through the native bridge (maybeShowAd below); early close
+   * or load failure means NO claim, never a free bypass. On the web
+   * (no bridge) the claim is APP-ONLY since v59 (no free web grant,
+   * no fake ad): the card shows the app note, the button stays
+   * disabled, and doStreakClaim returns before any server call.
    * PENDING STATE: if the streak migration has not run yet, the card
    * shows an honest pending note and claiming is disabled. NEVER a
    * local streak/points fallback: a missing server function must
@@ -4103,12 +4086,13 @@ window.PUZZLEPOP_CONFIG = {
    * error + Retry / pending. The Profile nav dot reuses the Contact
    * NEW-dot pattern (.bnav-dot, static, no push), now wired to the
    * SERVER claim state. */
-  /* AD GATE HOOK (v29 LIVE): CFG.BONUS.AD_GATE_ENABLED is true —
-   * in the Android apps the claim requires a full rewarded view
-   * through the native bridge (maybeShowAd below); early close or
-   * load failure means NO claim. On the web (no bridge) claiming
-   * stays FREE, exactly as in v28. */
-  /* v28: break ad after every 5 finished games (ALL modes,
+  /* AD GATE HOOK (v29 LIVE, v59 web-tightened): CFG.BONUS.AD_GATE_ENABLED
+   * is true — in the Android apps the claim requires a full rewarded
+   * view through the native bridge (maybeShowAd below); early close
+   * or load failure means NO claim. On the web (no bridge) the claim
+   * is APP-ONLY since v59 (no free web grant, no fake ad): the card
+   * shows the app note and the button stays disabled. */
+  /* v59: break ad after every 4 finished games (ALL modes,
    * guests included). RULE + HOOK ONLY: maybeShowGameAd()
    * resolves immediately today; the real AdMob interstitial call
    * goes inside it when units arrive (Android apps only \u2014 the
@@ -4141,7 +4125,9 @@ window.PUZZLEPOP_CONFIG = {
   function maybeShowAd() {
     /* v29: bonus ad gate LIVE in the Android apps (bridge present):
      * a full rewarded view is required to claim. On the web (no
-     * bridge) claiming stays FREE, exactly as in v28. */
+     * bridge) the Promise.resolve fallback below is UNREACHABLE from
+     * the UI since v59: refreshStreakCard shows the app-only state
+     * and doStreakClaim returns early, so no web claim is ever made. */
     if (CFG.BONUS && CFG.BONUS.AD_GATE_ENABLED && hasAdBridge()) {
       return bridgeShowRewarded("bonus");
     }
@@ -4174,16 +4160,16 @@ window.PUZZLEPOP_CONFIG = {
   function renderStreakLadder() {
     var lists = document.querySelectorAll("[data-streak-card] .streak-ladder");
     if (!lists.length) return;
-    var ladder = (CFG.BONUS && CFG.BONUS.LADDER) || [15000, 30000, 50000, 75000];
+    var ladder = (CFG.BONUS && CFG.BONUS.LADDER) || [15000, 30000, 50000, 75000, 100000, 120000, 150000];
     var hammers = (CFG.BONUS && CFG.BONUS.HAMMERS) || 2;
     var bombs = (CFG.BONUS && CFG.BONUS.BOMBS) || 2;
     /* Display day: the ladder slot today fills. If claimed today it
      * is the claimed slot; otherwise it is the next slot to collect. */
     var todaySlot = bonusClaimedToday
-      ? ((bonusStreak - 1) % 4) + 1
+      ? ((bonusStreak - 1) % 7) + 1
       : bonusLadderDay;
     var html = "";
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 7; i++) {
       var day = i + 1;
       var cls = "";
       /* v28 belt-and-braces: done marks only for a signed-in player
@@ -4235,11 +4221,11 @@ window.PUZZLEPOP_CONFIG = {
     }
     var hammers = (CFG.BONUS && CFG.BONUS.HAMMERS) || 2;
     var bombs = (CFG.BONUS && CFG.BONUS.BOMBS) || 2;
-    var cycleDay = bonusClaimedToday ? ((bonusStreak - 1) % 4) + 1 : bonusLadderDay;
+    var cycleDay = bonusClaimedToday ? ((bonusStreak - 1) % 7) + 1 : bonusLadderDay;
     if (bonusStreak > 0) {
-      setStreakText("streak-dayline", "\uD83D\uDD25 " + bonusStreak + "-day streak \u00B7 Day " + cycleDay + " of 4");
+      setStreakText("streak-dayline", "\uD83D\uDD25 " + bonusStreak + "-day streak \u00B7 Day " + cycleDay + " of 7");
     } else {
-      setStreakText("streak-dayline", "No streak yet \u2014 Day 1 of 4 starts with today's claim!");
+      setStreakText("streak-dayline", "No streak yet \u2014 Day 1 of 7 starts with today's claim!");
     }
     var pointsNote = bonusUnlocked
       ? " Coins count on your leaderboard total."
@@ -4248,11 +4234,18 @@ window.PUZZLEPOP_CONFIG = {
       setStreakText("streak-status", "Already claimed today \u2014 Day " + cycleDay + " collected: " +
         bonusCoinsToday.toLocaleString() + " coins + " + hammers + " hammers + " + bombs + " bombs." +
         (bonusUnlocked ? " Added to your leaderboard total." : pointsNote));
+    } else if (!hasAdBridge()) {
+      /* v59 audit: daily bonus is APP-ONLY on the web — no AdMob
+       * there, never a free grant, never a fake ad. Disabled button
+       * + honest note, mirroring the ad-spin / scratch / Watch & Win
+       * web states. */
+      setStreakButtons(true, true);
+      setStreakText("streak-status", "Daily bonus works in the Android app — open the app to watch an ad and collect " +
+        bonusNextCoins.toLocaleString() + " coins + " + hammers + " hammers + " + bombs + " bombs for your next game." + pointsNote);
     } else {
       setStreakButtons(false, true);
       /* v29: in the apps the tap means watching an ad, so the button
-       * says so; on the web the claim stays free and the label is
-       * unchanged. */
+       * says so. */
       var collectLabel = (CFG.BONUS && CFG.BONUS.AD_GATE_ENABLED && hasAdBridge())
         ? "Watch ad to collect" : "Collect daily bonus";
       var collectBtns2 = document.querySelectorAll("[data-streak-card] .streak-collect-btn");
@@ -4266,7 +4259,7 @@ window.PUZZLEPOP_CONFIG = {
       setStreakText("streak-unlock-line", bonusDaysToUnlock + " more day" + (bonusDaysToUnlock === 1 ? "" : "s") +
         " to unlock the tournament \u2014 come back daily, miss a day and your streak restarts.");
     }
-    if (dot) dot.hidden = bonusClaimedToday;
+    if (dot) dot.hidden = bonusClaimedToday || !hasAdBridge();
   }
   /* Prizes-page unlock explainer (v17 text, v20 streak rule):
    * display-only, mirrors session / bonus state — the same state the
@@ -4288,10 +4281,13 @@ window.PUZZLEPOP_CONFIG = {
         return;
       }
       if (bonusClaimedToday) { refreshStreakCard(); return; }
+      /* v59 audit: no bridge (web) → never reach the ad call or the
+       * server claim; refreshStreakCard renders the app-only state. */
+      if (!hasAdBridge()) { refreshStreakCard(); return; }
       setStreakButtons(true, true);
       setStreakText("streak-status", "Claiming\u2026");
-      /* Ad gate (v29): in the apps a full rewarded view is required;
-       * on the web the claim stays free. */
+      /* Ad gate (v29, v59 web-tightened): in the apps a full rewarded
+       * view is required; on the web the claim is app-only (guard above). */
       maybeShowAd().then(function () {
         return callRest("rpc/claim_daily_bonus", "POST", {});
       }).then(function (res) {
@@ -5019,12 +5015,12 @@ window.PUZZLEPOP_CONFIG = {
     cancelBarRevealTimer();
     gameActive = false;
     syncBarVisibility();
-    /* v28: every finished game counts toward the 5-game break ad,
-     * whatever the mode (Classic, Levels, Daily). Trigger at 5/10/15...: the counter resets after
+    /* v59: every finished game counts toward the 4-game break ad,
+     * whatever the mode (Classic, Levels, Daily). Trigger at 4/8/12...: the counter resets after
      * each trigger, so breaks never pile up. User-scoped, so an
      * account switch starts a fresh count. */
     var adCount = gameAdCount() + 1;
-    if (adCount >= 5) {
+    if (adCount >= 4) {
       setGameAdCount(0);
       try { maybeShowGameAd(); } catch (e) {}
     } else {
@@ -5671,7 +5667,7 @@ window.PUZZLEPOP_CONFIG = {
    * The game's most important page. All totals come from the server
    * (rpc/get_earnings_overview) — the client never sums scores
    * itself, never guesses a balance, and never mints a payout.
-   * Conversion: 4,000,000 score = $1; one cent = 40,000 score.
+   * Conversion: 3,000,000 score = $1; one cent = 30,000 score.
    * Payouts are USDT crypto ONLY, paid manually by the owner; there
    * is NO mark-paid button in the game (owner marks paid in the
    * Supabase Table Editor, like weekly claims).
@@ -5684,15 +5680,15 @@ window.PUZZLEPOP_CONFIG = {
     var m = (err && err.message) || "";
     return /PGRST202|PGRST205|does not exist|could not find|schema cache/i.test(m);
   }
-  var EARNINGS_SCORE_PER_USD = 4000000;
-  var EARNINGS_SCORE_PER_CENT = 40000;
+  var EARNINGS_SCORE_PER_USD = 3000000;
+  var EARNINGS_SCORE_PER_CENT = 30000;
   var EARNINGS_THRESHOLD_USD = 20;
   function earningsFmt(n) {
     var s = String(Math.max(0, Math.floor(n || 0)));
     return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   /* Full available balance to the cent: floor to whole cents, so
-   * sub-cent dust (< 40,000 score) is never paid as a fraction. */
+   * sub-cent dust (< 30,000 score) is never paid as a fraction. */
   function earningsUsdtFromScore(score) {
     var cents = Math.floor(Math.max(0, score || 0) / EARNINGS_SCORE_PER_CENT);
     return cents / 100;
@@ -5841,7 +5837,7 @@ window.PUZZLEPOP_CONFIG = {
   /* ================= multi-page panel (no scrolling) ================= */
   /* The bottom bar IS the navigation now: Game = the board, the rest open
      the full-screen tournament view on that page. */
-  var PAGES = ["board", "prizes", "spin", "profile", "contact", "referrals", "earnings"];
+  var PAGES = ["spin", "profile", "contact", "referrals", "earnings"];
   /* Bottom-bar play state: hidden while a game is in motion, back on Back. */
   var barPlaying = false;
   var barPinned = false;
@@ -5854,13 +5850,13 @@ window.PUZZLEPOP_CONFIG = {
   var barPadOn = false;
   var currentPageName = "profile";
   function setBarActive(view) {
-    ["game", "board", "prizes", "spin", "profile", "contact", "referrals", "earnings"].forEach(function (v) {
+    ["game", "spin", "profile", "contact", "referrals", "earnings"].forEach(function (v) {
       var btn = $("bnav-" + v);
       if (btn) btn.classList.toggle("active", v === view);
     });
   }
   function showPage(name) {
-    if (PAGES.indexOf(name) === -1) name = "board";
+    if (PAGES.indexOf(name) === -1) name = "spin";
     currentPageName = name;
     PAGES.forEach(function (p) {
       var sec = $("page-" + p);
@@ -5890,15 +5886,11 @@ window.PUZZLEPOP_CONFIG = {
       var ep = $("page-earnings");
       if (ep) { ep.classList.remove("earnings-enter"); void ep.offsetWidth; ep.classList.add("earnings-enter"); }
     }
-    // Live leaderboard: subscribe on board open, unsubscribe on leave.
-    updateLiveSubscription();
-    // Live Winner Paid Proof: subscribe on Prizes open, unsubscribe on leave.
-    updateProofSubscription();
+    // v59: Leaderboard + Prizes pages removed — their live subscriptions
+    // are dead (currentPageName can never be board/prizes); the
+    // functions stay for refreshTournamentData callers and no-op.
     // Live referral board: subscribe on Referrals open, unsubscribe on leave.
     updateReferralSubscription();
-    // v38 modern Prizes entrance: replay the staggered section entrance
-    // every time the Prizes tab opens (look-only, no behavior change).
-    if (name === "prizes") { var pp = $("page-prizes"); if (pp) { pp.classList.remove("prizes-enter"); void pp.offsetWidth; pp.classList.add("prizes-enter"); } }
   }
   function wireBottomNav() {
     function leaveBoardModal() {
@@ -6164,7 +6156,7 @@ window.PUZZLEPOP_CONFIG = {
     renderTiers();
     renderMonthInfo();
     refreshTournamentData();
-    showPage(page || (session ? "board" : "profile"));
+    showPage(page || (session ? "spin" : "profile"));
     /* Badge check on every hub open (except Contact itself, which marks
        seen): this is how users notice a new announcement while on other
        tabs, since there is no push channel. */
