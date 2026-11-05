@@ -521,6 +521,24 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   :root[data-theme="dark"] #page-earnings .earnings-section .muted{color:rgba(255,255,255,.75);}
   :root[data-theme="dark"] #page-earnings .earnings-balance{color:#6EE7B7;}
   @media (prefers-reduced-motion:reduce){#page-earnings::before,#page-earnings .btn::after,#page-earnings.earnings-enter .earnings-section{animation:none!important;}}
+  /* ===== v63: Live Payouts page (scoped to #page-livepayouts ONLY) ===== */
+  #page-livepayouts{overflow-y:auto;}
+  #page-livepayouts .livepayouts-section{background:linear-gradient(135deg,#FFF9E6,#EAFBF1 45%,#FFF3D6);border:1.5px solid rgba(232,199,102,.7);border-radius:20px;padding:16px;box-shadow:0 10px 24px rgba(15,36,64,.12);margin:0 0 14px;}
+  #page-livepayouts .livepayouts-section h3{margin:0 0 6px;font-family:"Baloo 2",cursive;font-size:19px;}
+  #page-livepayouts .livepayouts-section h3::after{content:"";display:block;height:3px;width:56px;margin-top:6px;border-radius:99px;background:linear-gradient(90deg,#F59E0B,#22C55E,#F59E0B);}
+  #page-livepayouts .livepayouts-section p{margin:6px 0;line-height:1.5;}
+  #page-livepayouts .livepayouts-total{font-size:19px;font-weight:900;color:var(--ink);}
+  #page-livepayouts ul{padding-left:0;}
+  #page-livepayouts li:not(.empty-state):not(.error-state){background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:11px 13px;box-shadow:var(--shadow-sm);margin:0 0 8px;list-style:none;font-weight:800;font-size:13.5px;}
+  #page-livepayouts li.empty-state,#page-livepayouts li.error-state{text-align:center;font-weight:800;list-style:none;}
+  #page-livepayouts .lp-net{display:inline-block;padding:2px 9px;border-radius:999px;background:#E8F7EE;color:#15803D;font-size:11.5px;font-weight:900;margin-left:6px;}
+  #page-livepayouts.livepayouts-enter #livePayoutsTotalsSection{animation:livePayoutsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.02s;}
+  #page-livepayouts.livepayouts-enter #livePayoutsListSection{animation:livePayoutsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.10s;}
+  @keyframes livePayoutsIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+  :root[data-theme="dark"] #page-livepayouts .livepayouts-section{background:linear-gradient(135deg,#2A2140,#123B2A 45%,#3A2B10);border-color:rgba(232,199,102,.5);color:#FFFFFF;}
+  :root[data-theme="dark"] #page-livepayouts .livepayouts-section .muted{color:rgba(255,255,255,.75);}
+  :root[data-theme="dark"] #page-livepayouts .lp-net{background:#123B2A;color:#86EFAC;}
+  @media (prefers-reduced-motion:reduce){#page-livepayouts.livepayouts-enter .livepayouts-section{animation:none!important;}}
   /* ===== v18: live badge ===== */
   .lb-live-badge{display:inline-block;padding:3px 10px;border-radius:999px;background:#16A34A;color:#FFFFFF;font-size:12px;font-weight:900;letter-spacing:.02em;}
   /* ===== v32: Prizes page — exactly 3 sections; Winner Paid Proof is premium ===== */
@@ -922,6 +940,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
   <button type="button" class="bnav-btn" id="bnav-contact" data-view="contact"><span class="bnav-ic">💬</span><span class="bnav-lb">Contact</span><span class="bnav-dot" id="contactNewDot" hidden aria-label="New announcements"></span></button>
   <button type="button" class="bnav-btn" id="bnav-referrals" data-view="referrals"><span class="bnav-ic">🎁</span><span class="bnav-lb">Referrals</span></button>
   <button type="button" class="bnav-btn" id="bnav-earnings" data-view="earnings"><span class="bnav-ic">💵</span><span class="bnav-lb">Earnings</span></button>
+  <button type="button" class="bnav-btn" id="bnav-livepayouts" data-view="livepayouts"><span class="bnav-ic">💸</span><span class="bnav-lb">Live Payouts</span></button>
 </nav>
 
 <div class="overlay ad-overlay" id="adOverlay" role="dialog" aria-modal="true" aria-label="Ad break">
@@ -1016,6 +1035,9 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
 <div class="earnings-section" id="ownerPayoutsSection" hidden><h3>👑 Owner Payouts</h3><p class="muted" id="ownerPayoutsSummary"></p><p class="muted"><b>Pending</b></p><ul id="ownerPayoutsPendingList"></ul><p class="muted"><b>Paid</b></p><ul id="ownerPayoutsPaidList"></ul><p class="muted" id="ownerPayoutsNote"></p><p class="muted">Mark paid only after the player has the latest app, so they see the paid celebration.</p></div>
+</section><section class="tpage" id="page-livepayouts"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💸 Live Payouts</h2><p class="page-sub">Real payouts, paid in USDT — proof the game pays.</p></div>
+<div class="livepayouts-section" id="livePayoutsTotalsSection"><h3>💰 Total paid out</h3><p class="livepayouts-total" id="livePayoutsTotal">Loading…</p><p class="muted">Payouts are paid manually in USDT after review.</p></div>
+<div class="livepayouts-section" id="livePayoutsListSection"><h3>✅ Recent payouts</h3><ul id="livePayoutsList"></ul><p class="muted" id="livePayoutsNote"></p></div>
 </section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Questions, prize help, or feedback? Email us directly.</p></div>
 <a class="btn btn-primary contact-email-btn" id="contactEmailBtn" href="mailto:support@puzzleearn.online">📧 support@puzzleearn.online</a>
 <h3>📣 Announcements</h3>
@@ -6164,11 +6186,77 @@ window.PUZZLEPOP_CONFIG = {
     var reqBtn = $("earningsRequestBtn");
     if (reqBtn) reqBtn.addEventListener("click", submitEarningsPayout);
   }
+  /* ================= v63: Live Payouts page =================
+   * Public proof the game pays: every paid payout, newest first,
+   * for everyone to see — guests included, no login needed. The
+   * server returns PAID rows only (never pending) with no wallet
+   * column at all, and test accounts are excluded server-side, so
+   * this page can never leak a wallet or a pending payout. Two
+   * read-only RPCs (get_public_payouts + get_public_payouts_total),
+   * both granted to anon as well as authenticated. The page refreshes
+   * on every open (see showPage). If the v63 migration has not run
+   * yet the RPCs are missing and the page says so instead of failing.
+   * Rows are built with textContent only — usernames are
+   * user-controlled text and must never reach innerHTML. */
+  var LIVE_PAYOUTS_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function livePayoutsDateText(iso) {
+    var s = String(iso || "");
+    if (s.length < 10) return s;
+    var parts = s.slice(0, 10).split("-");
+    if (parts.length !== 3) return s.slice(0, 10);
+    var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+    if (!y || !m || m < 1 || m > 12 || !d) return s.slice(0, 10);
+    return d + " " + LIVE_PAYOUTS_MONTHS[m - 1] + " " + y;
+  }
+  function refreshLivePayoutsPage() {
+    var page = $("page-livepayouts");
+    if (!page) return;
+    var totalEl = $("livePayoutsTotal"), list = $("livePayoutsList"), note = $("livePayoutsNote");
+    if (totalEl) totalEl.textContent = "Loading…";
+    if (note) note.textContent = "";
+    if (list) list.innerHTML = "<li class=\"empty-state\">Loading payouts…</li>";
+    callRest("rpc/get_public_payouts_total", "POST", {}).then(function (res) {
+      var row = (Array.isArray(res) && res.length) ? res[0] : null;
+      var total = row ? (Number(row.total_usdt) || 0) : 0;
+      var count = row ? (Number(row.winner_count) || 0) : 0;
+      if (totalEl) totalEl.textContent = "Total paid out: " + earningsUsdText(total) + " · " + count + (count === 1 ? " winner" : " winners");
+    }).catch(function (err) {
+      if (totalEl) totalEl.textContent = isEarningsMissingError(err) ?
+        "Live Payouts are being set up — check back soon." :
+        "Could not load payout totals — try again later.";
+    });
+    callRest("rpc/get_public_payouts", "POST", {}).then(function (res) {
+      if (!list) return;
+      var rows = Array.isArray(res) ? res : [];
+      list.innerHTML = "";
+      if (!rows.length) {
+        list.innerHTML = "<li class=\"empty-state\">No payouts yet — the first winners will appear here.</li>";
+        return;
+      }
+      rows.forEach(function (r) {
+        var li = document.createElement("li");
+        var head = document.createElement("div");
+        head.textContent = (r.username || "unknown") + " — " + earningsUsdText(r.amount_usdt);
+        li.appendChild(head);
+        var meta = document.createElement("div");
+        meta.appendChild(document.createTextNode("Paid " + livePayoutsDateText(r.paid_at)));
+        var badge = document.createElement("span");
+        badge.className = "lp-net";
+        badge.textContent = r.network || "";
+        meta.appendChild(badge);
+        li.appendChild(meta);
+        list.appendChild(li);
+      });
+    }).catch(function (err) {
+      if (list) list.innerHTML = "<li class=\"error-state\">" +
+        (isEarningsMissingError(err) ? "Live Payouts are being set up — check back soon." : "Could not load payouts — try again later.") + "</li>";
+    });
+  }
 
   /* ================= multi-page panel (no scrolling) ================= */
   /* The bottom bar IS the navigation now: Game = the board, the rest open
      the full-screen tournament view on that page. */
-  var PAGES = ["spin", "profile", "contact", "referrals", "earnings"];
+  var PAGES = ["spin", "profile", "contact", "referrals", "earnings", "livepayouts"];
   /* Bottom-bar play state: hidden while a game is in motion, back on Back. */
   var barPlaying = false;
   var barPinned = false;
@@ -6181,7 +6269,7 @@ window.PUZZLEPOP_CONFIG = {
   var barPadOn = false;
   var currentPageName = "profile";
   function setBarActive(view) {
-    ["game", "spin", "profile", "contact", "referrals", "earnings"].forEach(function (v) {
+    ["game", "spin", "profile", "contact", "referrals", "earnings", "livepayouts"].forEach(function (v) {
       var btn = $("bnav-" + v);
       if (btn) btn.classList.toggle("active", v === view);
     });
@@ -6216,6 +6304,12 @@ window.PUZZLEPOP_CONFIG = {
       refreshEarningsPage();
       var ep = $("page-earnings");
       if (ep) { ep.classList.remove("earnings-enter"); void ep.offsetWidth; ep.classList.add("earnings-enter"); }
+    }
+    // Live Payouts refreshes on every open: totals + latest paid payouts.
+    if (name === "livepayouts") {
+      refreshLivePayoutsPage();
+      var lp = $("page-livepayouts");
+      if (lp) { lp.classList.remove("livepayouts-enter"); void lp.offsetWidth; lp.classList.add("livepayouts-enter"); }
     }
     // v59: Leaderboard + Prizes pages removed — their live subscriptions
     // are dead (currentPageName can never be board/prizes); the
