@@ -6219,7 +6219,7 @@ window.PUZZLEPOP_CONFIG = {
       var row = (Array.isArray(res) && res.length) ? res[0] : null;
       var total = row ? (Number(row.total_usdt) || 0) : 0;
       var count = row ? (Number(row.winner_count) || 0) : 0;
-      if (totalEl) totalEl.textContent = "Total paid out: " + earningsUsdText(total) + " · " + count + (count === 1 ? " winner" : " winners");
+      if (totalEl) totalEl.textContent = "Total paid out: " + earningsUsdText(total);
     }).catch(function (err) {
       if (totalEl) totalEl.textContent = isEarningsMissingError(err) ?
         "Live Payouts are being set up — check back soon." :
