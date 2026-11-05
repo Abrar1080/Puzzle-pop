@@ -686,6 +686,30 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #spinReadyCelebration .src-coins b:nth-child(5){left:84%;animation-delay:.4s;}
 @keyframes srcBounce{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-46px) scale(1.06);}}
 @media (prefers-reduced-motion:reduce){#spinBtn.spin-ready-pulse,#adSpinBtn.spin-ready-pulse{animation:none !important;}#spinReadyCelebration .src-confetti i,#spinReadyCelebration .src-coins b,#spinReadyCelebration .src-card{animation:none !important;}}
+/* v61 payout-paid celebration: same vibrant language as the spin-ready
+ * celebration (confetti + bouncing gold coins, gold treasure card),
+ * plus the big USDT amount, per-payout network rows, View + Dismiss.
+ * No wallet address is ever rendered here (amount + network only). */
+#payoutPaidCelebration{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(20,8,40,.55);overflow:hidden;}
+#payoutPaidCelebration.show{display:flex;}
+#payoutPaidCelebration .src-card{position:relative;z-index:2;text-align:center;background:linear-gradient(160deg,#FFF9E6,#FFE9B0);border:3px solid #FFB020;border-radius:24px;padding:26px 22px;max-width:min(320px,86vw);box-shadow:0 18px 50px rgba(0,0,0,.45);animation:srcCardIn .5s ease-out;}
+#payoutPaidCelebration .src-title{font-family:"Baloo 2",cursive;font-size:26px;font-weight:900;color:#7A4A00;margin:0 0 6px;}
+#payoutPaidCelebration .src-sub{font-weight:700;font-size:14px;color:#5B3A00;margin:0 0 16px;}
+#payoutPaidCelebration .src-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+#payoutPaidCelebration .src-confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:srcFall 3.2s linear infinite;}
+#payoutPaidCelebration .src-coins{position:absolute;inset:0;pointer-events:none;}
+#payoutPaidCelebration .src-coins b{position:absolute;bottom:12%;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF7CC,#FFD166 45%,#E8A800 80%);box-shadow:0 4px 10px rgba(0,0,0,.35);animation:srcBounce 1.4s ease-in-out infinite;}
+#payoutPaidCelebration .src-coins b:nth-child(1){left:8%;animation-delay:0s;}
+#payoutPaidCelebration .src-coins b:nth-child(2){left:26%;animation-delay:.25s;}
+#payoutPaidCelebration .src-coins b:nth-child(3){left:46%;animation-delay:.5s;}
+#payoutPaidCelebration .src-coins b:nth-child(4){left:66%;animation-delay:.15s;}
+#payoutPaidCelebration .src-coins b:nth-child(5){left:84%;animation-delay:.4s;}
+#payoutPaidCelebration .payout-amount{font-family:"Baloo 2",cursive;font-size:40px;font-weight:900;color:#0E7A3D;line-height:1.1;margin:2px 0 8px;}
+#payoutPaidCelebration .payout-lines{margin:0 0 12px;}
+#payoutPaidCelebration .payout-row{font-weight:800;font-size:14px;color:#5B3A00;margin:2px 0;}
+#payoutPaidCelebration .payout-view,#payoutPaidCelebration .payout-dismiss{width:100%;padding:13px;font-size:16px;}
+#payoutPaidCelebration .payout-view{margin:0 0 8px;}
+@media (prefers-reduced-motion:reduce){#payoutPaidCelebration .src-confetti i,#payoutPaidCelebration .src-coins b,#payoutPaidCelebration .src-card{animation:none !important;}}
 #spinRetryBtn:not([hidden]){display:block;width:100%;margin-top:8px;}
 #saveProfileBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #panelAuthBtn{display:block;width:100%;padding:12px;}
@@ -3696,6 +3720,174 @@ window.PUZZLEPOP_CONFIG = {
     if (!hasNotifyBridge()) return;
     try { window.AndroidNotifyBridge.cancelAllTimers(); } catch (e) {}
   }
+  /* v61 PAYOUT-PAID NOTIFICATION (Earnings payouts only — the flow
+   * where the owner marks a payout paid in Table Editor; tournament /
+   * referral cash payouts are OUT of scope). Detection is CLIENT-SIDE
+   * and reuses the exact read the Earnings page already uses
+   * (rpc/get_earnings_overview -> completed[] rows, which are the
+   * CALLER's own requests by construction — the RPC filters
+   * user_id = auth.uid() — so another user's payouts can never
+   * surface here). NO server change: the read already carries id,
+   * amount_usdt, network and status.
+   * Triggers: app start (after session established), Earnings page
+   * open (via refreshEarningsPage), and after a payout-request action
+   * (submitEarningsPayout refreshes the Earnings page). A failed
+   * check is silent — it must never break the page.
+   * FIRST-RUN SEEDING (critical): the first successful check for a
+   * user silently marks ALL currently-paid requests as seen, with NO
+   * celebration. Only payouts that flip to paid AFTER this build
+   * ships may celebrate. Keys are PER-USER (suffixed with the user
+   * id) so an account switch on a shared device seeds each account
+   * separately instead of leaking one account's history into another.
+   * ONCE PER PAYOUT: seen IDs are marked at DISPLAY time — marked
+   * immediately before the celebration shows, so a crash before
+   * display re-shows next time, and a crash after display never
+   * repeats. Several newly-paid at once -> ONE combined celebration
+   * (total + per-payout rows) and ONE local notification, never a
+   * stack. PRIVACY: amount + network only — no wallet address is
+   * ever rendered in the celebration or the notification, and NO
+   * tx hash exists in v1 (payout requests carry no proof field).
+   * LOCAL NOTIFICATION (app only; web is a no-op): reuses the v54
+   * rich style via the native bridge (coin small icon, treasure
+   * large icon, BigPictureStyle, gold 0xFFFFB800, same channel) —
+   * no new channel. Permission gating mirrors scheduleNotifyTimer:
+   * without a grant the in-app celebration still shows and the
+   * prompt/hint is offered once per visit. If localStorage is
+   * unavailable, in-memory state still prevents repeats within
+   * the session. KNOWN LIMIT: the overview caps completed at the
+   * 50 newest by request date, so a newly-paid old request beyond
+   * that cap would be missed — same cap as the Earnings page
+   * itself. */
+  var PAYOUT_SEEN_KEY_PREFIX = "pp_payout_seen_paid_v61_";
+  var PAYOUT_SEEDED_KEY_PREFIX = "pp_payout_seeded_v61_";
+  var payoutPaidCheckInFlight = false;
+  var payoutSeenMem = null; /* in-memory seen set (storage fallback) */
+  var payoutSeededMem = false;
+  function payoutPaidUserKey(prefix) {
+    var uid = (session && session.user && session.user.id) ? String(session.user.id) : "";
+    return uid ? (prefix + uid) : "";
+  }
+  function payoutSeenPaidIds() {
+    if (payoutSeenMem) return payoutSeenMem.slice();
+    try {
+      var raw = localStorage.getItem(payoutPaidUserKey(PAYOUT_SEEN_KEY_PREFIX));
+      var arr = raw ? JSON.parse(raw) : [];
+      payoutSeenMem = Array.isArray(arr) ? arr.slice() : [];
+    } catch (e) { payoutSeenMem = []; }
+    return payoutSeenMem.slice();
+  }
+  function payoutMarkPaidSeen(ids) {
+    var seen = payoutSeenPaidIds();
+    ids.forEach(function (id) { if (seen.indexOf(id) === -1) seen.push(id); });
+    payoutSeenMem = seen;
+    try {
+      var key = payoutPaidUserKey(PAYOUT_SEEN_KEY_PREFIX);
+      if (key) localStorage.setItem(key, JSON.stringify(seen));
+    } catch (e) {}
+  }
+  function payoutSeeded() {
+    if (payoutSeededMem) return true;
+    try { return localStorage.getItem(payoutPaidUserKey(PAYOUT_SEEDED_KEY_PREFIX)) === "1"; } catch (e) { return false; }
+  }
+  function payoutMarkSeeded() {
+    payoutSeededMem = true;
+    try {
+      var key = payoutPaidUserKey(PAYOUT_SEEDED_KEY_PREFIX);
+      if (key) localStorage.setItem(key, "1");
+    } catch (e) {}
+  }
+  function handlePayoutPaidRows(completed) {
+    if (!session || !session.user) return;
+    var rows = Array.isArray(completed) ? completed : [];
+    var paid = rows.filter(function (r) { return r && r.status === "paid"; });
+    if (!payoutSeeded()) {
+      payoutMarkPaidSeen(paid.map(function (r) { return r.id; }));
+      payoutMarkSeeded();
+      return;
+    }
+    var seen = payoutSeenPaidIds();
+    var fresh = paid.filter(function (r) { return seen.indexOf(r.id) === -1; });
+    if (!fresh.length) return;
+    payoutMarkPaidSeen(fresh.map(function (r) { return r.id; }));
+    showPayoutPaidCelebration(fresh);
+    postPayoutPaidNotification(fresh);
+  }
+  function checkPayoutPaidOnStart() {
+    if (!session || !session.user) return;
+    if (payoutPaidCheckInFlight) return;
+    payoutPaidCheckInFlight = true;
+    callRest("rpc/get_earnings_overview", "POST", {}).then(function (res) {
+      payoutPaidCheckInFlight = false;
+      handlePayoutPaidRows(res && res.completed);
+    }).catch(function () { payoutPaidCheckInFlight = false; });
+  }
+  function buildPayoutPaidCelebration() {
+    var colors = ["#FF5A5F", "#FFB020", "#2E9E5B", "#3B82F6", "#A855F7", "#EC4899", "#FFD166"];
+    var ov = document.createElement("div");
+    ov.id = "payoutPaidCelebration";
+    var html = '<div class="src-confetti">';
+    for (var i = 0; i < 14; i++) {
+      html += '<i style="left:' + ((3 + i * 7) % 96) + '%;animation-delay:' + ((i % 7) * 0.22) +
+        's;animation-duration:' + (2.6 + (i % 5) * 0.3) + 's;background:' + colors[i % colors.length] + '"></i>';
+    }
+    html += '</div><div class="src-coins"><b></b><b></b><b></b><b></b><b></b></div>' +
+      '<div class="src-card"><div class="src-title" id="payoutPaidTitle">Payout paid!</div>' +
+      '<div class="payout-amount" id="payoutPaidAmount"></div>' +
+      '<div class="payout-lines" id="payoutPaidLines"></div>' +
+      '<div class="src-sub" id="payoutPaidSub">Sent to your wallet.</div>' +
+      '<button type="button" class="btn btn-primary payout-view" id="payoutPaidViewBtn">View in Earnings</button>' +
+      '<button type="button" class="btn btn-ghost payout-dismiss" id="payoutPaidDismissBtn">Got it!</button></div>';
+    ov.innerHTML = html;
+    document.body.appendChild(ov);
+    var v = $("payoutPaidViewBtn");
+    if (v) v.addEventListener("click", function () { ov.classList.remove("show"); showAppView("earnings"); });
+    var d = $("payoutPaidDismissBtn");
+    if (d) d.addEventListener("click", function () { ov.classList.remove("show"); });
+    ov.addEventListener("click", function (e) { if (e.target === ov) ov.classList.remove("show"); });
+    return ov;
+  }
+  function showPayoutPaidCelebration(items) {
+    var ov = $("payoutPaidCelebration");
+    if (!ov) ov = buildPayoutPaidCelebration();
+    if (!ov) return;
+    var total = 0;
+    items.forEach(function (r) { total += Number(r.amount_usdt) || 0; });
+    var title = $("payoutPaidTitle");
+    if (title) title.textContent = items.length > 1 ? "Payouts paid!" : "Payout paid!";
+    var amt = $("payoutPaidAmount");
+    if (amt) amt.textContent = earningsUsdText(total);
+    var lines = $("payoutPaidLines");
+    if (lines) {
+      lines.innerHTML = "";
+      items.forEach(function (r) {
+        var row = document.createElement("div");
+        row.className = "payout-row";
+        row.textContent = earningsUsdText(Number(r.amount_usdt) || 0) + " · " + (r.network || "");
+        lines.appendChild(row);
+      });
+    }
+    var sub = $("payoutPaidSub");
+    if (sub) sub.textContent = items.length > 1
+      ? items.length + " payouts — sent to your wallet."
+      : "Sent to your wallet.";
+    ov.classList.add("show");
+  }
+  function postPayoutPaidNotification(items) {
+    if (!hasNotifyBridge()) return;
+    if (typeof window.AndroidNotifyBridge.postPayoutPaidNotification !== "function") return;
+    if (!notifyPermissionGranted()) { maybeAskNotifyPermission(); return; }
+    var total = 0;
+    items.forEach(function (r) { total += Number(r.amount_usdt) || 0; });
+    var title, text;
+    if (items.length > 1) {
+      title = "Payouts paid!";
+      text = items.length + " payouts totalling " + earningsUsdText(total) + " have been paid.";
+    } else {
+      title = "Payout paid!";
+      text = "Your " + earningsUsdText(total) + " payout (" + (items[0].network || "") + ") has been paid.";
+    }
+    try { window.AndroidNotifyBridge.postPayoutPaidNotification(title, text); } catch (e) {}
+  }
   /* AD-GATE HOOK (v20 pattern): ad-spin claims call this before the
    * server claim. In the Android apps (bridge present) it shows the
    * real rewarded ad: resolves ONLY on earned reward, rejects on
@@ -5795,6 +5987,11 @@ window.PUZZLEPOP_CONFIG = {
           });
         }
       }
+      /* v61: payout-paid detection on every Earnings open (reuses this
+       * fetch — no second network call). Also covers the
+       * post-payout-request refresh, since submitEarningsPayout
+       * calls refreshEarningsPage on success. */
+      handlePayoutPaidRows((res && res.completed) || []);
     }).catch(function (err) {
       var setup = isEarningsMissingError(err);
       setText("earningsTotalScore", "—");
@@ -7538,6 +7735,7 @@ window.PUZZLEPOP_CONFIG = {
       // panel on Profile so the username picker is right there.
       if (p) { showAppView("game"); } else { showAppView("profile"); }
       refreshTournamentData();
+      checkPayoutPaidOnStart();
     });
   }
   /* ================= social sign-in (Google) =================
@@ -7997,7 +8195,7 @@ window.PUZZLEPOP_CONFIG = {
     setInterval(tickCountdown, 1000);
     // Optimistic session from storage (validated quietly in background).
     if (session && session.user) {
-      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } });
+      fetchMyProfile().then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } checkPayoutPaidOnStart(); });
     } else if (session) {
       // Session exists but user id unknown (OAuth redirect): fetch it.
       fetch(CFG.SUPABASE_URL + "/auth/v1/user", { headers: authHeaders() })
@@ -8010,7 +8208,7 @@ window.PUZZLEPOP_CONFIG = {
           }
           return null;
         })
-        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } })
+        .then(function (p) { myProfile = p; renderAuth(); if (myProfile) { fetchProgress(); fetchBonusState(); fetchScratchState(); fetchAdSpinState(); fetchAdWatchState(); refreshNotifyTestBtn(); } checkPayoutPaidOnStart(); })
         .catch(function () { renderAuth(); });
     }
     renderAuth();
