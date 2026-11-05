@@ -513,7 +513,6 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   @keyframes earningsBtnShine{0%,55%{left:-80%;}85%,100%{left:130%;}}
   #page-earnings .btn:disabled{filter:grayscale(.4);opacity:.6;box-shadow:none;}
   #page-earnings.earnings-enter #earningsHeroSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.02s;}
-  #page-earnings.earnings-enter #earningsPayoutSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.10s;}
   #page-earnings.earnings-enter #earningsPendingSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.18s;}
   #page-earnings.earnings-enter #earningsCompletedSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.26s;}
   @keyframes earningsIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
@@ -1030,8 +1029,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
-<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><ul id="earningsBreakdownList"></ul></div><p class="muted" id="earningsHeroNote"></p></div>
-<div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div><p class="muted" id="earningsHeroNote"></p></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
 <div class="earnings-section" id="ownerPayoutsSection" hidden><h3>👑 Owner Payouts</h3><p class="muted" id="ownerPayoutsSummary"></p><p class="muted"><b>Pending</b></p><ul id="ownerPayoutsPendingList"></ul><p class="muted"><b>Paid</b></p><ul id="ownerPayoutsPaidList"></ul><p class="muted" id="ownerPayoutsNote"></p><p class="muted">Mark paid only after the player has the latest app, so they see the paid celebration.</p></div>
@@ -5963,25 +5961,12 @@ window.PUZZLEPOP_CONFIG = {
         "You can request your full available balance below." :
         "Payouts unlock at $20.00. Keep playing — every score counts.");
       setText("earningsHeroNote", "");
-      var bd = (res && res.breakdown) || {};
-      var blist = $("earningsBreakdownList");
-      if (blist) {
-        var rows = [
-          ["Board total, all weeks (games + counted bonuses)", bd.board_total],
-          ["Spin wins not yet counted", bd.spin_unapplied],
-          ["Scratch wins not yet counted", bd.scratch_unapplied],
-          ["Ad-watch coins not yet counted", bd.adwatch_unapplied],
-          ["Daily bonuses not yet counted", bd.daily_unapplied],
-          ["Referral coins waiting to be claimed", bd.referral_banked],
-          ["Already requested or paid", bd.deducted_score]
-        ];
-        blist.innerHTML = "";
-        rows.forEach(function (r) {
-          var li = document.createElement("li");
-          li.textContent = r[0] + ": " + earningsFmt(r[1]);
-          blist.appendChild(li);
-        });
-      }
+      /* v65: the breakdown panel (board total, unapplied spin/scratch/
+       * ad-watch/daily/referral lines, deducted) was removed at the
+       * owner's request — the payout request form now lives in the hero
+       * where the breakdown was. The server still returns `breakdown`
+       * in the overview; the client simply ignores it. The balance
+       * total and payout flow are unchanged. */
       var reqBtn = $("earningsRequestBtn");
       if (reqBtn) {
         reqBtn.disabled = !can;
