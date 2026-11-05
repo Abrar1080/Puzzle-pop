@@ -498,6 +498,10 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   #page-earnings ul{padding-left:0;}
   #page-earnings li:not(.empty-state):not(.error-state){background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:11px 13px;box-shadow:var(--shadow-sm);margin:0 0 8px;list-style:none;font-weight:800;font-size:13.5px;}
   #page-earnings li.empty-state,#page-earnings li.error-state{text-align:center;font-weight:800;list-style:none;}
+  /* v62: Owner Payouts rows — compact Mark paid button (the page-wide
+     .btn rule is full-width) and a tappable truncated wallet. */
+  #page-earnings .owner-payout-row .btn{width:auto;padding:8px 14px;margin-top:8px;}
+  #page-earnings .op-wallet{font-family:monospace;cursor:pointer;text-decoration:underline dotted;}
   #page-earnings .earnings-hero{background:linear-gradient(135deg,#FFFBEB,#FEF3C7 40%,#D1FAE5);border:1.5px solid #F59E0B;box-shadow:0 14px 30px rgba(245,158,11,.30);}
   #page-earnings .earnings-big{font-family:"Baloo 2",cursive;font-size:34px;font-weight:900;line-height:1.1;margin:8px 0 2px;letter-spacing:.01em;}
   #page-earnings .earnings-balance{font-family:"Baloo 2",cursive;font-size:30px;font-weight:900;line-height:1.1;margin:8px 0 2px;color:#047857;}
@@ -1011,6 +1015,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="earnings-section" id="earningsPayoutSection"><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
 <div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
+<div class="earnings-section" id="ownerPayoutsSection" hidden><h3>👑 Owner Payouts</h3><p class="muted" id="ownerPayoutsSummary"></p><p class="muted"><b>Pending</b></p><ul id="ownerPayoutsPendingList"></ul><p class="muted"><b>Paid</b></p><ul id="ownerPayoutsPaidList"></ul><p class="muted" id="ownerPayoutsNote"></p><p class="muted">Mark paid only after the player has the latest app, so they see the paid celebration.</p></div>
 </section><section class="tpage" id="page-contact"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💬 Contact Us</h2><p class="page-sub">Questions, prize help, or feedback? Email us directly.</p></div>
 <a class="btn btn-primary contact-email-btn" id="contactEmailBtn" href="mailto:support@puzzleearn.online">📧 support@puzzleearn.online</a>
 <h3>📣 Announcements</h3>
@@ -5860,9 +5865,10 @@ window.PUZZLEPOP_CONFIG = {
    * (rpc/get_earnings_overview) — the client never sums scores
    * itself, never guesses a balance, and never mints a payout.
    * Conversion: 3,000,000 score = $1; one cent = 30,000 score.
-   * Payouts are USDT crypto ONLY, paid manually by the owner; there
-   * is NO mark-paid button in the game (owner marks paid in the
-   * Supabase Table Editor, like weekly claims).
+   * Payouts are USDT crypto ONLY, paid manually by the owner; the
+   * owner marks paid from the Owner Payouts panel on this page (v62),
+   * which lists every user's requests — his own Earnings page shows
+   * only his requests, which is why the panel exists.
    * DEGRADATION: until migration-earnings-v52.sql runs, every
    * Earnings fetch fails with a not-found / does-not-exist error and
    * degrades to the friendly setup note inside its own section —
@@ -5899,6 +5905,7 @@ window.PUZZLEPOP_CONFIG = {
   function refreshEarningsPage() {
     var page = $("page-earnings");
     if (!page) return;
+    refreshOwnerPayouts();
     var guestNote = $("earningsGuestNote"), authBtn = $("earningsAuthBtn");
     var heroWrap = $("earningsHeroWrap"), payoutWrap = $("earningsPayoutWrap");
     var pendingList = $("earningsPendingList"), completedList = $("earningsCompletedList");
@@ -6004,6 +6011,133 @@ window.PUZZLEPOP_CONFIG = {
         (setup ? EARNINGS_SETUP_NOTE : "Could not load payout requests.") + "</li>";
       var reqBtn = $("earningsRequestBtn");
       if (reqBtn) reqBtn.disabled = true;
+    });
+  }
+  /* ================= v62: Owner Payouts panel =================
+   * The owner used to mark payouts paid in the Supabase Table Editor
+   * because his own Earnings page shows only HIS requests — he never
+   * saw other players' requests there. This panel lists EVERY user's
+   * payout requests (rpc/get_owner_payouts) and lets him mark them
+   * paid (rpc/mark_payout_paid). The section is hidden entirely for
+   * non-owners (no empty section, no hint); the server enforces the
+   * same owner rule, so hiding is presentation only. Marking paid
+   * here flips the same status the v61 payout-paid celebration
+   * watches for, so the player still sees it on their next app open
+   * — no notification logic changed. The panel refreshes on every
+   * Earnings open (via refreshEarningsPage) and after every
+   * mark-paid. Status messages use the panel's own note line, the
+   * file's pattern (there is no toast system in this app). */
+  function ownerPayoutWalletShort(w) {
+    var s = String(w || "");
+    if (s.length <= 16) return s;
+    return s.slice(0, 8) + "…" + s.slice(-6);
+  }
+  function ownerPayoutCopyWallet(wallet) {
+    var val = String(wallet || "");
+    if (!val) return;
+    function done() { setText("ownerPayoutsNote", "Wallet copied."); }
+    function fallbackCopy() {
+      try {
+        var t = document.createElement("textarea");
+        t.value = val;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+        done();
+      } catch (e) { /* ignore */ }
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done).catch(fallbackCopy);
+        return;
+      }
+    } catch (e) { /* fall through to execCommand */ }
+    fallbackCopy();
+  }
+  function refreshOwnerPayouts() {
+    var section = $("ownerPayoutsSection");
+    if (!section) return;
+    if (!isOwner()) { section.hidden = true; return; }
+    section.hidden = false;
+    setText("ownerPayoutsSummary", "Loading…");
+    setText("ownerPayoutsNote", "");
+    var pendList = $("ownerPayoutsPendingList"), paidList = $("ownerPayoutsPaidList");
+    if (pendList) pendList.innerHTML = "";
+    if (paidList) paidList.innerHTML = "";
+    callRest("rpc/get_owner_payouts", "POST", {}).then(function (res) {
+      var pend = (res && res.pending) || [];
+      var paid = (res && res.paid) || [];
+      var pendUsd = 0, paidUsd = 0, i;
+      for (i = 0; i < pend.length; i++) pendUsd += Number(pend[i].amount_usdt) || 0;
+      for (i = 0; i < paid.length; i++) paidUsd += Number(paid[i].amount_usdt) || 0;
+      setText("ownerPayoutsSummary", "Pending: " + pend.length + " (" + earningsUsdText(pendUsd) + ") · Paid: " + paid.length + " (" + earningsUsdText(paidUsd) + ")");
+      if (pendList) {
+        if (!pend.length) {
+          pendList.innerHTML = "<li class=\"empty-state\">No pending payout requests.</li>";
+        } else {
+          pend.forEach(function (r) {
+            var li = document.createElement("li");
+            li.className = "owner-payout-row";
+            var head = document.createElement("div");
+            head.textContent = (r.username || "unknown") + " — " + earningsUsdText(r.amount_usdt) +
+              " (" + earningsFmt(r.amount_score) + " score)";
+            li.appendChild(head);
+            var wline = document.createElement("div");
+            var wspan = document.createElement("span");
+            wspan.className = "op-wallet";
+            wspan.textContent = ownerPayoutWalletShort(r.wallet);
+            wspan.title = "Tap to copy full wallet";
+            wspan.addEventListener("click", function () { ownerPayoutCopyWallet(r.wallet); });
+            wline.appendChild(document.createTextNode("Wallet: "));
+            wline.appendChild(wspan);
+            wline.appendChild(document.createTextNode(" (tap to copy)"));
+            li.appendChild(wline);
+            var meta = document.createElement("div");
+            meta.textContent = (r.network || "") + " — requested " + earningsDateText(r.created_at);
+            li.appendChild(meta);
+            var btn = document.createElement("button");
+            btn.className = "btn btn-small";
+            btn.textContent = "Mark paid";
+            btn.addEventListener("click", function () {
+              if (!window.confirm("Mark this payout as paid?\n" +
+                  (r.username || "unknown") + " — " + earningsUsdText(r.amount_usdt) +
+                  " (" + (r.network || "") + ")\nOnly mark paid after you have actually sent the USDT.")) return;
+              btn.disabled = true;
+              setText("ownerPayoutsNote", "Marking paid…");
+              callRest("rpc/mark_payout_paid", "POST", { p_request_id: r.id }).then(function () {
+                setText("ownerPayoutsNote", "Marked paid ✓ — " + (r.username || "unknown") + " " + earningsUsdText(r.amount_usdt) + ".");
+                refreshOwnerPayouts();
+              }).catch(function (err) {
+                btn.disabled = false;
+                setText("ownerPayoutsNote", "Could not mark paid: " + (err && err.message ? err.message : "try again later."));
+              });
+            });
+            li.appendChild(btn);
+            pendList.appendChild(li);
+          });
+        }
+      }
+      if (paidList) {
+        if (!paid.length) {
+          paidList.innerHTML = "<li class=\"empty-state\">No paid payout requests yet.</li>";
+        } else {
+          paid.forEach(function (r) {
+            var li2 = document.createElement("li");
+            li2.textContent = (r.username || "unknown") + " — " + earningsUsdText(r.amount_usdt) +
+              " — " + (r.network || "") + " — paid " +
+              earningsDateText(r.paid_at || r.created_at);
+            paidList.appendChild(li2);
+          });
+        }
+      }
+    }).catch(function (err) {
+      setText("ownerPayoutsSummary", "");
+      setText("ownerPayoutsNote", isEarningsMissingError(err) ?
+        "Owner payouts need the v62 migration run in Supabase first." :
+        "Could not load owner payouts — try again later.");
+      if (pendList) pendList.innerHTML = "<li class=\"empty-state\">Could not load payout requests.</li>";
+      if (paidList) paidList.innerHTML = "<li class=\"empty-state\">Could not load payout requests.</li>";
     });
   }
   function submitEarningsPayout() {
@@ -6224,12 +6358,17 @@ window.PUZZLEPOP_CONFIG = {
     if (ta) ta.addEventListener("click", function () { showSpinSub("adwatch"); });
   }
   /* ================= Contact Us: Discord + owner announcements ================= */
-  /* Owner gate: the announce form shows ONLY for this user id, and the
-     database enforces the same rule (see schema-announcements-migration.sql),
-     so hiding the form is presentation only — never the protection. */
+  /* Owner gate: the announce form (and every other owner-only surface)
+     shows ONLY for these two accounts — Rio by user id, and the owner's
+     second account by email. The database enforces the same rule
+     (see schema-announcements-migration.sql and
+     migration-owner-payouts-v62.sql), so hiding a form is presentation
+     only — never the protection. */
   var OWNER_USER_ID = "7dc7db5f-012f-43e0-b4d3-69b2505e42fa";
+  var OWNER_EMAIL = "abrarfarhat42@gmail.com";
   function isOwner() {
-    return !!(session && session.user && session.user.id === OWNER_USER_ID);
+    return !!(session && session.user && (session.user.id === OWNER_USER_ID ||
+      (session.user.email && session.user.email.toLowerCase() === OWNER_EMAIL)));
   }
   /* Unread-announcements badge: the in-app notification for new posts.
      Seen state is per viewer in localStorage (guest key vs per-user key).
