@@ -446,7 +446,21 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #tournamentOverlay{background:var(--bgimg);backdrop-filter:none;padding:0;z-index:150;}
 #tournamentOverlay.show{display:block;animation:viewIn .35s ease both;}
 #adOverlay{z-index:300;}
-.tournament-modal{height:100dvh;max-height:none;width:min(720px,100vw);max-width:720px;margin:0 auto;border-radius:0;padding:14px 16px 96px;box-shadow:none;animation:none;background-color:#FFC9A3;background-image:var(--bgimg);}
+/* v67 full-bleed: tab pages fill the screen edge to edge like the
+   game page. The modal used to pad its content 14px/16px, which left
+   the peach gradient showing as a frame around the inset rounded
+   cards (worst at the corners). Padding is now 0 on top/sides — the
+   cards reach the very edges; only the 96px bottom clearance for the
+   floating bottom nav stays. Non-card elements keep their 16px
+   gutter via their own padding/margin (see .page-head, the v67
+   gutter rules below, #logoutBtn), so nothing else moves. */
+.tournament-modal{height:100dvh;max-height:none;width:min(720px,100vw);max-width:720px;margin:0 auto;border-radius:0;padding:0 0 96px;box-shadow:none;animation:none;background-color:#FFC9A3;background-image:var(--bgimg);}
+/* v67 full-bleed gutters: bare text that used to sit 16px in via the
+   modal padding keeps that gutter itself, so only the cards move to
+   the edges. (Cards, banners and the subnav strip go full-bleed;
+   primary full-width CTAs like #spinBtn do too.) */
+#page-spin #spinWheelView>p,#page-spin #spinWheelView>h3{padding:0 16px;}
+#page-contact>h3,#page-contact>p,#page-contact>form{padding:0 16px;}
 @keyframes viewIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .tpage.active{animation:pageIn .35s ease both;}
 @keyframes pageIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
@@ -513,9 +527,17 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   @keyframes earningsBtnShine{0%,55%{left:-80%;}85%,100%{left:130%;}}
   #page-earnings .btn:disabled{filter:grayscale(.4);opacity:.6;box-shadow:none;}
   /* ===== v66: Giveaway codes (scoped to #page-earnings ONLY) =====
-     Redeem section under the hero card + owner-only code sessions.
-     Same card language as the other Earnings sections; the Kick
-     button is green when a channel URL is set, greyed when not. */
+     Redeem section inside the hero card (moved in v67) + owner-only
+     code sessions. Same card language as the other Earnings sections;
+     the Kick button is green when a channel URL is set, greyed when not. */
+  /* v67: the claim box lives inside the hero card, so its wrapper is
+     flat — no nested card (transparent, no border/shadow/padding),
+     in both day and dark themes. */
+  #page-earnings .earnings-hero #giveawayRedeemSection{background:transparent;border:none;box-shadow:none;padding:0;margin:0;}
+  /* v67: brief highlight when the header ticket button scrolls to the
+     claim box (added/removed by openGiveawayRedeem). */
+  #page-earnings #giveawayRedeemSection.giveaway-highlight{animation:giveawayFlash 1.5s ease-out;}
+  @keyframes giveawayFlash{0%{box-shadow:0 0 0 3px rgba(245,158,11,.85);border-radius:16px;}100%{box-shadow:0 0 0 0 rgba(245,158,11,0);border-radius:16px;}}
   #page-earnings .giveaway-badge{display:inline-block;padding:4px 12px;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#22C55E);color:#fff;font-weight:900;font-size:13px;margin-bottom:4px;}
   #page-earnings .giveaway-row{display:flex;gap:8px;margin:10px 0 6px;}
   #page-earnings .giveaway-row .t-input{flex:1;margin:0;text-transform:uppercase;}
@@ -542,7 +564,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   :root[data-theme="dark"] #page-earnings .earnings-section{background:linear-gradient(135deg,#2A2140,#123B2A 45%,#3A2B10);border-color:rgba(232,199,102,.5);color:#FFFFFF;}
   :root[data-theme="dark"] #page-earnings .earnings-section .muted{color:rgba(255,255,255,.75);}
   :root[data-theme="dark"] #page-earnings .earnings-balance{color:#6EE7B7;}
-  @media (prefers-reduced-motion:reduce){#page-earnings::before,#page-earnings .btn::after,#page-earnings.earnings-enter .earnings-section{animation:none!important;}}
+  @media (prefers-reduced-motion:reduce){#page-earnings::before,#page-earnings .btn::after,#page-earnings.earnings-enter .earnings-section,#page-earnings #giveawayRedeemSection.giveaway-highlight{animation:none!important;}}
   /* ===== v63: Live Payouts page (scoped to #page-livepayouts ONLY) ===== */
   #page-livepayouts{overflow-y:auto;}
   #page-livepayouts .livepayouts-section{background:linear-gradient(135deg,#FFF9E6,#EAFBF1 45%,#FFF3D6);border:1.5px solid rgba(232,199,102,.7);border-radius:20px;padding:16px;box-shadow:0 10px 24px rgba(15,36,64,.12);margin:0 0 14px;}
@@ -609,7 +631,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 .tpage .muted{color:var(--muted);font-weight:700;font-size:12.5px;line-height:1.5;}
 .tpage p:empty{display:none;}
 #passFeed:empty{display:none;}
-.page-head{margin:2px 0 12px;}
+.page-head{margin:2px 0 12px;padding:0 16px;} /* v67 full-bleed: heading keeps its 16px gutter now the modal padding is 0 */
 .page-head h2{font-family:"Baloo 2",cursive;font-size:24px;line-height:1.15;margin:0 0 3px;}
 .page-head h2::after{content:"";display:block;width:44px;height:4px;border-radius:99px;background:var(--grad);margin-top:6px;}
 .page-sub{color:var(--muted);font-weight:700;font-size:13px;line-height:1.5;margin:0;}
@@ -757,7 +779,8 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 #spinRetryBtn:not([hidden]){display:block;width:100%;margin-top:8px;}
 #saveProfileBtn{display:block;width:100%;padding:13px 12px;font-size:15px;}
 #panelAuthBtn{display:block;width:100%;padding:12px;}
-#logoutBtn{display:block;width:100%;margin-top:10px;}
+#logoutBtn{display:block;width:calc(100% - 32px);margin:10px 16px 0;} /* v67 full-bleed: keeps its 16px side gutter now the modal padding is 0 (width:auto does NOT stretch a <button>, hence the calc) */
+#page-profile #referralsPageBtn{margin-left:16px;} /* v67 full-bleed: same 16px gutter as before */
 .claim-row .btn{display:block;width:100%;padding:12px;}
 .shop-row{display:flex;gap:8px;}
 .shop-row .btn{flex:1;}
@@ -775,7 +798,7 @@ body.nav-on-board .wrap{padding-bottom:92px;}
 @media (max-width:600px){ .stat{padding:3px 6px 2px;} .stat .value{font-size:16px;} .stat.score .value{font-size:18px;} }
 @media (max-width:380px){ .stat .value{font-size:14px;} .stat.score .value{font-size:17px;} }
 #page-profile{scrollbar-width:thin;scrollbar-color:var(--line) transparent;overscroll-behavior:contain;}
-#page-profile .page-head{position:sticky;top:0;z-index:5;background:var(--panel);margin:0 -16px 12px;padding:10px 16px;border-bottom:1px solid var(--line);}
+#page-profile .page-head{position:sticky;top:0;z-index:5;background:var(--panel);margin:0 0 12px;padding:10px 16px;border-bottom:1px solid var(--line);} /* v67 full-bleed: -16px margins dropped, the modal padding they offset is gone */
   /* ===== v18 professional Profile theme (Profile page ONLY) =====
      Replaces the v16 orange gradient hero the owner rejected.
      Deep navy/charcoal gradient + gold accents, username large and
@@ -1053,8 +1076,8 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralBoardSection"><h3>🏆 Monthly referral board</h3><p class="muted">Resets on the 1st of every month.</p><p><span id="referralLiveBadge" class="lb-live-badge" hidden>● LIVE</span> <span id="referralLiveNote" class="muted"></span></p><p id="referralMonthLabel" class="muted"></p><ul id="referralBoardList"></ul><p id="referralOwnRank" class="muted"></p><p class="muted" id="referralBoardNote"></p></div>
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
-<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div><p class="muted" id="earningsHeroNote"></p></div>
-<div class="earnings-section" id="giveawayRedeemSection"><h3>🎟️ Have a code?</h3><p><span class="giveaway-badge">Worth $2.00</span></p><p class="muted">Codes drop live on the Kick stream. First player to enter a code gets the $2 — straight into this balance.</p><p class="muted" id="giveawayGuestNote" hidden>Log in to redeem a code.</p><div id="giveawayRedeemWrap"><div class="giveaway-row"><input class="t-input" id="giveawayCodeInput" type="text" placeholder="ENTER CODE" aria-label="Giveaway code" autocomplete="off" /><button class="btn btn-primary" id="giveawayClaimBtn" type="button">Claim</button></div><p class="giveaway-msg" id="giveawayResultMsg" aria-live="polite"></p></div><p class="muted">Codes drop live on stream — Watch live to catch the next one</p><button class="btn kick-btn" id="giveawayKickBtn" type="button" disabled>Kick link coming soon</button><h3 style="margin-top:14px;">🎟️ Your redeemed codes</h3><ul id="giveawayRedeemedList"></ul></div>
+<div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><div id="giveawayRedeemSection"><h3>🎟️ Have a code?</h3><p><span class="giveaway-badge">Worth $2.00</span></p><p class="muted">Codes drop live on the Kick stream. First player to enter a code gets the $2 — straight into this balance.</p><p class="muted" id="giveawayGuestNote" hidden>Log in to redeem a code.</p><div id="giveawayRedeemWrap"><div class="giveaway-row"><input class="t-input" id="giveawayCodeInput" type="text" placeholder="ENTER CODE" aria-label="Giveaway code" autocomplete="off" /><button class="btn btn-primary" id="giveawayClaimBtn" type="button">Claim</button></div><p class="giveaway-msg" id="giveawayResultMsg" aria-live="polite"></p></div><p class="muted">Codes drop live on stream — Watch live to catch the next one</p><button class="btn kick-btn" id="giveawayKickBtn" type="button" disabled>Kick link coming soon</button></div><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div><p class="muted" id="earningsHeroNote"></p></div>
+<div class="earnings-section" id="giveawayRedeemedSection"><h3>🎟️ Your redeemed codes</h3><ul id="giveawayRedeemedList"></ul></div>
 <div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div><div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
 <div class="earnings-section" id="ownerPayoutsSection" hidden><h3>👑 Owner Payouts</h3><p class="muted" id="ownerPayoutsSummary"></p><p class="muted"><b>Pending</b></p><ul id="ownerPayoutsPendingList"></ul><p class="muted"><b>Paid</b></p><ul id="ownerPayoutsPaidList"></ul><p class="muted" id="ownerPayoutsNote"></p><p class="muted">Mark paid only after the player has the latest app, so they see the paid celebration.</p></div>
 <div class="earnings-section" id="giveawayOwnerSection" hidden><h3>👑 Giveaway Codes</h3><p class="muted" id="giveawayOwnerStats">Loading…</p><button class="btn btn-primary" id="giveawayGenerateBtn" type="button">Generate $2 code</button><p class="muted" id="giveawayOwnerNote"></p><ul id="giveawayOwnerList"></ul><h3 style="margin-top:14px;">📺 Kick channel</h3><p class="muted">Players tap “Watch on Kick” to open this channel live.</p><div class="giveaway-kick-row"><input class="t-input" id="giveawayKickInput" type="url" placeholder="https://kick.com/your-channel" aria-label="Kick channel URL" autocomplete="off" /><button class="btn btn-primary" id="giveawayKickSaveBtn" type="button">Save</button></div><p class="muted" id="giveawayKickNote"></p></div>
@@ -6183,10 +6206,11 @@ window.PUZZLEPOP_CONFIG = {
     });
   }
   /* ================= v66: Giveaway codes =================
-   * Game v66. Redeem section under the Earnings hero card (see
-   * game.html #giveawayRedeemSection): a code dropped live on the
-   * Kick stream is worth $2 straight into the player's Earnings
-   * balance — first player to enter it wins it. Four read RPCs /
+   * Game v66. Redeem section inside the Earnings hero card (claim
+   * box moved into the hero in v67, between the balance and the
+   * payout form; see game.html #giveawayRedeemSection): a code
+   * dropped live on the Kick stream is worth $2 straight into the
+   * player's Earnings balance — first player to enter it wins it. Four read RPCs /
    * writes, all through the usual callRest pattern:
    *   redeem_giveaway_code(p_code) — one code per player per day,
    *     must have played at least one game first; server errors are
@@ -6402,11 +6426,18 @@ window.PUZZLEPOP_CONFIG = {
       if (list) list.innerHTML = "<li class=\"empty-state\">Could not load giveaway codes.</li>";
     });
   }
+  /* v67: claim box moved inside the hero card — scroll to it and
+     flash a brief highlight so the ticket button lands visibly
+     (no highlight when the user prefers reduced motion). */
   function openGiveawayRedeem() {
     showAppView("earnings");
     setTimeout(function () {
       var sec = $("giveawayRedeemSection");
       if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (sec && window.matchMedia && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        sec.classList.add("giveaway-highlight");
+        setTimeout(function () { sec.classList.remove("giveaway-highlight"); }, 1500);
+      }
     }, 120);
   }
   function submitEarningsPayout() {
