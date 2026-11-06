@@ -512,6 +512,29 @@ body.nav-on-board .wrap{padding-bottom:92px;}
   #page-earnings .btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);pointer-events:none;animation:earningsBtnShine 3.2s ease-in-out infinite;}
   @keyframes earningsBtnShine{0%,55%{left:-80%;}85%,100%{left:130%;}}
   #page-earnings .btn:disabled{filter:grayscale(.4);opacity:.6;box-shadow:none;}
+  /* ===== v66: Giveaway codes (scoped to #page-earnings ONLY) =====
+     Redeem section under the hero card + owner-only code sessions.
+     Same card language as the other Earnings sections; the Kick
+     button is green when a channel URL is set, greyed when not. */
+  #page-earnings .giveaway-badge{display:inline-block;padding:4px 12px;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#22C55E);color:#fff;font-weight:900;font-size:13px;margin-bottom:4px;}
+  #page-earnings .giveaway-row{display:flex;gap:8px;margin:10px 0 6px;}
+  #page-earnings .giveaway-row .t-input{flex:1;margin:0;text-transform:uppercase;}
+  #page-earnings .giveaway-row .btn{width:auto;flex:0 0 auto;padding:13px 20px;}
+  #page-earnings .giveaway-msg{font-weight:800;font-size:14px;min-height:20px;margin:4px 0;}
+  #page-earnings .giveaway-msg.ok{color:#047857;}
+  #page-earnings .giveaway-msg.err{color:#B91C1C;}
+  :root[data-theme="dark"] #page-earnings .giveaway-msg.ok{color:#6EE7B7;}
+  :root[data-theme="dark"] #page-earnings .giveaway-msg.err{color:#FCA5A5;}
+  #page-earnings .kick-btn{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 8px 18px rgba(34,197,94,.35);}
+  #page-earnings .kick-btn:disabled{background:rgba(15,36,64,.25);color:rgba(255,255,255,.9);filter:none;box-shadow:none;cursor:default;}
+  #page-earnings .giveaway-code{font-family:monospace;cursor:pointer;text-decoration:underline dotted;}
+  #page-earnings .giveaway-status{display:inline-block;padding:2px 9px;border-radius:999px;background:#E8F7EE;color:#15803D;font-size:11.5px;font-weight:900;margin-left:6px;}
+  #page-earnings .giveaway-status.revoked{background:#FEE2E2;color:#B91C1C;}
+  #page-earnings .giveaway-status.claimed{background:#FEF3C7;color:#92400E;}
+  #page-earnings .giveaway-owner-row .btn{width:auto;padding:8px 14px;margin-top:8px;}
+  #page-earnings .giveaway-kick-row{display:flex;gap:8px;margin:10px 0 6px;}
+  #page-earnings .giveaway-kick-row .t-input{flex:1;margin:0;}
+  #page-earnings .giveaway-kick-row .btn{width:auto;flex:0 0 auto;padding:13px 16px;}
   #page-earnings.earnings-enter #earningsHeroSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.02s;}
   #page-earnings.earnings-enter #earningsPendingSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.18s;}
   #page-earnings.earnings-enter #earningsCompletedSection{animation:earningsIn .55s cubic-bezier(.22,.9,.32,1) both;animation-delay:.26s;}
@@ -879,6 +902,7 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
       <div class="stat"><div class="label">Lines</div><div class="value" id="linesVal">0</div><div class="sub">cleared</div></div>
     </div>
     <div class="icon-btns">
+      <button class="icon-btn" id="ticketBtn" aria-label="Giveaway codes" title="Giveaway codes">🎟️</button>
       <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
       <button class="icon-btn" id="soundBtn" aria-label="Toggle sound" title="Sound">🔊</button>
       <button class="icon-btn" id="restartTop" aria-label="Restart game" title="Restart">↻</button>
@@ -1030,9 +1054,10 @@ body.nav-on-board .wrap{padding-bottom:calc(92px + env(safe-area-inset-bottom));
 <div class="referral-section" id="referralResultsSection"><h3>💰 Monthly results &amp; claim</h3><ul id="referralResultsList"></ul><p class="muted" id="referralResultsNote"></p></div>
 </section><section class="tpage" id="page-earnings"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💵 Earnings</h2><p class="page-sub">Your lifetime score, USDT balance, and payouts.</p></div>
 <div class="earnings-section earnings-hero" id="earningsHeroSection"><h3>⭐ Your lifetime score</h3><p class="muted" id="earningsGuestNote" hidden>Log in to see your earnings.</p><button class="btn btn-primary" id="earningsAuthBtn" hidden>Go to sign-in</button><div id="earningsHeroWrap"><p class="muted">All-time total score — games, spins, scratches, ad watches, daily bonuses, and referrals, all together:</p><p class="earnings-big" id="earningsTotalScore">—</p><p class="muted">USDT balance (3,000,000 score = $1):</p><p class="earnings-balance" id="earningsBalance">—</p><div class="earnings-track" aria-hidden="true"><div class="earnings-fill" id="earningsProgressFill"></div></div><p class="muted" id="earningsProgressText"></p><p class="muted" id="earningsThresholdNote"></p><h3>💵 Request payout in crypto</h3><p class="muted">USDT only, paid manually by the owner. When your balance reaches $20, you can request your full available balance here.</p><div id="earningsPayoutWrap"><input class="t-input" id="earningsWalletInput" type="text" placeholder="Your USDT wallet address" aria-label="USDT wallet address" /><select class="t-input" id="earningsNetworkSelect" aria-label="Network"><option value="BEP20">BEP20 (BNB Smart Chain)</option><option value="ERC20">ERC20 (Ethereum)</option><option value="TRC20">TRC20 (Tron)</option></select><button class="btn btn-primary" id="earningsRequestBtn">Request payout</button></div><p class="muted" id="earningsPayoutNote"></p></div><p class="muted" id="earningsHeroNote"></p></div>
-<div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div>
-<div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
+<div class="earnings-section" id="giveawayRedeemSection"><h3>🎟️ Have a code?</h3><p><span class="giveaway-badge">Worth $2.00</span></p><p class="muted">Codes drop live on the Kick stream. First player to enter a code gets the $2 — straight into this balance.</p><p class="muted" id="giveawayGuestNote" hidden>Log in to redeem a code.</p><div id="giveawayRedeemWrap"><div class="giveaway-row"><input class="t-input" id="giveawayCodeInput" type="text" placeholder="ENTER CODE" aria-label="Giveaway code" autocomplete="off" /><button class="btn btn-primary" id="giveawayClaimBtn" type="button">Claim</button></div><p class="giveaway-msg" id="giveawayResultMsg" aria-live="polite"></p></div><p class="muted">Codes drop live on stream — Watch live to catch the next one</p><button class="btn kick-btn" id="giveawayKickBtn" type="button" disabled>Kick link coming soon</button><h3 style="margin-top:14px;">🎟️ Your redeemed codes</h3><ul id="giveawayRedeemedList"></ul></div>
+<div class="earnings-section" id="earningsPendingSection"><h3>⏳ Pending payout requests</h3><ul id="earningsPendingList"></ul></div><div class="earnings-section" id="earningsCompletedSection"><h3>✅ Completed payout requests</h3><ul id="earningsCompletedList"></ul></div>
 <div class="earnings-section" id="ownerPayoutsSection" hidden><h3>👑 Owner Payouts</h3><p class="muted" id="ownerPayoutsSummary"></p><p class="muted"><b>Pending</b></p><ul id="ownerPayoutsPendingList"></ul><p class="muted"><b>Paid</b></p><ul id="ownerPayoutsPaidList"></ul><p class="muted" id="ownerPayoutsNote"></p><p class="muted">Mark paid only after the player has the latest app, so they see the paid celebration.</p></div>
+<div class="earnings-section" id="giveawayOwnerSection" hidden><h3>👑 Giveaway Codes</h3><p class="muted" id="giveawayOwnerStats">Loading…</p><button class="btn btn-primary" id="giveawayGenerateBtn" type="button">Generate $2 code</button><p class="muted" id="giveawayOwnerNote"></p><ul id="giveawayOwnerList"></ul><h3 style="margin-top:14px;">📺 Kick channel</h3><p class="muted">Players tap “Watch on Kick” to open this channel live.</p><div class="giveaway-kick-row"><input class="t-input" id="giveawayKickInput" type="url" placeholder="https://kick.com/your-channel" aria-label="Kick channel URL" autocomplete="off" /><button class="btn btn-primary" id="giveawayKickSaveBtn" type="button">Save</button></div><p class="muted" id="giveawayKickNote"></p></div>
 </section><section class="tpage" id="page-livepayouts"><div class="lb-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="page-head"><h2>💸 Live Payouts</h2><p class="page-sub">Real payouts, paid in USDT — proof the game pays.</p></div>
 <div class="livepayouts-section" id="livePayoutsTotalsSection"><h3>💰 Total paid out</h3><p class="livepayouts-total" id="livePayoutsTotal">Loading…</p><p class="muted">Payouts are paid manually in USDT after review.</p></div>
 <div class="livepayouts-section" id="livePayoutsListSection"><h3>✅ Recent payouts</h3><ul id="livePayoutsList"></ul><p class="muted" id="livePayoutsNote"></p></div>
@@ -5926,6 +5951,8 @@ window.PUZZLEPOP_CONFIG = {
     var page = $("page-earnings");
     if (!page) return;
     refreshOwnerPayouts();
+    refreshGiveawayOwner();
+    refreshKickButton();
     var guestNote = $("earningsGuestNote"), authBtn = $("earningsAuthBtn");
     var heroWrap = $("earningsHeroWrap"), payoutWrap = $("earningsPayoutWrap");
     var pendingList = $("earningsPendingList"), completedList = $("earningsCompletedList");
@@ -5936,12 +5963,20 @@ window.PUZZLEPOP_CONFIG = {
       if (payoutWrap) payoutWrap.hidden = true;
       if (pendingList) pendingList.innerHTML = "<li class=\"empty-state\">Log in to see your payout requests.</li>";
       if (completedList) completedList.innerHTML = "<li class=\"empty-state\">Log in to see your payout requests.</li>";
+      var gwGuest = $("giveawayGuestNote"), gwWrap = $("giveawayRedeemWrap"), gwList = $("giveawayRedeemedList");
+      if (gwGuest) gwGuest.hidden = false;
+      if (gwWrap) gwWrap.hidden = true;
+      if (gwList) gwList.innerHTML = "<li class=\"empty-state\">Log in to see your redeemed codes.</li>";
       return;
     }
     if (guestNote) guestNote.hidden = true;
     if (authBtn) authBtn.hidden = true;
     if (heroWrap) heroWrap.hidden = false;
     if (payoutWrap) payoutWrap.hidden = false;
+    var gwGuest2 = $("giveawayGuestNote"), gwWrap2 = $("giveawayRedeemWrap");
+    if (gwGuest2) gwGuest2.hidden = true;
+    if (gwWrap2) gwWrap2.hidden = false;
+    refreshMyGiveawayRedemptions();
     setText("earningsTotalScore", "Loading…");
     setText("earningsBalance", "Loading…");
     setText("earningsProgressText", "");
@@ -6147,6 +6182,233 @@ window.PUZZLEPOP_CONFIG = {
       if (paidList) paidList.innerHTML = "<li class=\"empty-state\">Could not load payout requests.</li>";
     });
   }
+  /* ================= v66: Giveaway codes =================
+   * Game v66. Redeem section under the Earnings hero card (see
+   * game.html #giveawayRedeemSection): a code dropped live on the
+   * Kick stream is worth $2 straight into the player's Earnings
+   * balance — first player to enter it wins it. Four read RPCs /
+   * writes, all through the usual callRest pattern:
+   *   redeem_giveaway_code(p_code) — one code per player per day,
+   *     must have played at least one game first; server errors are
+   *     mapped to friendly text below, never shown raw.
+   *   get_my_giveaway_redemptions() — the player's own history.
+   *   get_kick_url() / set_kick_url(p_url) — the channel the green
+   *     "Watch on Kick" button opens (greyed until the owner sets it).
+   * Owner-only sessions panel (#giveawayOwnerSection, same isOwner()
+   * gate as the Owner Payouts panel, hidden entirely otherwise):
+   *   generate_giveaway_code() / get_giveaway_codes() /
+   *   revoke_giveaway_code(p_code_id). The server enforces the same
+   * owner rule; hiding is presentation only. No new page, no new
+   * bottom-bar button; everything loads from refreshEarningsPage,
+   * so no extra page-load network storm. */
+  var GIVEAWAY_AMOUNT_USD = 2;
+  var giveawayKickUrl = null;
+  function giveawayRedeemErrorText(err) {
+    var m = String((err && err.message) || "").toLowerCase();
+    if (/invalid code/.test(m)) return "That code doesn't look right — check it and try again.";
+    if (/already claimed/.test(m)) return "Too late — someone already claimed this code.";
+    if (/code revoked/.test(m)) return "This code was revoked by the owner.";
+    if (/one code per day/.test(m)) return "You already claimed a code today — come back tomorrow.";
+    if (/play at least one game/.test(m)) return "Play at least one game first, then come back with your code.";
+    if (/too many tries/.test(m)) return "Too many wrong guesses — please wait a few minutes.";
+    if (/not authenticated/.test(m) || /profile missing/.test(m)) return "Log in to redeem a code.";
+    return "Something went wrong — try again.";
+  }
+  function giveawayCopyCode(code) {
+    var val = String(code || "");
+    if (!val) return;
+    function done() { setText("giveawayOwnerNote", "Code copied: " + val); }
+    function fallbackCopy() {
+      try {
+        var t = document.createElement("textarea");
+        t.value = val;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+        done();
+      } catch (e) { /* ignore */ }
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done).catch(fallbackCopy);
+        return;
+      }
+    } catch (e) { /* fall through to execCommand */ }
+    fallbackCopy();
+  }
+  function refreshMyGiveawayRedemptions() {
+    var list = $("giveawayRedeemedList");
+    if (!list) return;
+    if (!session || !session.user) {
+      list.innerHTML = "<li class=\"empty-state\">Log in to see your redeemed codes.</li>";
+      return;
+    }
+    list.innerHTML = "<li class=\"empty-state\">Loading…</li>";
+    callRest("rpc/get_my_giveaway_redemptions", "POST", {}).then(function (res) {
+      var rows = (res && res.redemptions) || [];
+      list.innerHTML = "";
+      if (!rows.length) {
+        list.innerHTML = "<li class=\"empty-state\">No codes redeemed yet — catch one live on Kick.</li>";
+        return;
+      }
+      rows.forEach(function (r) {
+        var li = document.createElement("li");
+        li.textContent = (r.code || "") + " — " + earningsDateText(r.redeemed_at) +
+          " — +$" + (Number(r.amount_usd) || 0).toFixed(2);
+        list.appendChild(li);
+      });
+    }).catch(function () {
+      list.innerHTML = "<li class=\"empty-state\">Could not load your redeemed codes.</li>";
+    });
+  }
+  function refreshKickButton() {
+    var btn = $("giveawayKickBtn");
+    if (!btn) return;
+    callRest("rpc/get_kick_url", "POST", {}).then(function (res) {
+      var url = (res && res.url) ? String(res.url) : "";
+      giveawayKickUrl = url || null;
+      var input = $("giveawayKickInput");
+      if (input && isOwner() && !input.value) input.value = url;
+      if (url) {
+        btn.disabled = false;
+        btn.textContent = "▶ Watch on Kick";
+      } else {
+        btn.disabled = true;
+        btn.textContent = "Kick link coming soon";
+      }
+    }).catch(function () {
+      giveawayKickUrl = null;
+      btn.disabled = true;
+      btn.textContent = "Kick link coming soon";
+    });
+  }
+  function submitGiveawayCode() {
+    var input = $("giveawayCodeInput"), btn = $("giveawayClaimBtn"), msg = $("giveawayResultMsg");
+    if (!input || !btn) return;
+    var code = input.value.trim().toUpperCase();
+    if (!code) {
+      if (msg) { msg.className = "giveaway-msg err"; msg.textContent = "Enter a code first."; }
+      return;
+    }
+    btn.disabled = true;
+    if (msg) { msg.className = "giveaway-msg"; msg.textContent = "Checking your code…"; }
+    callRest("rpc/redeem_giveaway_code", "POST", { p_code: code }).then(function (res) {
+      // v66 fix 1: wrong guesses no longer raise — the server returns
+      // {ok: false, error: 'invalid code' | 'too many tries, please
+      // wait a few minutes'} with HTTP 200 so the attempts counter
+      // commits instead of rolling back. Check ok FIRST and show the
+      // mapped friendly message, exactly as the exception path did.
+      // All other failures (already claimed, one code per day, code
+      // revoked, play at least one game first, not authenticated)
+      // still raise and are handled in .catch below.
+      if (res && res.ok === false) {
+        if (msg) { msg.className = "giveaway-msg err"; msg.textContent = giveawayRedeemErrorText({ message: res.error }); }
+        btn.disabled = false;
+        return;
+      }
+      var amt = (res && typeof res.amount_usd === "number") ? res.amount_usd : GIVEAWAY_AMOUNT_USD;
+      if (msg) {
+        msg.className = "giveaway-msg ok";
+        msg.textContent = "🎉 Code claimed! +$" + amt.toFixed(2) + " added to your Earnings.";
+      }
+      input.value = "";
+      btn.disabled = false;
+      refreshEarningsPage();
+    }).catch(function (err) {
+      if (msg) { msg.className = "giveaway-msg err"; msg.textContent = giveawayRedeemErrorText(err); }
+      btn.disabled = false;
+    });
+  }
+  function giveawayCodeStatus(c) {
+    if (c.revoked_at) return "revoked";
+    if (c.redeemed_at || c.redeemed_by_username) return "claimed";
+    var s = String(c.status || "").toLowerCase();
+    if (s === "revoked" || s === "claimed" || s === "unused") return s;
+    return "unused";
+  }
+  function refreshGiveawayOwner() {
+    var section = $("giveawayOwnerSection");
+    if (!section) return;
+    if (!isOwner()) { section.hidden = true; return; }
+    section.hidden = false;
+    setText("giveawayOwnerStats", "Loading…");
+    var list = $("giveawayOwnerList");
+    if (list) list.innerHTML = "";
+    callRest("rpc/get_giveaway_codes", "POST", {}).then(function (res) {
+      var codes = (res && res.codes) || [];
+      var stats = (res && res.stats) || {};
+      setText("giveawayOwnerStats", (Number(stats.generated) || codes.length) +
+        " codes generated · $" + (Number(stats.given_away_usd) || 0).toFixed(2) + " given away");
+      if (!list) return;
+      if (!codes.length) {
+        list.innerHTML = "<li class=\"empty-state\">No codes yet — generate the first one above.</li>";
+        return;
+      }
+      codes.forEach(function (c) {
+        var li = document.createElement("li");
+        li.className = "giveaway-owner-row";
+        var head = document.createElement("div");
+        var codeSpan = document.createElement("span");
+        codeSpan.className = "giveaway-code";
+        codeSpan.textContent = c.code || "";
+        codeSpan.title = "Tap to copy code";
+        codeSpan.addEventListener("click", function () { giveawayCopyCode(c.code); });
+        head.appendChild(codeSpan);
+        head.appendChild(document.createTextNode(" — $" + (Number(c.amount_usd) || 0).toFixed(2) +
+          " — " + earningsDateText(c.created_at)));
+        var badge = document.createElement("span");
+        var status = giveawayCodeStatus(c);
+        if (status === "revoked") {
+          badge.className = "giveaway-status revoked";
+          badge.textContent = "Revoked";
+        } else if (status === "claimed") {
+          badge.className = "giveaway-status claimed";
+          badge.textContent = "Claimed" +
+            (c.redeemed_by_username ? " by " + c.redeemed_by_username : "") +
+            (c.redeemed_at ? " · " + earningsDateText(c.redeemed_at) : "");
+        } else {
+          badge.className = "giveaway-status";
+          badge.textContent = "Unused";
+        }
+        head.appendChild(badge);
+        li.appendChild(head);
+        if (status === "unused") {
+          var btn = document.createElement("button");
+          btn.className = "btn btn-small";
+          btn.textContent = "Revoke";
+          btn.addEventListener("click", function () {
+            if (!window.confirm("Revoke this code?\n" + (c.code || "") +
+              "\nNobody will be able to claim it afterwards.")) return;
+            btn.disabled = true;
+            setText("giveawayOwnerNote", "Revoking…");
+            callRest("rpc/revoke_giveaway_code", "POST", { p_code_id: c.id }).then(function () {
+              refreshGiveawayOwner();
+              setText("giveawayOwnerNote", "Code revoked.");
+            }).catch(function () {
+              btn.disabled = false;
+              setText("giveawayOwnerNote", "Could not revoke — try again later.");
+            });
+          });
+          li.appendChild(btn);
+        }
+        list.appendChild(li);
+      });
+    }).catch(function (err) {
+      setText("giveawayOwnerStats", "");
+      setText("giveawayOwnerNote", isEarningsMissingError(err) ?
+        "Giveaway codes need the v66 migration run in Supabase first." :
+        "Could not load giveaway codes — try again later.");
+      if (list) list.innerHTML = "<li class=\"empty-state\">Could not load giveaway codes.</li>";
+    });
+  }
+  function openGiveawayRedeem() {
+    showAppView("earnings");
+    setTimeout(function () {
+      var sec = $("giveawayRedeemSection");
+      if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  }
   function submitEarningsPayout() {
     var wallet = $("earningsWalletInput"), network = $("earningsNetworkSelect");
     var btn = $("earningsRequestBtn");
@@ -6170,6 +6432,51 @@ window.PUZZLEPOP_CONFIG = {
     if (authBtn) authBtn.addEventListener("click", function () { closePanel(); showWelcome(); });
     var reqBtn = $("earningsRequestBtn");
     if (reqBtn) reqBtn.addEventListener("click", submitEarningsPayout);
+    /* v66: giveaway codes — header ticket, redeem claim, Kick open. */
+    var ticketBtn = $("ticketBtn");
+    if (ticketBtn) ticketBtn.addEventListener("click", openGiveawayRedeem);
+    var claimBtn = $("giveawayClaimBtn");
+    if (claimBtn) claimBtn.addEventListener("click", submitGiveawayCode);
+    var codeInput = $("giveawayCodeInput");
+    if (codeInput) codeInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); submitGiveawayCode(); }
+    });
+    var kickBtn = $("giveawayKickBtn");
+    if (kickBtn) kickBtn.addEventListener("click", function () {
+      if (giveawayKickUrl) window.open(giveawayKickUrl, "_blank");
+    });
+    var genBtn = $("giveawayGenerateBtn");
+    if (genBtn) genBtn.addEventListener("click", function () {
+      genBtn.disabled = true;
+      setText("giveawayOwnerNote", "Generating…");
+      callRest("rpc/generate_giveaway_code", "POST", {}).then(function (res) {
+        refreshGiveawayOwner();
+        setText("giveawayOwnerNote", "New code: " + ((res && res.code) || "") + " — share it live on Kick.");
+        genBtn.disabled = false;
+      }).catch(function () {
+        setText("giveawayOwnerNote", "Could not generate a code — try again later.");
+        genBtn.disabled = false;
+      });
+    });
+    var kickSaveBtn = $("giveawayKickSaveBtn");
+    if (kickSaveBtn) kickSaveBtn.addEventListener("click", function () {
+      var input = $("giveawayKickInput");
+      var url = input ? input.value.trim() : "";
+      kickSaveBtn.disabled = true;
+      setText("giveawayKickNote", "Saving…");
+      callRest("rpc/set_kick_url", "POST", { p_url: url }).then(function (res) {
+        giveawayKickUrl = (res && res.url) ? String(res.url) : (url || null);
+        setText("giveawayKickNote", "Saved ✓");
+        kickSaveBtn.disabled = false;
+        refreshKickButton();
+      }).catch(function (err) {
+        var m = String((err && err.message) || "").toLowerCase();
+        setText("giveawayKickNote", /invalid kick url/.test(m) ?
+          "Invalid Kick URL — use https://kick.com/your-channel." :
+          "Could not save — try again later.");
+        kickSaveBtn.disabled = false;
+      });
+    });
   }
   /* ================= v63: Live Payouts page =================
    * Public proof the game pays: every paid payout, newest first,
